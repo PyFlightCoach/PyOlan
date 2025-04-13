@@ -5,6 +5,11 @@ This WIP package contains a OLAN (One Letter Aerobatic Notation, https://openaer
 
 Installation
 ```
+    pip install pyolan
+```
+
+Install from source
+```
     pip install -e .
 ```
 
