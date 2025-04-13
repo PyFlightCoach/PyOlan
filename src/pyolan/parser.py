@@ -7,6 +7,7 @@ import numpy as np
 import schemas.positioning as p
 from flightanalysis import ManDef, Manoeuvre
 from flightanalysis.builders.manbuilder import ManBuilder
+from flightanalysis.builders.example.manbuilder import mb as exampe_mb
 from flightdata import State
 from schemas import aresti as a
 
@@ -27,8 +28,9 @@ class ParsedOlanFig:
 
 
 def parse_olan(
-    data: str, mb: ManBuilder, wind: p.Heading = p.Heading.LTOR
+    data: str, mb: ManBuilder=None, wind: p.Heading = p.Heading.LTOR
 ) -> list[ParsedOlanFig]:
+    mb = exampe_mb if mb is None else mb    
     data = data.split(" ")
     figs: list[ParsedOlanFig] = []
     itrans = None
