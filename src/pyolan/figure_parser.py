@@ -19,7 +19,7 @@ from typing import Tuple
 import numpy as np
 import schemas.positioning as p
 from loguru import logger
-from schemas import aresti as a, maninfomaker
+from schemas import aresti as a, ManInfo
 
 from .primitives import OFig, sp, li, lo, tu, ofig_re, olan_figs
 from .rolls import OlanRoll, ro
@@ -158,7 +158,7 @@ class OlanFig:
         ), data[i + 1 :]
 
     def create_info(self):
-        return maninfomaker(
+        return ManInfo.build(
             "olan figure",
             "ofig",
             10,
@@ -368,7 +368,7 @@ class OlanFig:
         entry_direction: p.Direction = None,
         exit_direction: p.Direction = None,
     ) -> a.ManInfo:
-        return maninfomaker(
+        return ManInfo.build(
             self.fig.name,
             short_name or self.fig.short_name,
             10,
