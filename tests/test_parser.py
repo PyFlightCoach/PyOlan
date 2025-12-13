@@ -1,10 +1,11 @@
 import numpy as np
 from pytest import approx
 from schemas.positioning import Direction
-from flightanalysis.builders.example.manbuilder import mb
+from tuning.builders import load_builder
 
 from pyolan.parser import ParsedOlanFig, parse_olan
 
+mb = load_builder("IAC")
 
 def test_entry_direction():
     ofigs = parse_olan("13% -``5if```,4ao(,1),22+`", mb)
@@ -47,3 +48,9 @@ def test_turn():
 
 def test_tailslide():
     fig: ParsedOlanFig = parse_olan("~~.,3ita'3....~>", mb)
+
+
+def test_iac_unl_2026_n():
+    fig: ParsedOlanFig = parse_olan("7% ``-if....'in(.,3,34...'').....''-~~", mb)[0]
+
+    pass
