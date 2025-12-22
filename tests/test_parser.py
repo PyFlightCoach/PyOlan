@@ -59,3 +59,11 @@ def test_iac_unl_2026_n(mb: ManBuilder):
 
 
     pass
+
+
+def test_iac_adv_2026(mb: ManBuilder):
+    figs = parse_olan("44c,2 (2,0) 9% m1- (12,0) /~~---.h.....''2f.......+++~~ (-16,0) ~++..''n(.'24...).24.'- (-2,0) -5is...''iBb()......'8' 3% 6m~~ (11,0) 22% ,6fic2- -a3',34+ 6% +8pb3..''+``` 3% 2> `44'm24+~~ (5,0) 4% 3jo3", mb)
+    assert len(figs) == 11
+    names = [f.aresti.info.short_name for f in figs]
+    assert len(set(names)) == len(names)  # all names unique
+    pass
