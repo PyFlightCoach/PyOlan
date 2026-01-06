@@ -34,7 +34,10 @@ def parse_olan(
     itrans = None
 
     while data:
-        olanfig, data = OlanFig.take(data)
+        try:
+            olanfig, data = OlanFig.take(data)
+        except Exception:
+            break
 
         # make sure short_name is unique
         _suffix = ""
@@ -100,5 +103,8 @@ def parse_olan(
         )
 
         figs.append(ParsedOlanFig(olanfig, arestifig, mdef, man, tp))
+
+    if len(figs) == 0:
+        raise Exception("No valid figures found in OLAN data")
 
     return figs
