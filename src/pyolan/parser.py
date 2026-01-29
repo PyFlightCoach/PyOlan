@@ -7,7 +7,6 @@ import numpy as np
 import schemas.positioning as p
 from flightanalysis import ManDef, Manoeuvre
 from flightanalysis.builders.manbuilder import ManBuilder
-from flightanalysis.builders.example.manbuilder import mb as exampe_mb
 from flightdata import State
 from schemas import aresti as a
 
@@ -28,22 +27,24 @@ class ParsedOlanFig:
 
 
 def parse_olan(
-    data: str, mb: ManBuilder=None, wind: p.Heading = p.Heading.LTOR
+    data: str, mb: ManBuilder, wind: p.Heading = p.Heading.LTOR
 ) -> list[ParsedOlanFig]:
-    mb = exampe_mb if mb is None else mb    
     data = data.split(" ")
     figs: list[ParsedOlanFig] = []
     itrans = None
 
     while data:
-        olanfig, data = OlanFig.take(data)
+        try:
+            olanfig, data = OlanFig.take(data)
+        except Exception:
+            break
 
         # make sure short_name is unique
         _suffix = ""
         while f"{olanfig.fig.short_name}{_suffix}" in [
-            f.olan.fig.short_name for f in figs
+            f.aresti.info.short_name for f in figs
         ]:
-            _suffix = int(_suffix) + 1 if _suffix else "2"
+            _suffix = int(_suffix) + 1 if len(_suffix) else "2"
 
         # Take the initial heading from the end of the previous figure if possible
         # if not infer it from the wind direction and the draw parameters (default to upwind)
@@ -102,5 +103,8 @@ def parse_olan(
         )
 
         figs.append(ParsedOlanFig(olanfig, arestifig, mdef, man, tp))
+
+    if len(figs) == 0:
+        raise Exception("No valid figures found in OLAN data")
 
     return figs

@@ -229,12 +229,16 @@ class OlanFig:
         is_vertical = (direction == 0.25) | (direction == 0.75)
 
         if self.inverted:
+            # If figure is inverted loops before first vertical line are swapped
             loops = loops * np.where(
-                np.logical_not(is_vertical), swap(not self.inverted), 1
+                np.arange(len(self)) <= is_vertical.argmax(),
+                -1,
+                1,
             )
+            
             direction = np.concatenate((np.array([0]), (loops.cumsum() % 1)[:-1]))
 
-        # If exit is inverted all loops before the first vertical line are swapped
+        # If exit is inverted the loop before the first vertical line are swapped
         if sum(is_vertical) > 0:
             entry_swap = np.where(
                 np.arange(len(self)) <= is_vertical.argmax(),

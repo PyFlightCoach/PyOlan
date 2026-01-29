@@ -1,13 +1,13 @@
 
 from flightdata import State
 from pyolan.parser import parse_olan
+from tuning.builders import load_builder
 
-
+mb = load_builder("IMAC")
 olan = parse_olan(
-    "/d'1 5% 2a,f (-3,6) 4h4^> p(2)...' dq 4% 2b.''1.''+``` (-13,0) 3% ~2g~ (2,0) 3% iv```6s.....'' 22y````1.. (-3,0) 8% `24'zt`8''",
+    "o 12% 3> ``+````````2``rc+`````` 4> ',1~~ 2% 7> m2 (8,19) 1% id. 6% 8> h.' 8> ,2'b``,2' 12> v'2' (7,18) `````9s..'ik`` 3% 4> 2a",
+    mb
 )
 
-
-template = State.stack({fig.definition.info.short_name: fig.template for fig in olan}, "manoeuvre")
-
-template.plotlabels("manoeuvre").show()
+for fig in olan:
+    fig.template.plotlabels("element", nmodels=5).show()

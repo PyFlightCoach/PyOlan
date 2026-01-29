@@ -1,6 +1,6 @@
 [project]
 name = "pyolan"
-version = "0.1.0"
+version = "0.1.1"
 description = "One Letter Aerobatic Notation Parser"
 readme = "README.md"
 authors = [
@@ -9,10 +9,7 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "pydantic>=2.9.2",
-    "pfcschemas>=0.1.10",
-    "pfc-geometry",
-    "flightdata",
-    "flightanalysis"
+    "flightanalysis>=0.4.0"
 ]
 
 

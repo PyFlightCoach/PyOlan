@@ -185,6 +185,9 @@ olan_figs = create_ofig_dict(
             ],
             True,
         ),
+        OFig("Cuban Eight", "cuban", "cc", 
+             [li(), lo(5/8), li(), lo(-3/4), li(), lo(1/8)], 
+             True),
         OFig("Half Cuban", "hc", "c", [li(), lo(5 / 8), li(), lo(-1 / 8)], True),
         OFig(
             "Reverse Half Cuban", "rhc", "rc", [lo(1 / 8), li(), lo(-5 / 8), li()], True
