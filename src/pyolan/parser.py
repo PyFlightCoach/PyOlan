@@ -23,7 +23,7 @@ class ParsedOlanFig:
 
     @property
     def short_name(self):
-        return self.olan.short_name
+        return self.aresti.info.short_name
 
 
 def parse_olan(
