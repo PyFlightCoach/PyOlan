@@ -53,6 +53,9 @@ TODO:
   `test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope`.
 - Modify so it respects the correct olan figure directions (prefers turnarounds when there is ambiguity)
 - Consider closer links with open-aero. Would it be better to read .seq files?
-- Add K factor calculation
+- Parsed catalogue definitions expose their OpenAero K factors through
+ `OlanFig.k_powered`, `OlanFig.k_glider`, or `OlanFig.k_factor(glider=True)`.
+ Lookup is exact-definition based because K factors vary with orientation and
+ roll pattern; unknown/custom OLAN patterns raise `ValueError`.
 - Think about positioning the generated templates so they fit in the box better (probably better handled in the FlightAnalysis submodule).
 - 
