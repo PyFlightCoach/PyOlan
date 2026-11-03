@@ -346,6 +346,17 @@ def test_reverse_cuban_matches_open_aero_arc_and_roll_structure():
     assert len([element for element in parsed.fig.oels if element.canRoll]) == 3
 
 
+@pytest.mark.parametrize("code", ["tri", "rcc", "vv", "hat", "xm", "xa"])
+def test_roll_slot_count_matches_open_aero_definition(code):
+    source = BY_CODE[code]
+    parsed = OlanFig.take([code])[0]
+    open_aero_slots = sum(
+        marker in "_^&$" for marker in source["semantics"]["roll_markers"]
+    )
+
+    assert sum(element.canRoll for element in parsed.fig.oels) == open_aero_slots
+
+
 @pytest.mark.parametrize(
     ("code", "special_shape", "element_kind"),
     [
