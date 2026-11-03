@@ -98,6 +98,18 @@ def test_fixture_contains_k_factors_for_all_definitions():
     )
 
 
+def test_fixture_metadata_and_patterns_are_well_formed():
+    patterns = [figure["pattern"] for figure in FIGURES]
+
+    assert len(patterns) == len(set(patterns))
+    for figure in FIGURES:
+        assert re.fullmatch(r"\d+(?:\.\d+){1,3}", figure["aresti"])
+        assert isinstance(figure["k_powered"], int)
+        assert isinstance(figure["k_glider"], int)
+        assert figure["k_powered"] >= 0
+        assert figure["k_glider"] >= 0
+
+
 def test_fixture_contains_normalized_open_aero_semantics():
     assert all(
         set(figure["semantics"])
