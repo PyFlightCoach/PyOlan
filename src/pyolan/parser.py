@@ -29,7 +29,7 @@ class ParsedOlanFig:
 def parse_olan(
     data: str, mb: ManBuilder, wind: p.Heading = p.Heading.LTOR
 ) -> list[ParsedOlanFig]:
-    data = data.split(" ")
+    data = data.split()
     figs: list[ParsedOlanFig] = []
     itrans = None
 

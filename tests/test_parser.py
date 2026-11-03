@@ -88,4 +88,4 @@ def test_splits_two_figs(mb: ManBuilder):
 "5;3ifdh22 3,8pn(5f,8) -3,5ig6if,1 ,5ita3if 42c24,9 44hif ,4,3g32- -,is,24irp,32;f n(22,6),2 2j2"
 def test_pn(mb: ManBuilder):
     fig = parse_olan("3,8pn(5f,8)", mb)[0]
-    assert fig.short_name == "pn"
+    assert fig.short_name == "pushN"

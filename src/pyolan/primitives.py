@@ -419,7 +419,74 @@ olan_figs = create_ofig_dict(
     ]
 )
 
+# OpenAero legacy names and compound field codes. These are kept as distinct
+# entries because they occur in exported OLAN strings.
+olan_figs.update(
+    create_ofig_dict(
+        [
+            OFig("Horizontal S", "hS", "cm", [li(), lo(5 / 8), li(), lo(-5 / 8), li()], True),
+            OFig("Reversing Loop", "rloop", "or", [li(), lo(3 / 4, True), lo(-1 / 4), li()], True),
+            OFig("Reverse Reversing Loop", "rloop", "rao|ro", [li(), lo(1 / 4, True), lo(-3 / 4), li()], True),
+            OFig("Alternating Turn", "turn", "jj", [tu("i"), tu("i")]),
+            OFig("Outside Rolling Turns", "rturn", "jojo", [tu("o"), tu("o")]),
+            OFig("Inside Outside Rolling Turns", "rturn", "jijo", [tu("i"), tu("o")]),
+            OFig("Outside Inside Rolling Turns", "rturn", "joji", [tu("o"), tu("i")]),
+            OFig("Outside Rolling Turn", "rturn", "joj", [tu("o"), tu("i"), tu("o")]),
+            OFig("Inside Reversing Rolling Turn", "rturn", "jjoi", [tu("i"), tu("oi", 1 / 2)]),
+            OFig("Outside Reversing Rolling Turn", "rturn", "jojio", [tu("o"), tu("io", 1 / 2)]),
+            OFig("Double Z", "doubleZ", "dz", [lo(1 / 8), li(), lo(-1 / 8), lo(3 / 8), li(), lo(-3 / 8)]),
+            OFig("Double Vertical Z", "doubleVZ", "dvz", [lo(1 / 4), li(), lo(-1 / 4), lo(1 / 4), li(), lo(-1 / 4), lo(1 / 4), li(), lo(-1 / 4)]),
+            OFig("Double Vertical Diamond", "doubleVD", "dvd", [lo(1 / 4), li(), lo(-1 / 4), lo(-1 / 4), li(), lo(1 / 4), lo(-1 / 4), li(), lo(1 / 4)]),
+            OFig("Reverse Eight Loop", "reverse8", "rqq", [lo(1 / 8), li(), lo(1 / 8), li(), lo(1 / 8), li(), lo(1 / 8), li(), lo(-1 / 8), li(), lo(-1 / 8), li(), lo(-1 / 8), li(), lo(-1 / 8)]),
+            OFig("Extended Vertical Lines", "verticalLines", "vv", [lo(1 / 4), li(), lo(-1 / 4), li(), lo(1 / 4), li(), lo(-1 / 4)]),
+            OFig("Hat", "hat", "hat", [lo(1 / 4), li(), lo(-1 / 4), li(), lo(1 / 4), li(), lo(-1 / 4)]),
+            OFig("Triangle", "triangle", "tri", [lo(1 / 8), li(), lo(3 / 8), li(), lo(-3 / 8), li(), lo(-1 / 8)]),
+            OFig(
+                "Extended Immelman",
+                "extendedImmelman",
+                "xm",
+                [
+                    lo(1 / 8, True),
+                    lo(1 / 8, True),
+                    lo(1 / 8, True),
+                    lo(1 / 8),
+                ],
+            ),
+            OFig("Extended Split S", "extendedSplitS", "xa", [li(), lo(-1 / 2), li(), lo(1 / 2), li(), lo(-1 / 2), li()]),
+            OFig("Loop and Turn", "loopTurn", "oj", [lo(1, True), tu("i")], True),
+            OFig("Loop and Turns", "loopTurns", "oaj|oajj|oajjj|oajjjj", [lo(1, True), li(), lo(-1 / 2), li(), tu("i")], True),
+            OFig("Half Barrel Roll", "halfBarrel", "aj|mj", [li(), lo(1 / 2), li()], True),
+            OFig("Hammer P Loop", "hammerPLoop", "hp|ph|pbh", [lo(1 / 4), li(), st(), li(), lo(3 / 4, True), li()], True),
+            OFig("Tip Head Hammer", "tipHeadHammer", "th", [lo(1 / 4), li(), st(), li(), lo(-1 / 4)], True),
+            OFig("Humpty Hammer", "humptyHammer", "bh", [lo(1 / 4), li(), lo(1 / 2), li(), st(), li(), lo(1 / 4)], True),
+            OFig("Vertical S", "verticalS", "vs|vis", [lo(1 / 2), li(), lo(-1 / 2)], True),
+            OFig("Rolling Turnaround", "rollingTurnaround", "jw", [tu("o"), tu("i")]),
+            OFig("Vertical Cuban", "verticalCuban", "vc|cv", [lo(1 / 4), li(), lo(5 / 8), li(), lo(-3 / 4), li(), lo(1 / 8)], True),
+            OFig(
+                "Reverse Cuban",
+                "reverseCuban",
+                "rcc",
+                [lo(1 / 8), li(), lo(-3 / 4), li(), lo(5 / 8), li()],
+                True,
+            ),
+            OFig("Cuban Eight Reverse", "reverseCubanEight", "co", [li(), lo(5 / 8), li(), lo(-3 / 4), li(), lo(1 / 8)], True),
+        ]
+    )
+)
+
+# OpenAero uses these forms for a roll or flick on a basic line.
+for _base, _code in (("d", "df"), ("d", "dif"), ("v", "vf"), ("v", "vif")):
+    _base_fig = olan_figs[_base]
+    olan_figs[_code] = OFig(
+        _base_fig.name,
+        _base_fig.short_name,
+        _code,
+        _base_fig.oels,
+        _base_fig.invertable,
+        _base_fig.turnable,
+    )
+
 
 ofig_re = re.compile(
-    rf"([^a-zA-Z]|if|f|s|^)({'|'.join(f'{f.pattern()}' for f in olan_figs.values())})([^a-zA-Z]|if|f|s|$)"
+    rf"([^a-zA-Z]|if|f|s|^)({'|'.join(sorted((f.pattern() for f in olan_figs.values()), key=len, reverse=True))})([^a-zA-Z]|if|f|s|$)"
 )

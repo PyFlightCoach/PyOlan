@@ -98,7 +98,7 @@ class OlanFig:
             raise Exception("No olan figure found in data")
 
         # Special handling for rolling circles
-        if re.match(r"(j|ji|jo|jio|joi)", fig_chars):
+        if fig_chars in ("j", "ji", "jo", "jio", "joi"):
             ofig = OFig(
                 "turn",
                 "turn",

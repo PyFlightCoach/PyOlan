@@ -38,6 +38,15 @@ parse an entire olan sequence, join the templates into one and plot:
 ```
 
 TODO:
+- Validate generated geometry and roll placement for the extended OpenAero
+  field codes listed in `tests/test_open_aero_catalog.py`.
+- Refresh the pinned OpenAero fixture with:
+  `node ../../../OpenAero/tools/export-figure-catalog.js tests/data/openaero/figures.json`.
+- The fixture includes source structural tokens (roll markers and drawing
+  shapes) for differential checks without making OpenAero a runtime dependency.
+- Render plans distinguish independent rolls (`_`) from embedded looping rolls
+  (`!`); use these plans when validating primitive element counts and roll
+  placement.
 - Modify so it respects the correct olan figure directions (prefers turnarounds when there is ambiguity)
 - Consider closer links with open-aero. Would it be better to read .seq files?
 - Add K factor calculation
