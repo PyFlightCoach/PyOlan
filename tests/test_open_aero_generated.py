@@ -17,6 +17,19 @@ for figure in FIGURES:
         BY_CODE.setdefault(figure["base_code"], figure)
 
 
+def parseable_figures():
+    seen = set()
+    for figure in FIGURES:
+        if not figure["base_code"] or figure["pattern"] in seen:
+            continue
+        seen.add(figure["pattern"])
+        try:
+            parsed = OlanFig.take([figure["pattern"]])[0]
+        except Exception:
+            continue
+        yield figure, parsed
+
+
 def pyolan_semantic(code):
     figure = OlanFig.take([code])[0]
     return [
@@ -191,6 +204,43 @@ def test_pyolan_preserves_open_aero_pattern_attitude(pattern):
         if source["semantics"]["attitude"]["exit"] == "inverted"
         else Orientation.UPRIGHT
     )
+
+
+def test_all_parseable_open_aero_attitudes_match_pyolan():
+    checked = 0
+
+    for source, parsed in parseable_figures():
+        assert parsed.entry == (
+            Orientation.INVERTED
+            if source["semantics"]["attitude"]["entry"] == "inverted"
+            else Orientation.UPRIGHT
+        )
+        assert parsed.exit == (
+            Orientation.INVERTED
+            if source["semantics"]["attitude"]["exit"] == "inverted"
+            else Orientation.UPRIGHT
+        )
+        checked += 1
+
+    assert checked >= 1100
+
+
+@pytest.mark.parametrize("code", ["dq", "qo", "qq", "rqq"])
+def test_signed_arc_sequence_matches_open_aero(code):
+    source = BY_CODE[code]
+    parsed = OlanFig.take([code])[0]
+    open_aero_arcs = [
+        item["angle"] / 360
+        for item in source["semantics"]["render_plan"]
+        if item["kind"] == "arc"
+    ]
+    pyolan_arcs = [
+        element.loopamount
+        for element in parsed.fig.oels
+        if element.kind == "Loop"
+    ]
+
+    assert pyolan_arcs == open_aero_arcs
 
 
 @pytest.mark.parametrize(

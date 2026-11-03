@@ -452,8 +452,8 @@ olan_figs.update(
                 [
                     lo(1 / 8), OlanEl("Line", 0, False),
                     lo(1 / 8), OlanEl("Line", 0, False),
-                    lo(1 / 8), OlanEl("Line", 0, False),
-                    lo(1 / 8), OlanEl("Line", 0, False),
+                    lo(-1 / 8), OlanEl("Line", 0, False),
+                    lo(-1 / 8), OlanEl("Line", 0, False),
                     lo(-1 / 8), OlanEl("Line", 0, False),
                     lo(-1 / 8), OlanEl("Line", 0, False),
                     lo(-1 / 8), OlanEl("Line", 0, False),

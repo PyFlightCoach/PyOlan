@@ -1,8 +1,8 @@
 {
   "source": {
     "repository": "PyFlightCoach/OpenAero",
-    "revision": "ad4dcf7d6385dacf331a551f1d0e7bbc102c6731",
-    "dirty": true,
+    "revision": "16d072dc8a659f1329a981b95d7e834b172b83a8",
+    "dirty": false,
     "file": "data/figures/figures.js"
   },
   "figures": [
