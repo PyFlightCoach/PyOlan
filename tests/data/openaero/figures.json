@@ -2,7 +2,7 @@
   "source": {
     "repository": "PyFlightCoach/OpenAero",
     "revision": "16d072dc8a659f1329a981b95d7e834b172b83a8",
-    "dirty": false,
+    "dirty": true,
     "file": "data/figures/figures.js"
   },
   "figures": [
@@ -15196,7 +15196,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "J1"
+          },
+          {
+            "kind": "line",
+            "length": 1
           }
         ]
       }
@@ -15260,7 +15268,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "J1"
+          },
+          {
+            "kind": "line",
+            "length": 1
           }
         ]
       }
@@ -15332,7 +15348,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J15"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15363,7 +15387,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J15"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15435,7 +15467,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J11"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15466,7 +15506,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J11"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15571,7 +15619,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "J2"
+          },
+          {
+            "kind": "line",
+            "length": 1
           }
         ]
       }
@@ -15643,7 +15699,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J21"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15674,7 +15738,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J21"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15787,7 +15859,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J215"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15818,7 +15898,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J215"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15897,12 +15985,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio215"
           },
           {
             "kind": "line",
@@ -15942,9 +16025,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO215"
           },
           {
             "kind": "line",
@@ -15984,9 +16066,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO215"
           },
           {
             "kind": "line",
@@ -16028,12 +16109,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio215"
           },
           {
             "kind": "line",
@@ -16109,7 +16185,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J22"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16140,7 +16224,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J22"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16219,12 +16311,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio22"
           },
           {
             "kind": "line",
@@ -16264,9 +16351,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO22"
           },
           {
             "kind": "line",
@@ -16306,9 +16392,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO22"
           },
           {
             "kind": "line",
@@ -16350,12 +16435,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio22"
           },
           {
             "kind": "line",
@@ -16397,12 +16477,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio251"
           },
           {
             "kind": "line",
@@ -16442,9 +16517,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO251"
           },
           {
             "kind": "line",
@@ -16484,9 +16558,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO251"
           },
           {
             "kind": "line",
@@ -16528,12 +16601,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio251"
           },
           {
             "kind": "line",
@@ -16609,7 +16677,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J3"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16677,7 +16753,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J315"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16706,7 +16790,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J315"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16781,12 +16873,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio315"
           },
           {
             "kind": "line",
@@ -16824,9 +16911,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO315"
           },
           {
             "kind": "line",
@@ -16864,9 +16950,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO315"
           },
           {
             "kind": "line",
@@ -16906,12 +16991,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio315"
           },
           {
             "kind": "line",
@@ -16983,7 +17063,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J33"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17012,7 +17100,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J33"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17087,12 +17183,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio33"
           },
           {
             "kind": "line",
@@ -17130,9 +17221,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO33"
           },
           {
             "kind": "line",
@@ -17170,9 +17260,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO33"
           },
           {
             "kind": "line",
@@ -17212,12 +17301,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio33"
           },
           {
             "kind": "line",
@@ -17257,12 +17341,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio351"
           },
           {
             "kind": "line",
@@ -17300,9 +17379,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO351"
           },
           {
             "kind": "line",
@@ -17340,9 +17418,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO351"
           },
           {
             "kind": "line",
@@ -17382,12 +17459,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio351"
           },
           {
             "kind": "line",
@@ -17455,7 +17527,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "J4"
+          },
+          {
+            "kind": "line",
+            "length": 1
           }
         ]
       }
@@ -17527,7 +17607,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J41"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17558,7 +17646,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J41"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17671,7 +17767,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J42"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17702,7 +17806,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J42"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17781,12 +17893,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio42"
           },
           {
             "kind": "line",
@@ -17826,9 +17933,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO42"
           },
           {
             "kind": "line",
@@ -17868,9 +17974,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO42"
           },
           {
             "kind": "line",
@@ -17912,12 +18017,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio42"
           },
           {
             "kind": "line",
@@ -17993,7 +18093,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J43"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -18024,7 +18132,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J43"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -18103,12 +18219,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio43"
           },
           {
             "kind": "line",
@@ -18148,9 +18259,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO43"
           },
           {
             "kind": "line",
@@ -18190,9 +18300,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO43"
           },
           {
             "kind": "line",
@@ -18234,12 +18343,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio43"
           },
           {
             "kind": "line",
@@ -18315,7 +18419,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J44"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -18346,7 +18458,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J44"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -18425,12 +18545,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio44"
           },
           {
             "kind": "line",
@@ -18470,9 +18585,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO44"
           },
           {
             "kind": "line",
@@ -18512,9 +18626,8 @@
             "length": 2
           },
           {
-            "kind": "arc",
-            "shape": "O",
-            "angle": -360
+            "kind": "turn",
+            "token": "JIO44"
           },
           {
             "kind": "line",
@@ -18556,12 +18669,7 @@
           },
           {
             "kind": "turn",
-            "token": "j"
-          },
-          {
-            "kind": "arc",
-            "shape": "o",
-            "angle": 360
+            "token": "jio44"
           },
           {
             "kind": "line",
@@ -89471,7 +89579,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J45"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -89502,7 +89618,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "J45"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }

@@ -513,6 +513,37 @@ def test_open_aero_loop_and_turn_variants(code, turnamount):
 
 
 @pytest.mark.parametrize(
+    ("code", "turnamount", "roll_total", "rolltype"),
+    [
+        ("j", 1 / 4, 0, "i"),
+        ("1j5", 1 / 4, 5, "i"),
+        ("2jio15", 1 / 2, 1.5, "io"),
+        ("3j3", 3 / 4, 3, "i"),
+        ("4j5", 1, 5, "i"),
+    ],
+)
+def test_open_aero_rolling_turn_tokens_match_pyolan(
+    code, turnamount, roll_total, rolltype
+):
+    source = BY_CODE[code]
+    parsed = OlanFig.take([code])[0]
+    turns = [element for element in parsed.fig.oels if element.kind == "Turn"]
+    tokens = [
+        item["token"]
+        for item in source["semantics"]["render_plan"]
+        if item["kind"] == "turn"
+    ]
+
+    assert len(tokens) == len(turns) == 1
+    assert tokens[0].lower().startswith("j")
+    assert turns[0].turnamount == turnamount
+    assert turns[0].rolltype == rolltype
+    assert sum(
+        sum(roll.turns()) for roll in parsed.element_rolls() if roll
+    ) == roll_total
+
+
+@pytest.mark.parametrize(
     ("code", "expected"),
     [
         (
