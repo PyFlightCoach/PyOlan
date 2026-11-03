@@ -1,7 +1,7 @@
 {
   "source": {
     "repository": "PyFlightCoach/OpenAero",
-    "revision": "f9aa5841450440fb4485a353d4f2b4256581b231",
+    "revision": "ad4dcf7d6385dacf331a551f1d0e7bbc102c6731",
     "dirty": true,
     "file": "data/figures/figures.js"
   },
@@ -15161,7 +15161,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "j1"
+          },
+          {
+            "kind": "line",
+            "length": 1
           }
         ]
       }
@@ -15217,7 +15225,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "j1"
+          },
+          {
+            "kind": "line",
+            "length": 1
           }
         ]
       }
@@ -15277,7 +15293,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j15"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15372,7 +15396,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j15"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15467,7 +15499,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j11"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15496,7 +15536,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "j2"
+          },
+          {
+            "kind": "line",
+            "length": 1
           }
         ]
       }
@@ -15556,7 +15604,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j21"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15651,7 +15707,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j21"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15684,7 +15748,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j215"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15779,7 +15851,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j215"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -15814,6 +15894,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -15943,6 +16027,10 @@
             "length": 2
           },
           {
+            "kind": "turn",
+            "token": "j"
+          },
+          {
             "kind": "arc",
             "shape": "o",
             "angle": 360
@@ -15982,7 +16070,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j22"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16077,7 +16173,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j22"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16112,6 +16216,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -16241,6 +16349,10 @@
             "length": 2
           },
           {
+            "kind": "turn",
+            "token": "j"
+          },
+          {
             "kind": "arc",
             "shape": "o",
             "angle": 360
@@ -16282,6 +16394,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -16411,6 +16527,10 @@
             "length": 2
           },
           {
+            "kind": "turn",
+            "token": "j"
+          },
+          {
             "kind": "arc",
             "shape": "o",
             "angle": 360
@@ -16450,7 +16570,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j3"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16512,7 +16640,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j315"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16601,7 +16737,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j315"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16634,6 +16778,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -16757,6 +16905,10 @@
             "length": 2
           },
           {
+            "kind": "turn",
+            "token": "j"
+          },
+          {
             "kind": "arc",
             "shape": "o",
             "angle": 360
@@ -16794,7 +16946,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j33"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16883,7 +17043,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j33"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -16916,6 +17084,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -17039,6 +17211,10 @@
             "length": 2
           },
           {
+            "kind": "turn",
+            "token": "j"
+          },
+          {
             "kind": "arc",
             "shape": "o",
             "angle": 360
@@ -17078,6 +17254,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -17201,6 +17381,10 @@
             "length": 2
           },
           {
+            "kind": "turn",
+            "token": "j"
+          },
+          {
             "kind": "arc",
             "shape": "o",
             "angle": 360
@@ -17236,7 +17420,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "j4"
+          },
+          {
+            "kind": "line",
+            "length": 1
           }
         ]
       }
@@ -17296,7 +17488,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j41"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17391,7 +17591,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j41"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17424,7 +17632,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j42"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17519,7 +17735,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j42"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17554,6 +17778,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -17683,6 +17911,10 @@
             "length": 2
           },
           {
+            "kind": "turn",
+            "token": "j"
+          },
+          {
             "kind": "arc",
             "shape": "o",
             "angle": 360
@@ -17722,7 +17954,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j43"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17817,7 +18057,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j43"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -17852,6 +18100,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -17981,6 +18233,10 @@
             "length": 2
           },
           {
+            "kind": "turn",
+            "token": "j"
+          },
+          {
             "kind": "arc",
             "shape": "o",
             "angle": 360
@@ -18020,7 +18276,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j44"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -18115,7 +18379,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j44"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -18150,6 +18422,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -18277,6 +18553,10 @@
           {
             "kind": "line",
             "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j"
           },
           {
             "kind": "arc",
@@ -88036,7 +88316,15 @@
           },
           {
             "kind": "line",
-            "length": 2
+            "length": 1
+          },
+          {
+            "kind": "turn",
+            "token": "j2"
+          },
+          {
+            "kind": "line",
+            "length": 1
           },
           {
             "kind": "roll",
@@ -89144,7 +89432,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j45"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -89239,7 +89535,15 @@
         "render_plan": [
           {
             "kind": "line",
-            "length": 4
+            "length": 2
+          },
+          {
+            "kind": "turn",
+            "token": "j45"
+          },
+          {
+            "kind": "line",
+            "length": 2
           }
         ]
       }
@@ -98953,6 +99257,10 @@
             "angle": 360
           },
           {
+            "kind": "turn",
+            "token": "j1"
+          },
+          {
             "kind": "line",
             "length": 1
           }
@@ -98990,6 +99298,10 @@
             "kind": "arc",
             "shape": "o",
             "angle": 360
+          },
+          {
+            "kind": "turn",
+            "token": "j2"
           },
           {
             "kind": "line",
@@ -99031,6 +99343,10 @@
             "angle": 360
           },
           {
+            "kind": "turn",
+            "token": "j3"
+          },
+          {
             "kind": "line",
             "length": 1
           }
@@ -99068,6 +99384,10 @@
             "kind": "arc",
             "shape": "o",
             "angle": 360
+          },
+          {
+            "kind": "turn",
+            "token": "j4"
           },
           {
             "kind": "line",

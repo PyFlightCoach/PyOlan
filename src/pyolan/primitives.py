@@ -490,7 +490,10 @@ olan_figs.update(
                 True,
             ),
             OFig("Loop and Turn", "loopTurn", "oj", [lo(1, True), tu("i")], True),
-            OFig("Loop and Turns", "loopTurns", "oaj|oajj|oajjj|oajjjj", [lo(1, True), li(), lo(-1 / 2), li(), tu("i")], True),
+            OFig("Loop and Turn", "loopTurn", "oaj", [lo(1, True), li(), lo(-1 / 2), li(), tu("i", 1 / 4)], True),
+            OFig("Loop and Turn", "loopTurn", "oajj", [lo(1, True), li(), lo(-1 / 2), li(), tu("i", 1 / 2)], True),
+            OFig("Loop and Turn", "loopTurn", "oajjj", [lo(1, True), li(), lo(-1 / 2), li(), tu("i", 3 / 4)], True),
+            OFig("Loop and Turn", "loopTurn", "oajjjj", [lo(1, True), li(), lo(-1 / 2), li(), tu("i", 1)], True),
             OFig("Half Barrel Roll", "halfBarrel", "aj|mj", [li(), lo(1 / 2), li()], True),
             OFig(
                 "Hammer P Loop",

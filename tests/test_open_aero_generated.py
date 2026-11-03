@@ -149,6 +149,7 @@ def test_render_plans_are_well_formed():
                 "roll",
                 "embedded_roll",
                 "special",
+                "turn",
             }
             if item["kind"] == "line":
                 assert item["length"] > 0
@@ -445,6 +446,20 @@ def test_open_aero_turn_family_semantics(code, expected):
     ]
 
     assert actual == expected
+
+
+@pytest.mark.parametrize(
+    ("code", "turnamount"),
+    [("oaj", 1 / 4), ("oajj", 1 / 2), ("oajjj", 3 / 4), ("oajjjj", 1)],
+)
+def test_open_aero_loop_and_turn_variants(code, turnamount):
+    source = BY_CODE[code]
+    parsed = OlanFig.take([code])[0]
+
+    assert source["semantics"]["render_plan"][-2]["kind"] == "turn"
+    assert source["semantics"]["render_plan"][-2]["token"] == f"j{int(turnamount * 4)}"
+    assert parsed.fig.oels[-1].kind == "Turn"
+    assert parsed.fig.oels[-1].turnamount == turnamount
 
 
 @pytest.mark.parametrize(
