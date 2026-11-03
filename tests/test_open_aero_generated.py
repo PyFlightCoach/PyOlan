@@ -550,6 +550,8 @@ def test_open_aero_loop_and_turn_variants(code, turnamount):
         ("2jio15", 1 / 2, 1.5, "io"),
         ("3j3", 3 / 4, 3, "i"),
         ("4j5", 1, 5, "i"),
+        ("4jio3", 1, 1, "io"),
+        ("4joi4", 1, 0, "oi"),
     ],
 )
 def test_open_aero_rolling_turn_tokens_match_pyolan(
