@@ -347,7 +347,21 @@ def test_reverse_cuban_matches_open_aero_arc_and_roll_structure():
 
 
 @pytest.mark.parametrize(
-    "code", ["tri", "rcc", "vv", "hat", "xm", "xa", "co", "hp"]
+    "code",
+    [
+        "tri",
+        "rcc",
+        "vv",
+        "hat",
+        "xm",
+        "xa",
+        "co",
+        "hp",
+        "dq",
+        "qo",
+        "qq",
+        "rqq",
+    ]
 )
 def test_roll_slot_count_matches_open_aero_definition(code):
     source = BY_CODE[code]
