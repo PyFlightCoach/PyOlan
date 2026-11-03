@@ -12,7 +12,10 @@ The create_elements method will create the pyflightcoach principal elements for 
 
 from __future__ import annotations
 import re
+import json
 from dataclasses import dataclass
+from functools import lru_cache
+from importlib.resources import files
 from typing import Tuple
 
 
@@ -25,6 +28,13 @@ from .primitives import OFig, sp, li, lo, tu, ofig_re, olan_figs
 from .rolls import OlanRoll, ro
 
 from .drawing import re_drawing, re_draw
+
+
+@lru_cache
+def _open_aero_k_factors() -> dict[str, dict[str, int]]:
+    return json.loads(
+        files("pyolan.data").joinpath("openaero_k_factors.json").read_text()
+    )
 
 
 @dataclass
@@ -42,9 +52,35 @@ class OlanFig:
     exit_downwind: bool = (
         False  ## only used if there is a 1/4 roll on vertical line, otherwise infer
     )
+    source_pattern: str = ""
 
     def __len__(self):
         return len(self.fig.oels)
+
+    def _catalogue_pattern(self) -> str:
+        body = self.rawfig.strip("-+")
+        entry = "-" if self.entry == p.Orientation.INVERTED else "+"
+        exit = "-" if self.exit == p.Orientation.INVERTED else "+"
+        return f"{entry}{body}{exit}"
+
+    def k_factor(self, glider: bool = False) -> int:
+        """Return the OpenAero K factor for this exact figure definition."""
+        pattern = self.source_pattern or self._catalogue_pattern()
+        try:
+            values = _open_aero_k_factors()[pattern]
+        except KeyError as exc:
+            raise ValueError(
+                f"No OpenAero K factor is registered for OLAN pattern {pattern!r}"
+            ) from exc
+        return values["k_glider" if glider else "k_powered"]
+
+    @property
+    def k_powered(self) -> int:
+        return self.k_factor()
+
+    @property
+    def k_glider(self) -> int:
+        return self.k_factor(glider=True)
 
     @staticmethod
     def take(data: list[str]) -> Tuple[OlanFig, list[str]]:
@@ -155,6 +191,7 @@ class OlanFig:
             p.Orientation.INVERTED if rawfig.endswith("-") else p.Orientation.UPRIGHT,
             entry_direction,
             re.match(r">", d) is not None,
+            d,
         ), data[i + 1 :]
 
     def create_info(self):

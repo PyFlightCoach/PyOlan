@@ -1,0 +1,4670 @@
+{
+  "+$iBb(&)&+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+$iBb(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+$iBpb(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+$iBpb(&)&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+$ib&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+$ib&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+$ibB(&)&+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+$ibB(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+$ibb(&)&+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+$ibb(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+$ibh(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+$ibh(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+$ibpB(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+$ibpB(&)&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+$ibpb(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+$ibpb(&)&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+$ihat(_)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+$ik^+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+$ik^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+$ik_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+$ik_-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+$ikz^+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+$ikz^-": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "+$ikz_+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+$ikz_-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+$in(^)&+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+$in(^)&-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+$in(_)&+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "+$in(_)&-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+$ipBb(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+$ipBb(&)&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+$ipBpb(&)&+": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "+$ipBpb(&)&-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+$ipb&+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+$ipb&-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+$ipbB(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+$ipbB(&)&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+$ipbb(&)&+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+$ipbb(&)&-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "+$ipbh(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+$ipbh(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+$ipbpB(&)&+": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "+$ipbpB(&)&-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+$ipbpb(&)&+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+$ipbpb(&)&-": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "+$ipn(^)&+": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "+$ipn(^)&-": {
+    "k_glider": 0,
+    "k_powered": 26
+  },
+  "+$ipn(_)&+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+$ipn(_)&-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+$irp(^)^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+$irp(^)^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+$irp(^)_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+$irp(^)_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+$irp(~)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+$irp(~)^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+$irp(~)_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+$irp(~)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+$irpp^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+$irpp^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+$irpp_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+$irpp_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+$iry^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+$iry^-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+$iry_+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+$iry_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+$iryz^+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+$iryz^-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+$iryz_+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+$iryz_-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+$ivv(_)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+&Bb(&)&+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+&Bb(&)&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+&Bpb(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&Bpb(&)&-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&b&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+&b&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+&bB(&)&+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+&bB(&)&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+&bb(&)&+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+&bb(&)&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+&bpB(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&bpB(&)&-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&bpb(&)&+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+&bpb(&)&-": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+&h&+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+&h&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+&hat(_)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+&hd(&)^+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+&hd(&)^-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+&hd(&)_+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+&hd(&)_-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+&hp(&)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+&hp(&)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+&hp(&)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+&hp(&)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+&ita&+": {
+    "k_glider": 17,
+    "k_powered": 15
+  },
+  "+&ita&-": {
+    "k_glider": 18,
+    "k_powered": 16
+  },
+  "+&k^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+&k^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+&k_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+&k_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+&kz^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+&kz^-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+&kz_+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+&kz_-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+&n(^)&+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+&n(^)&-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+&n(_)&+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+&n(_)&-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "+&pBb(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&pBb(&)&-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&pBpb(&)&+": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+&pBpb(&)&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+&pb&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+&pb&-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+&pbB(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&pbB(&)&-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&pbb(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&pbb(&)&-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+&pbpB(&)&+": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+&pbpB(&)&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+&pbpb(&)&+": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "+&pbpb(&)&-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "+&pn(^)&+": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "+&pn(^)&-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+&pn(_)&+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+&pn(_)&-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+&rp(^)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+&rp(^)^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+&rp(^)_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+&rp(^)_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+&rp(_)^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+&rp(_)^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+&rp(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+&rp(_)_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+&rpp(_)^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+&rpp(_)^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+&rpp(_)_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+&rpp(_)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+&ry^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+&ry^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+&ry_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+&ry_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+&ryz^+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+&ryz^-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+&ryz_+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+&ryz_-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+&ta&+": {
+    "k_glider": 17,
+    "k_powered": 15
+  },
+  "+&ta&-": {
+    "k_glider": 18,
+    "k_powered": 16
+  },
+  "+&th&+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+&th&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+&vv(_)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+1j+": {
+    "k_glider": 3,
+    "k_powered": 3
+  },
+  "+1j5-": {
+    "k_glider": 19,
+    "k_powered": 14
+  },
+  "+1jo1+": {
+    "k_glider": 21,
+    "k_powered": 15
+  },
+  "+1jo5-": {
+    "k_glider": 21,
+    "k_powered": 15
+  },
+  "+2j+": {
+    "k_glider": 4,
+    "k_powered": 4
+  },
+  "+2j1+": {
+    "k_glider": 36,
+    "k_powered": 26
+  },
+  "+2j15-": {
+    "k_glider": 31,
+    "k_powered": 24
+  },
+  "+2j2+": {
+    "k_glider": 30,
+    "k_powered": 22
+  },
+  "+2jio15-": {
+    "k_glider": 37,
+    "k_powered": 26
+  },
+  "+2jio2+": {
+    "k_glider": 37,
+    "k_powered": 25
+  },
+  "+2jio51-": {
+    "k_glider": 40,
+    "k_powered": 27
+  },
+  "+2jo1+": {
+    "k_glider": 40,
+    "k_powered": 28
+  },
+  "+2jo15-": {
+    "k_glider": 35,
+    "k_powered": 26
+  },
+  "+2jo2+": {
+    "k_glider": 34,
+    "k_powered": 24
+  },
+  "+2joi15-": {
+    "k_glider": 39,
+    "k_powered": 27
+  },
+  "+2joi2+": {
+    "k_glider": 37,
+    "k_powered": 25
+  },
+  "+2joi51-": {
+    "k_glider": 39,
+    "k_powered": 26
+  },
+  "+3j+": {
+    "k_glider": 5,
+    "k_powered": 5
+  },
+  "+3j15-": {
+    "k_glider": 47,
+    "k_powered": 34
+  },
+  "+3j3+": {
+    "k_glider": 41,
+    "k_powered": 30
+  },
+  "+3jio15-": {
+    "k_glider": 54,
+    "k_powered": 37
+  },
+  "+3jio3+": {
+    "k_glider": 53,
+    "k_powered": 35
+  },
+  "+3jio51-": {
+    "k_glider": 0,
+    "k_powered": 38
+  },
+  "+3jo15-": {
+    "k_glider": 53,
+    "k_powered": 37
+  },
+  "+3jo3+": {
+    "k_glider": 47,
+    "k_powered": 33
+  },
+  "+3joi15-": {
+    "k_glider": 56,
+    "k_powered": 38
+  },
+  "+3joi3+": {
+    "k_glider": 55,
+    "k_powered": 36
+  },
+  "+3joi51-": {
+    "k_glider": 0,
+    "k_powered": 37
+  },
+  "+4j+": {
+    "k_glider": 6,
+    "k_powered": 6
+  },
+  "+4j1+": {
+    "k_glider": 0,
+    "k_powered": 46
+  },
+  "+4j2+": {
+    "k_glider": 58,
+    "k_powered": 42
+  },
+  "+4j3+": {
+    "k_glider": 52,
+    "k_powered": 39
+  },
+  "+4j4+": {
+    "k_glider": 52,
+    "k_powered": 38
+  },
+  "+4j5-": {
+    "k_glider": 0,
+    "k_powered": 50
+  },
+  "+4jio2+": {
+    "k_glider": 67,
+    "k_powered": 46
+  },
+  "+4jio3+": {
+    "k_glider": 65,
+    "k_powered": 45
+  },
+  "+4jio4+": {
+    "k_glider": 71,
+    "k_powered": 46
+  },
+  "+4jo1+": {
+    "k_glider": 0,
+    "k_powered": 50
+  },
+  "+4jo2+": {
+    "k_glider": 66,
+    "k_powered": 46
+  },
+  "+4jo3+": {
+    "k_glider": 60,
+    "k_powered": 43
+  },
+  "+4jo4+": {
+    "k_glider": 60,
+    "k_powered": 42
+  },
+  "+4jo5-": {
+    "k_glider": 0,
+    "k_powered": 54
+  },
+  "+4joi2+": {
+    "k_glider": 67,
+    "k_powered": 46
+  },
+  "+4joi3+": {
+    "k_glider": 67,
+    "k_powered": 46
+  },
+  "+4joi4+": {
+    "k_glider": 71,
+    "k_powered": 46
+  },
+  "+^-": {
+    "k_glider": 2,
+    "k_powered": 2
+  },
+  "+^a^-": {
+    "k_glider": 6,
+    "k_powered": 6
+  },
+  "+^a_+": {
+    "k_glider": 6,
+    "k_powered": 6
+  },
+  "+^ac(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^ac(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^ac(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^ac(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^aj^-": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+^aj_+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+^ao(_)^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^ao(_)_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^bz^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+^bz_-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+^c^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^c_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^cm(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^cm(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^cm(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^cm(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^db^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^db_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^dh(&)&+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+^dh(&)&-": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "+^dhd(&)(&)^+": {
+    "k_glider": 0,
+    "k_powered": 27
+  },
+  "+^dhd(&)(&)^-": {
+    "k_glider": 0,
+    "k_powered": 27
+  },
+  "+^dhd(&)(&)_+": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "+^dhd(&)(&)_-": {
+    "k_glider": 0,
+    "k_powered": 26
+  },
+  "+^g^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^g_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^gg(^)^-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+^gg(^)_+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+^gg(_)^+": {
+    "k_glider": 26,
+    "k_powered": 26
+  },
+  "+^gg(_)_-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+^iac(^)^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^iac(^)_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^iac(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^iac(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^iao(_)^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^iao(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^ibz^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+^ibz_-": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "+^ic^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^ic_+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+^icm(^)^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^icm(^)_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^icm(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^icm(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^idb^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^idb_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^ig^-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+^ig_+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+^igg(^)^-": {
+    "k_glider": 31,
+    "k_powered": 31
+  },
+  "+^igg(^)_+": {
+    "k_glider": 29,
+    "k_powered": 29
+  },
+  "+^igg(_)^+": {
+    "k_glider": 26,
+    "k_powered": 26
+  },
+  "+^igg(_)_-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+^ioo-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+^ioo^+": {
+    "k_glider": 0,
+    "k_powered": 26
+  },
+  "+^ior(_)^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^ior(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^ip(^)&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^ip(^)&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^ip(~)&+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^ip(~)&-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^iph(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^iph(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^ipp&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^ipp&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^iq^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^iq_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^irao(_)^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^irao(_)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^irbz^+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "+^irbz_-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+^irc^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^irc_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^ircc(^)_+": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+^ircc(_)_-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+^irdb^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^irdb_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^iro(_)^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^iro(_)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^irq^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^irq_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^irzb^+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "+^irzb_-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+^it&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^it&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^itri(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^itri(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^itri(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^itri(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^iw(&)^+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+^iw(&)^-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "+^iw(&)_+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+^iw(&)_-": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+^ixa(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^ixm(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^iy&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^iy&-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^izb^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+^izb_-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+^izt&+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+^izt&-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+^izy&+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+^izy&-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+^m^-": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "+^m_+": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "+^mj^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^mj_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^oo-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+^oo^+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+^or(_)^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^or(_)_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^p(^)&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^p(^)&-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^p(_)&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+^p(_)&-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^pp(_)&+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^pp(_)&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^q(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^q(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+^rao(_)^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^rao(_)_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^rbz^+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+^rbz_-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+^rc^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^rc_+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+^rcc(^)_+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+^rcc(_)_-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+^rdb^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+^rdb_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^ro(_)^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^ro(_)_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+^rq(_)^+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+^rq(_)_-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+^rzb^+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+^rzb_-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+^t&+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+^t&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+^tri(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^tri(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^tri(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^tri(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^w(&)^+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+^w(&)^-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+^w(&)_+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+^w(&)_-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+^xa(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^xm(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+^y&+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+^y&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+^zb^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+^zb_-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+^zt&+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+^zt&-": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "+^zy&+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+^zy&-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_+": {
+    "k_glider": 2,
+    "k_powered": 2
+  },
+  "+_a^+": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "+_a_-": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "+_ac(^)^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_ac(^)_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_ac(_)^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_ac(_)_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_aj^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_aj_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_ao(_)^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_ao(_)_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_bz^-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_bz_+": {
+    "k_glider": 0,
+    "k_powered": 13
+  },
+  "+_c^+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+_c_-": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+_cc(^)^+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+_cc(^)_-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+_cc(_)^-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "+_cc(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_cm(^)^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_cm(^)_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_cm(_)^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_cm(_)_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_co&+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+_co&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+_db^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_db_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_dh(&)&+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+_dh(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_dhd(&)(&)^+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+_dhd(&)(&)^-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+_dhd(&)(&)_+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+_dhd(&)(&)_-": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+_dq_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_g^+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+_g_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_gg(^)^+": {
+    "k_glider": 29,
+    "k_powered": 29
+  },
+  "+_gg(^)_-": {
+    "k_glider": 28,
+    "k_powered": 28
+  },
+  "+_gg(_)^-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+_gg(_)_+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+_iac(^)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_iac(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_iac(_)^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_iac(_)_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_iao(_)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_iao(_)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_ibz^-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_ibz_+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_ic^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_ic_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_icc(^)^+": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+_icc(^)_-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "+_icc(_)^-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "+_icc(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_icm(^)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_icm(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_icm(_)^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_icm(_)_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_ico&+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+_ico&-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+_idb^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_idb_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_idq_+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+_ig^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_ig_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_igg(^)^+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+_igg(^)_-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "+_igg(_)^-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "+_igg(_)_+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "+_ior(_)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_ior(_)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_ip(^)&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_ip(^)&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_ip(~)&+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_ip(~)&-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_iph(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_iph(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_ipp&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_ipp&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_iq^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+_iq_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_irao(_)^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_irao(_)_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_irbz^-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_irbz_+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_irc^+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+_irc_-": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+_ircc(^)_-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+_ircc(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_irdb^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_irdb_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_iro(_)^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_iro(_)_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_irq^-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_irq_+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_irzb^-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+_irzb_+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_it&+": {
+    "k_glider": 0,
+    "k_powered": 13
+  },
+  "+_it&-": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "+_itri(^)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_itri(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_itri(_)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_itri(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_iw(&)^+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+_iw(&)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_iw(&)_+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+_iw(&)_-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+_ixa(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_ixa(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_ixa(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_ixm(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_ixm(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_ixm(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_iy&+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+_iy&-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+_izb^-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+_izb_+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_izt&+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+_izt&-": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "+_izy&+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_izy&-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_jw_+": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "+_m^+": {
+    "k_glider": 6,
+    "k_powered": 6
+  },
+  "+_m_-": {
+    "k_glider": 6,
+    "k_powered": 6
+  },
+  "+_mj^+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+_mj_-": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+_or(_)^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_or(_)_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_p(^)&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_p(^)&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_p(_)&+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_p(_)&-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_pp(_)&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_pp(_)&-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "+_q(_)^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_q(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_rao(_)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_rao(_)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_rbz^-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_rbz_+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_rc^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_rc_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_rcc(^)_-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "+_rcc(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_rdb^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_rdb_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_ro(_)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_ro(_)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_rq(_)^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_rq(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+_rzb^-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_rzb_+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_t&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+_t&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_tri(^)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_tri(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_tri(_)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_tri(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_w(&)^+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+_w(&)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_w(&)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_w(&)_-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+_xa(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_xa(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_xa(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_xm(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_xm(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_xm(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+_y&+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+_y&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+_zb^-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_zb_+": {
+    "k_glider": 0,
+    "k_powered": 13
+  },
+  "+_zt&+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "+_zt&-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "+_zy&+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "+_zy&-": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "+d^+": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "+d^-": {
+    "k_glider": 7,
+    "k_powered": 7
+  },
+  "+d_-": {
+    "k_glider": 0,
+    "k_powered": 9
+  },
+  "+dvd+": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "+dvz-": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "+dz-": {
+    "k_glider": 9,
+    "k_powered": 9
+  },
+  "+id^+": {
+    "k_glider": 0,
+    "k_powered": 9
+  },
+  "+id^-": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "+id_+": {
+    "k_glider": 7,
+    "k_powered": 7
+  },
+  "+id_-": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "+idvd+": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "+idvz-": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "+idz-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+imm+": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "+imm^-": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "+io^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+io_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+ioj_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "+ioo+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+ioo^-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "+iooo+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+iooo^-": {
+    "k_glider": 0,
+    "k_powered": 26
+  },
+  "+iqo^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+iqo_+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "+iqq+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+irqq-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+iv$+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+iv$-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "+iz^+": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "+iz^-": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "+iz_+": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "+iz_-": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "+j+": {
+    "k_glider": 3,
+    "k_powered": 3
+  },
+  "+mm+": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "+mm^-": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "+o^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "+o_+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+oaj+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+oajj+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+oajjj+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+oajjjj+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "+oj_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "+oo+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+oo^-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "+ooo+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+ooo^-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "+qo^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "+qo_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "+qq+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "+rqq-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "+v&+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "+v&-": {
+    "k_glider": 9,
+    "k_powered": 9
+  },
+  "+z^+": {
+    "k_glider": 0,
+    "k_powered": 9
+  },
+  "+z^-": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "+z_+": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "+z_-": {
+    "k_glider": 0,
+    "k_powered": 9
+  },
+  "-$iBb(&)&+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-$iBb(&)&-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-$iBpb(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$iBpb(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-$ib&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-$ib&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-$ibB(&)&+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-$ibB(&)&-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-$ibb(&)&+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-$ibb(&)&-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-$ibh(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ibh(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ibpB(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ibpB(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-$ibpb(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ibpb(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-$ihat(_)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ik^+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-$ik^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-$ik_+": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "-$ik_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-$ikz^+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-$ikz^-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-$ikz_+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-$ikz_-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-$in(^)&+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-$in(^)&-": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "-$in(_)&+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-$in(_)&-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-$ipBb(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ipBb(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-$ipBpb(&)&+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-$ipBpb(&)&-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "-$ipb&+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-$ipb&-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-$ipbB(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ipbB(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-$ipbb(&)&+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-$ipbb(&)&-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-$ipbh(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ipbh(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-$ipbpB(&)&+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-$ipbpB(&)&-": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "-$ipbpb(&)&+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-$ipbpb(&)&-": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "-$ipn(^)&+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-$ipn(^)&-": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "-$ipn(_)&+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-$ipn(_)&-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-$irp(^)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-$irp(^)^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-$irp(^)_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-$irp(^)_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-$irp(~)^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-$irp(~)^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-$irp(~)_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-$irp(~)_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-$irpp^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-$irpp^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-$irpp_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-$irpp_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-$iry^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-$iry^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-$iry_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-$iry_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-$iryz^+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-$iryz^-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-$iryz_+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-$iryz_-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-$ivv(_)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&Bb(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "-&Bb(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&Bpb(&)&+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-&Bpb(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-&b&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-&b&-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-&bB(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "-&bB(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&bb(&)&+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "-&bb(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&bpB(&)&+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-&bpB(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-&bpb(&)&+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-&bpb(&)&-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-&h&+": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-&h&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-&hat(_)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&hd(&)^+": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "-&hd(&)^-": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "-&hd(&)_+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-&hd(&)_-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-&hp(&)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&hp(&)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&hp(&)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&hp(&)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-&ita&+": {
+    "k_glider": 22,
+    "k_powered": 17
+  },
+  "-&ita&-": {
+    "k_glider": 23,
+    "k_powered": 18
+  },
+  "-&k^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-&k^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-&k_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-&k_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-&kz^+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-&kz^-": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-&kz_+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-&kz_-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-&n(^)&+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-&n(^)&-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-&n(_)&+": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "-&n(_)&-": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "-&pBb(&)&+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-&pBb(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-&pBpb(&)&+": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "-&pBpb(&)&-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-&pb&+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-&pb&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-&pbB(&)&+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-&pbB(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-&pbb(&)&+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-&pbb(&)&-": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-&pbpB(&)&+": {
+    "k_glider": 25,
+    "k_powered": 25
+  },
+  "-&pbpB(&)&-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-&pbpb(&)&+": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "-&pbpb(&)&-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-&pn(^)&+": {
+    "k_glider": 0,
+    "k_powered": 27
+  },
+  "-&pn(^)&-": {
+    "k_glider": 0,
+    "k_powered": 26
+  },
+  "-&pn(_)&+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-&pn(_)&-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-&rp(^)^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-&rp(^)^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-&rp(^)_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-&rp(^)_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-&rp(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-&rp(_)^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-&rp(_)_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-&rp(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-&rpp(_)^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-&rpp(_)^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-&rpp(_)_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-&rpp(_)_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-&ry^+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-&ry^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-&ry_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-&ry_-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-&ryz^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-&ryz^-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-&ryz_+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-&ryz_-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-&ta&+": {
+    "k_glider": 22,
+    "k_powered": 17
+  },
+  "-&ta&-": {
+    "k_glider": 23,
+    "k_powered": 18
+  },
+  "-&th&+": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-&th&-": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-&vv(_)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-1j-": {
+    "k_glider": 4,
+    "k_powered": 4
+  },
+  "-1j1-": {
+    "k_glider": 20,
+    "k_powered": 15
+  },
+  "-1j5+": {
+    "k_glider": 19,
+    "k_powered": 14
+  },
+  "-1jo1-": {
+    "k_glider": 22,
+    "k_powered": 16
+  },
+  "-1jo5+": {
+    "k_glider": 21,
+    "k_powered": 15
+  },
+  "-2j-": {
+    "k_glider": 5,
+    "k_powered": 5
+  },
+  "-2j1-": {
+    "k_glider": 37,
+    "k_powered": 27
+  },
+  "-2j15+": {
+    "k_glider": 31,
+    "k_powered": 24
+  },
+  "-2j2-": {
+    "k_glider": 31,
+    "k_powered": 23
+  },
+  "-2jio15+": {
+    "k_glider": 37,
+    "k_powered": 26
+  },
+  "-2jio2-": {
+    "k_glider": 38,
+    "k_powered": 26
+  },
+  "-2jio51+": {
+    "k_glider": 40,
+    "k_powered": 27
+  },
+  "-2jo1-": {
+    "k_glider": 41,
+    "k_powered": 29
+  },
+  "-2jo15+": {
+    "k_glider": 35,
+    "k_powered": 26
+  },
+  "-2jo2-": {
+    "k_glider": 35,
+    "k_powered": 25
+  },
+  "-2joi15+": {
+    "k_glider": 39,
+    "k_powered": 27
+  },
+  "-2joi2-": {
+    "k_glider": 38,
+    "k_powered": 26
+  },
+  "-2joi51+": {
+    "k_glider": 39,
+    "k_powered": 26
+  },
+  "-3j-": {
+    "k_glider": 7,
+    "k_powered": 7
+  },
+  "-3j15+": {
+    "k_glider": 47,
+    "k_powered": 34
+  },
+  "-3j3-": {
+    "k_glider": 42,
+    "k_powered": 31
+  },
+  "-3jio15+": {
+    "k_glider": 54,
+    "k_powered": 37
+  },
+  "-3jio3-": {
+    "k_glider": 54,
+    "k_powered": 36
+  },
+  "-3jio51+": {
+    "k_glider": 0,
+    "k_powered": 38
+  },
+  "-3jo15+": {
+    "k_glider": 53,
+    "k_powered": 37
+  },
+  "-3jo3-": {
+    "k_glider": 48,
+    "k_powered": 34
+  },
+  "-3joi15+": {
+    "k_glider": 56,
+    "k_powered": 38
+  },
+  "-3joi3-": {
+    "k_glider": 56,
+    "k_powered": 37
+  },
+  "-3joi51+": {
+    "k_glider": 0,
+    "k_powered": 37
+  },
+  "-4j-": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "-4j1-": {
+    "k_glider": 0,
+    "k_powered": 47
+  },
+  "-4j2-": {
+    "k_glider": 59,
+    "k_powered": 43
+  },
+  "-4j3-": {
+    "k_glider": 53,
+    "k_powered": 40
+  },
+  "-4j4-": {
+    "k_glider": 53,
+    "k_powered": 39
+  },
+  "-4j5+": {
+    "k_glider": 0,
+    "k_powered": 51
+  },
+  "-4jio2-": {
+    "k_glider": 68,
+    "k_powered": 47
+  },
+  "-4jio3-": {
+    "k_glider": 65,
+    "k_powered": 45
+  },
+  "-4jio4-": {
+    "k_glider": 72,
+    "k_powered": 47
+  },
+  "-4jo1-": {
+    "k_glider": 0,
+    "k_powered": 51
+  },
+  "-4jo2-": {
+    "k_glider": 67,
+    "k_powered": 47
+  },
+  "-4jo3-": {
+    "k_glider": 61,
+    "k_powered": 44
+  },
+  "-4jo4-": {
+    "k_glider": 61,
+    "k_powered": 43
+  },
+  "-4jo5+": {
+    "k_glider": 0,
+    "k_powered": 55
+  },
+  "-4joi2-": {
+    "k_glider": 68,
+    "k_powered": 47
+  },
+  "-4joi3-": {
+    "k_glider": 68,
+    "k_powered": 47
+  },
+  "-4joi4-": {
+    "k_glider": 72,
+    "k_powered": 47
+  },
+  "-^+": {
+    "k_glider": 2,
+    "k_powered": 2
+  },
+  "-^a^+": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "-^a_-": {
+    "k_glider": 9,
+    "k_powered": 9
+  },
+  "-^ac(^)^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^ac(^)_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^ac(_)^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-^ac(_)_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^aj^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-^aj_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^ao(_)^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^ao(_)_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-^bz^-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-^bz_+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-^c^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^c_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^cm(^)^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^cm(^)_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^cm(_)^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-^cm(_)_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^db^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^db_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^dh(&)&+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "-^dh(&)&-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-^dhd(&)(&)^+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-^dhd(&)(&)^-": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-^dhd(&)(&)_+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-^dhd(&)(&)_-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-^g^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^g_-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-^gg(^)^+": {
+    "k_glider": 31,
+    "k_powered": 31
+  },
+  "-^gg(^)_-": {
+    "k_glider": 30,
+    "k_powered": 30
+  },
+  "-^gg(_)^-": {
+    "k_glider": 27,
+    "k_powered": 27
+  },
+  "-^gg(_)_+": {
+    "k_glider": 26,
+    "k_powered": 26
+  },
+  "-^iac(^)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^iac(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^iac(_)^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-^iac(_)_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^iao(_)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^iao(_)_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^ibz^-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-^ibz_+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-^ic^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^ic_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^icm(^)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^icm(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^icm(_)^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-^icm(_)_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^idb^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^idb_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^ig^+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^ig_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^igg(^)^+": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-^igg(^)_-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-^igg(_)^-": {
+    "k_glider": 27,
+    "k_powered": 27
+  },
+  "-^igg(_)_+": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-^ioo+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-^ioo^-": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-^ior(_)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^ior(_)_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^ip(^)&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^ip(^)&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^ip(~)&+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^ip(~)&-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^iph(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^iph(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^ipp&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^ipp&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^iq^-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-^iq_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^irao(_)^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^irao(_)_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-^irbz^-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-^irbz_+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-^irc^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^irc_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^ircc(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^ircc(_)_+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "-^irdb^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^irdb_-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^iro(_)^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^iro(_)_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-^irq^-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-^irq_+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-^irzb^-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-^irzb_+": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "-^it&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^it&-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-^itri(^)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^itri(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^itri(_)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^itri(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^iw(&)^+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-^iw(&)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^iw(&)_+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-^iw(&)_-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-^ixa(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^ixm(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^iy&+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-^iy&-": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-^izb^-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-^izb_+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-^izt&+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-^izt&-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-^izy&+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-^izy&-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-^m^+": {
+    "k_glider": 6,
+    "k_powered": 6
+  },
+  "-^m_-": {
+    "k_glider": 7,
+    "k_powered": 7
+  },
+  "-^mj^+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "-^mj_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^oo+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-^oo^-": {
+    "k_glider": 0,
+    "k_powered": 27
+  },
+  "-^or(_)^+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^or(_)_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-^p(^)&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^p(^)&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^p(_)&+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-^p(_)&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^pp(_)&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^pp(_)&-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^q(_)^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^q(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-^rao(_)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^rao(_)_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^rbz^-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-^rbz_+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-^rc^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^rc_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^rcc(^)_-": {
+    "k_glider": 26,
+    "k_powered": 26
+  },
+  "-^rcc(_)_+": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-^rdb^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^rdb_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^ro(_)^+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-^ro(_)_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^rq(_)^-": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "-^rq(_)_+": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "-^rzb^-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-^rzb_+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-^t&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-^t&-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^tri(^)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^tri(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^tri(_)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^tri(_)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^w(&)^+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-^w(&)^-": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "-^w(&)_+": {
+    "k_glider": 21,
+    "k_powered": 21
+  },
+  "-^w(&)_-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-^xa(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^xm(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-^y&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-^y&-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-^zb^-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-^zb_+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-^zt&+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-^zt&-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-^zy&+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-^zy&-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-_-": {
+    "k_glider": 3,
+    "k_powered": 3
+  },
+  "-_a^-": {
+    "k_glider": 7,
+    "k_powered": 7
+  },
+  "-_a_+": {
+    "k_glider": 6,
+    "k_powered": 6
+  },
+  "-_ac(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_ac(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_ac(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_ac(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_aj^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_aj_+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "-_ao(_)^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_ao(_)_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_bz^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-_bz_-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-_c^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_c_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_cc(^)^-": {
+    "k_glider": 26,
+    "k_powered": 26
+  },
+  "-_cc(^)_+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-_cc(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_cc(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_cm(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_cm(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_cm(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_cm(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_co&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_co&-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-_db^-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_db_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_dh(&)&+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-_dh(&)&-": {
+    "k_glider": 0,
+    "k_powered": 25
+  },
+  "-_dhd(&)(&)^+": {
+    "k_glider": 0,
+    "k_powered": 26
+  },
+  "-_dhd(&)(&)^-": {
+    "k_glider": 0,
+    "k_powered": 27
+  },
+  "-_dhd(&)(&)_+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-_dhd(&)(&)_-": {
+    "k_glider": 0,
+    "k_powered": 26
+  },
+  "-_dq_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_g^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_g_+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_gg(^)^-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-_gg(^)_+": {
+    "k_glider": 23,
+    "k_powered": 23
+  },
+  "-_gg(_)^+": {
+    "k_glider": 26,
+    "k_powered": 26
+  },
+  "-_gg(_)_-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-_iac(^)^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_iac(^)_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_iac(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_iac(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_iao(_)^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_iao(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_ibz^+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-_ibz_-": {
+    "k_glider": 0,
+    "k_powered": 13
+  },
+  "-_ic^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_ic_+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "-_icc(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_icc(^)_+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-_icc(_)^+": {
+    "k_glider": 22,
+    "k_powered": 22
+  },
+  "-_icc(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_icm(^)^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_icm(^)_+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_icm(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_icm(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_ico&+": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-_ico&-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-_idb^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_idb_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_idq_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_ig^-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-_ig_+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_igg(^)^-": {
+    "k_glider": 30,
+    "k_powered": 30
+  },
+  "-_igg(^)_+": {
+    "k_glider": 27,
+    "k_powered": 27
+  },
+  "-_igg(_)^+": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-_igg(_)_-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-_ior(_)^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_ior(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_ip(^)&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_ip(^)&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_ip(~)&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_ip(~)&-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_iph(&)&+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_iph(&)&-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_ipp&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_ipp&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_iq^+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_iq_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_irao(_)^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_irao(_)_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_irbz^+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-_irbz_-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_irc^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_irc_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_ircc(^)_+": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-_ircc(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_irdb^-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_irdb_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_iro(_)^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_iro(_)_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_irq^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_irq_-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_irzb^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-_irzb_-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_it&+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_it&-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_itri(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_itri(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_itri(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_itri(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_iw(&)^+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-_iw(&)^-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-_iw(&)_+": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-_iw(&)_-": {
+    "k_glider": 0,
+    "k_powered": 22
+  },
+  "-_ixa(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_ixa(_)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_ixa(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_ixm(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_ixm(_)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_ixm(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_iy&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_iy&-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_izb^+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_izb_-": {
+    "k_glider": 0,
+    "k_powered": 13
+  },
+  "-_izt&+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_izt&-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-_izy&+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-_izy&-": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-_m^-": {
+    "k_glider": 9,
+    "k_powered": 9
+  },
+  "-_m_+": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "-_mj^-": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_mj_+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_or(_)^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_or(_)_+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_p(^)&+": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_p(^)&-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_p(_)&+": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-_p(_)&-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_pp(_)&+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_pp(_)&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_q(_)^+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_q(_)_-": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_rao(_)^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_rao(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_rbz^+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_rbz_-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_rc^-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_rc_+": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "-_rcc(^)_+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-_rcc(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_rdb^-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_rdb_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_ro(_)^-": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-_ro(_)_+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-_rq(_)^+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-_rq(_)_-": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-_rzb^+": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_rzb_-": {
+    "k_glider": 0,
+    "k_powered": 15
+  },
+  "-_t&+": {
+    "k_glider": 13,
+    "k_powered": 13
+  },
+  "-_t&-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-_tri(^)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_tri(^)_+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_tri(_)^+": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_tri(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_w(&)^+": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "-_w(&)^-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-_w(&)_+": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-_w(&)_-": {
+    "k_glider": 0,
+    "k_powered": 21
+  },
+  "-_xa(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_xa(_)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_xa(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_xm(^)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_xm(_)^-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_xm(_)_-": {
+    "k_glider": 20,
+    "k_powered": 20
+  },
+  "-_y&+": {
+    "k_glider": 16,
+    "k_powered": 16
+  },
+  "-_y&-": {
+    "k_glider": 18,
+    "k_powered": 18
+  },
+  "-_zb^+": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-_zb_-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-_zt&+": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-_zt&-": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-_zy&+": {
+    "k_glider": 0,
+    "k_powered": 16
+  },
+  "-_zy&-": {
+    "k_glider": 0,
+    "k_powered": 17
+  },
+  "-d^+": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "-d^-": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "-d_+": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "-d_-": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "-dvd-": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "-dvz+": {
+    "k_glider": 0,
+    "k_powered": 13
+  },
+  "-dz+": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-id^+": {
+    "k_glider": 7,
+    "k_powered": 7
+  },
+  "-id^-": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "-id_+": {
+    "k_glider": 0,
+    "k_powered": 9
+  },
+  "-id_-": {
+    "k_glider": 8,
+    "k_powered": 8
+  },
+  "-idvd-": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "-idvz+": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "-idz+": {
+    "k_glider": 9,
+    "k_powered": 9
+  },
+  "-imm-": {
+    "k_glider": 0,
+    "k_powered": 13
+  },
+  "-imm^+": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "-io^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-io_-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-ioo-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-ioo^+": {
+    "k_glider": 0,
+    "k_powered": 24
+  },
+  "-iooo-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-iooo^+": {
+    "k_glider": 0,
+    "k_powered": 18
+  },
+  "-iqo^+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-iqo_-": {
+    "k_glider": 14,
+    "k_powered": 14
+  },
+  "-iqq-": {
+    "k_glider": 0,
+    "k_powered": 19
+  },
+  "-irqq+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-iv$+": {
+    "k_glider": 9,
+    "k_powered": 9
+  },
+  "-iv$-": {
+    "k_glider": 10,
+    "k_powered": 10
+  },
+  "-iz^+": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "-iz^-": {
+    "k_glider": 0,
+    "k_powered": 10
+  },
+  "-iz_+": {
+    "k_glider": 0,
+    "k_powered": 8
+  },
+  "-iz_-": {
+    "k_glider": 0,
+    "k_powered": 12
+  },
+  "-j-": {
+    "k_glider": 4,
+    "k_powered": 4
+  },
+  "-mm-": {
+    "k_glider": 0,
+    "k_powered": 13
+  },
+  "-mm^+": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "-o^+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-o_-": {
+    "k_glider": 15,
+    "k_powered": 15
+  },
+  "-oo-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-oo^+": {
+    "k_glider": 0,
+    "k_powered": 20
+  },
+  "-ooo-": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-ooo^+": {
+    "k_glider": 0,
+    "k_powered": 26
+  },
+  "-qo^+": {
+    "k_glider": 17,
+    "k_powered": 17
+  },
+  "-qo_-": {
+    "k_glider": 19,
+    "k_powered": 19
+  },
+  "-qq-": {
+    "k_glider": 24,
+    "k_powered": 24
+  },
+  "-rqq+": {
+    "k_glider": 0,
+    "k_powered": 23
+  },
+  "-v&+": {
+    "k_glider": 12,
+    "k_powered": 12
+  },
+  "-v&-": {
+    "k_glider": 11,
+    "k_powered": 11
+  },
+  "-z^+": {
+    "k_glider": 0,
+    "k_powered": 14
+  },
+  "-z^-": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "-z_+": {
+    "k_glider": 0,
+    "k_powered": 11
+  },
+  "-z_-": {
+    "k_glider": 0,
+    "k_powered": 12
+  }
+}

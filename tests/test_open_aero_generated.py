@@ -110,6 +110,36 @@ def test_fixture_metadata_and_patterns_are_well_formed():
         assert figure["k_glider"] >= 0
 
 
+def test_all_parseable_open_aero_k_factors_match_fixture():
+    checked = 0
+
+    for source, parsed in parseable_figures():
+        assert parsed.k_powered == source["k_powered"]
+        assert parsed.k_glider == source["k_glider"]
+        assert parsed.k_factor() == source["k_powered"]
+        assert parsed.k_factor(glider=True) == source["k_glider"]
+        checked += 1
+
+    assert checked == 1127
+
+
+@pytest.mark.parametrize(
+    ("pattern", "k_powered", "k_glider"),
+    [
+        ("-d_-", 8, 8),
+        ("+d_-", 9, 0),
+        ("+2jio15-", 26, 37),
+    ],
+)
+def test_open_aero_k_factor_preserves_definition_context(
+    pattern, k_powered, k_glider
+):
+    parsed = OlanFig.take([pattern])[0]
+
+    assert parsed.k_powered == k_powered
+    assert parsed.k_glider == k_glider
+
+
 def test_fixture_contains_normalized_open_aero_semantics():
     assert all(
         set(figure["semantics"])
