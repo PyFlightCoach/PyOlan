@@ -16,6 +16,18 @@ for figure in FIGURES:
     if figure["base_code"]:
         BY_CODE.setdefault(figure["base_code"], figure)
 
+RENDERER_ONLY_PATTERNS = {
+    "+$ihat(_)&+", "+$ivv(_)&+", "+^itri(^)^-", "+^itri(^)_+",
+    "+^itri(_)^+", "+^itri(_)_-", "+^ixm(_)_+", "+_itri(^)^+",
+    "+_itri(^)_-", "+_itri(_)^-", "+_itri(_)_+", "+_ixm(^)_+",
+    "+_ixm(_)^+", "+_ixm(_)_+", "+idvd+", "+idvz-", "+idz-",
+    "+irqq-", "-$ihat(_)&-", "-$ivv(_)&-", "-^itri(^)^+",
+    "-^itri(^)_-", "-^itri(_)^-", "-^itri(_)_+", "-^ixm(_)_-",
+    "-_itri(^)^-", "-_itri(^)_+", "-_itri(_)^+", "-_itri(_)_-",
+    "-_ixm(^)_-", "-_ixm(_)^-", "-_ixm(_)_-", "-idvd-", "-idvz+",
+    "-idz+", "-irqq+",
+}
+
 
 def parseable_figures():
     seen = set()
@@ -52,6 +64,24 @@ def test_fixture_has_open_aero_provenance():
     assert len(source["revision"]) == 40
     assert source["file"] == "data/figures/figures.js"
     assert FIGURES
+
+
+def test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope():
+    """These inverted renderer variants are not OLAN parser inputs."""
+    unsupported = set()
+    seen = set()
+    for figure in FIGURES:
+        pattern = figure["pattern"]
+        if not figure["base_code"] or pattern in seen:
+            continue
+        seen.add(pattern)
+        try:
+            OlanFig.take([pattern])
+        except Exception:
+            unsupported.add(pattern)
+
+    assert unsupported == RENDERER_ONLY_PATTERNS
+    assert len(unsupported) == 36
 
 
 def test_fixture_contains_k_factors_for_all_definitions():

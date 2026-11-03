@@ -47,6 +47,10 @@ TODO:
 - Render plans distinguish independent rolls (`_`) from embedded looping rolls
   (`!`); use these plans when validating primitive element counts and roll
   placement.
+- The 36 OpenAero patterns whose normalized base code starts with `i` are
+  renderer-only inverted variants, not currently accepted PyOlan OLAN inputs.
+  Their exact scope is guarded by
+  `test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope`.
 - Modify so it respects the correct olan figure directions (prefers turnarounds when there is ambiguity)
 - Consider closer links with open-aero. Would it be better to read .seq files?
 - Add K factor calculation
