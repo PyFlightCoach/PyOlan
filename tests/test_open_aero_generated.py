@@ -611,6 +611,46 @@ def test_all_numeric_rolling_turn_definitions_match_open_aero():
     assert checked >= 40
 
 
+def test_independent_roll_markers_match_parseable_element_slots():
+    checked = 0
+    seen = set()
+
+    for source in FIGURES:
+        pattern = source["pattern"]
+        markers = source["semantics"]["roll_markers"]
+        if (
+            not source["base_code"]
+            or pattern in seen
+            or not markers
+            or not set(markers) <= {"_", "&"}
+            or any(
+                item["kind"] == "embedded_roll"
+                for item in source["semantics"]["render_plan"]
+            )
+        ):
+            continue
+        seen.add(pattern)
+
+        try:
+            parsed = OlanFig.take([pattern])[0]
+        except Exception:
+            continue
+
+        render_rolls = [
+            item
+            for item in source["semantics"]["render_plan"]
+            if item["kind"] == "roll"
+        ]
+        element_rolls = [
+            roll for roll in parsed.element_rolls() if roll is not None
+        ]
+
+        assert len(render_rolls) == len(element_rolls)
+        checked += 1
+
+    assert checked >= 350
+
+
 @pytest.mark.parametrize(
     ("code", "expected"),
     [
