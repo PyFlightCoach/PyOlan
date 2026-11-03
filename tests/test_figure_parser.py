@@ -148,6 +148,12 @@ def test_olan_take_turn_2():
 
 def test_olan_take_compound_rolling_turn_variants():
     cases = [
+        ("1j5", "i", 1 / 4, [ro(5)]),
+        ("1jo5", "o", 1 / 4, [ro(-5)]),
+        ("2j15", "i", 1 / 2, [ro(1.5), ro(0.5)]),
+        ("2jo15", "o", 1 / 2, [ro(-1.5), ro(0.5)]),
+        ("2jio15", "io", 1 / 2, [ro(1), ro(0.5)]),
+        ("2joi15", "oi", 1 / 2, [ro(-1), ro(0.5)]),
         ("3jio3", "io", 3 / 4, [ro(1), ro(-1), ro(1)]),
         ("4jio3", "io", 1, [ro(1), ro(-1), ro(1)]),
         ("4joi4", "oi", 1, [ro(-1), ro(1), ro(-1), ro(1)]),
