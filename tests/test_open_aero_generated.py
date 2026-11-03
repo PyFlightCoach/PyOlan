@@ -651,6 +651,46 @@ def test_independent_roll_markers_match_parseable_element_slots():
     assert checked >= 350
 
 
+def test_turn_render_tokens_match_parseable_turn_elements():
+    checked = 0
+    seen = set()
+
+    for source in FIGURES:
+        pattern = source["pattern"]
+        if not source["base_code"] or pattern in seen:
+            continue
+        seen.add(pattern)
+
+        tokens = [
+            item["token"]
+            for item in source["semantics"]["render_plan"]
+            if item["kind"] == "turn"
+        ]
+        if not tokens:
+            continue
+
+        parsed = OlanFig.take([pattern])[0]
+        turns = [element for element in parsed.fig.oels if element.kind == "Turn"]
+        if len(tokens) != len(turns):
+            continue
+
+        for token, turn in zip(tokens, turns):
+            letters = token[1:]
+            digits = ""
+            rolltype = ""
+            while letters and not letters[0].isdigit():
+                rolltype += letters[0]
+                letters = letters[1:]
+            digits = letters
+            rolltype = rolltype.lower()
+            if rolltype:
+                assert sorted(turn.rolltype) == sorted(rolltype)
+            assert turn.turnamount == int(digits[0]) / 4
+        checked += 1
+
+    assert checked >= 90
+
+
 @pytest.mark.parametrize(
     ("code", "expected"),
     [
