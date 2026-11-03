@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -577,6 +578,37 @@ def test_open_aero_rolling_turn_tokens_match_pyolan(
     assert sum(
         sum(roll.turns()) for roll in parsed.element_rolls() if roll
     ) == roll_total
+
+
+def test_all_numeric_rolling_turn_definitions_match_open_aero():
+    checked = 0
+    seen = set()
+
+    for source in FIGURES:
+        code = source["base_code"]
+        if not code or code in seen:
+            continue
+        match = re.fullmatch(r"([1-4])j(io|oi|i|o)?(\d*)", code)
+        if not match:
+            continue
+        seen.add(code)
+
+        parsed = OlanFig.take([source["pattern"]])[0]
+        turns = [element for element in parsed.fig.oels if element.kind == "Turn"]
+        tokens = [
+            item["token"]
+            for item in source["semantics"]["render_plan"]
+            if item["kind"] == "turn"
+        ]
+        expected_rolltype = match.group(2) or "i"
+
+        assert len(turns) == len(tokens) == 1
+        assert turns[0].turnamount == int(match.group(1)) / 4
+        assert turns[0].rolltype == expected_rolltype
+        assert tokens[0].lower().startswith("j")
+        checked += 1
+
+    assert checked >= 40
 
 
 @pytest.mark.parametrize(
