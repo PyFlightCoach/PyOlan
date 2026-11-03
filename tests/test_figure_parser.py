@@ -146,6 +146,21 @@ def test_olan_take_turn_2():
     assert ofig.final.roll_arr == [ro(-1), ro(1)]
 
 
+def test_olan_take_compound_rolling_turn_variants():
+    cases = [
+        ("3jio3", "io", 3 / 4, [ro(1), ro(-1), ro(1)]),
+        ("4jio3", "io", 1, [ro(1), ro(-1), ro(1)]),
+        ("4joi4", "oi", 1, [ro(-1), ro(1), ro(-1), ro(1)]),
+    ]
+
+    for code, rolltype, turnamount, expected_rolls in cases:
+        ofig = OlanFig.take([code])[0]
+
+        assert ofig.fig.oels[0].rolltype == rolltype
+        assert ofig.fig.oels[0].turnamount == turnamount
+        assert ofig.element_rolls()[0].roll_arr == expected_rolls
+
+
 def test_olan_take_spin():
     ofig = OlanFig.take(["s"])[0]
     assert len(ofig.fig.oels) == 3
