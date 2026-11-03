@@ -84,6 +84,10 @@ def test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope():
     assert len(unsupported) == 36
 
 
+def test_fixture_parseability_boundary_is_stable():
+    assert sum(1 for _ in parseable_figures()) == 1127
+
+
 def test_fixture_contains_k_factors_for_all_definitions():
     assert len(FIGURES) > 1000
     assert all(

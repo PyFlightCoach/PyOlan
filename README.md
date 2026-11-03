@@ -38,8 +38,8 @@ parse an entire olan sequence, join the templates into one and plot:
 ```
 
 TODO:
-- Validate generated geometry and roll placement for the extended OpenAero
-  field codes listed in `tests/test_open_aero_catalog.py`.
+- Extend differential geometry and roll-direction checks to compound OpenAero
+  render plans whose arc decomposition differs from PyOlan's element model.
 - Refresh the pinned OpenAero fixture with:
   `node ../../../OpenAero/tools/export-figure-catalog.js tests/data/openaero/figures.json`.
 - The fixture includes source structural tokens (roll markers and drawing
