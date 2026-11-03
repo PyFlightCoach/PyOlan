@@ -470,7 +470,13 @@ olan_figs.update(
             OFig("Loop and Turn", "loopTurn", "oj", [lo(1, True), tu("i")], True),
             OFig("Loop and Turns", "loopTurns", "oaj|oajj|oajjj|oajjjj", [lo(1, True), li(), lo(-1 / 2), li(), tu("i")], True),
             OFig("Half Barrel Roll", "halfBarrel", "aj|mj", [li(), lo(1 / 2), li()], True),
-            OFig("Hammer P Loop", "hammerPLoop", "hp|ph|pbh", [lo(1 / 4), li(), st(), li(), lo(3 / 4, True), li()], True),
+            OFig(
+                "Hammer P Loop",
+                "hammerPLoop",
+                "hp|ph|pbh",
+                [lo(1 / 4), li(), st(), li(), lo(3 / 4, True), OlanEl("Line", 0, False)],
+                True,
+            ),
             OFig("Tip Head Hammer", "tipHeadHammer", "th", [lo(1 / 4), li(), st(), li(), lo(-1 / 4)], True),
             OFig("Humpty Hammer", "humptyHammer", "bh", [lo(1 / 4), li(), lo(1 / 2), li(), st(), li(), lo(1 / 4)], True),
             OFig("Vertical S", "verticalS", "vs|vis", [lo(1 / 2), li(), lo(-1 / 2)], True),
@@ -483,7 +489,13 @@ olan_figs.update(
                 [lo(1 / 8), li(), lo(-3 / 4), li(), lo(5 / 8), li()],
                 True,
             ),
-            OFig("Cuban Eight Reverse", "reverseCubanEight", "co", [li(), lo(5 / 8), li(), lo(-3 / 4), li(), lo(1 / 8)], True),
+            OFig(
+                "Cuban Eight Reverse",
+                "reverseCubanEight",
+                "co",
+                [li(), lo(5 / 8), li(), lo(-3 / 4), OlanEl("Line", 0, False), lo(1 / 8)],
+                True,
+            ),
         ]
     )
 )
