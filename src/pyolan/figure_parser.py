@@ -366,15 +366,13 @@ class OlanFig:
 
                             if len(rolls[i].roll_arr) > 1:
                                 # TODO need to know if its F3A or IMAC here
-                                pes.append(a.line(length=30))
                                 pes.append(
                                     a.roll(
                                         rolls[i].angles()[1:],
                                         rolltypes=rolls[i].rolltypes()[1:],
-                                        padded=False,
+                                        padded=True,
                                     )
                                 )
-                                pes.append(a.line(length=50))
                             else:
                                 pes.append(a.line())
                             pass

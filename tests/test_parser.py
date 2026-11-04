@@ -128,6 +128,22 @@ def test_figure_n_ends_on_horizontal_line(mb: ManBuilder):
     assert np.sin(fig.template.att.bearing()[-1]) == approx(0)
 
 
+def test_spin_following_roll_has_equal_padding_lines(mb: ManBuilder):
+    fig = parse_olan("(-2,-1) 4% ``-````,5is,2ib````,24'-````", mb)[0]
+
+    assert fig.aresti.elements[0].kind == "spin"
+    assert fig.aresti.elements[1].kind == "roll"
+    assert fig.aresti.elements[1].kwargs["padded"] is True
+
+    padded_lines = [
+        element
+        for element in fig.definition.eds
+        if element.name in {"e_1_pad1", "e_1_pad2"}
+    ]
+    assert [element.name for element in padded_lines] == ["e_1_pad1", "e_1_pad2"]
+    assert padded_lines[0].props["length"] == padded_lines[1].props["length"]
+
+
 def test_tailslide(mb: ManBuilder):
     fig: ParsedOlanFig = parse_olan("~~.,3ita'3....~>", mb)
 
