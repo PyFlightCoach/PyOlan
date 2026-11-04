@@ -82,6 +82,13 @@ def test_rolling_circle_preserves_turn_and_roll_constraints(mb: ManBuilder):
     assert fig.aresti.info.k == 46
 
 
+def test_parse_olan_preserves_open_aero_k_factor(mb: ManBuilder):
+    fig = parse_olan("d_-", mb)[0]
+
+    assert fig.aresti.info.k == 9
+    assert fig.definition.info.k == 9
+
+
 def test_parse_olan_creates_structural_aresti_elements(mb: ManBuilder):
     cases = [
         ("o", ["loop"], [2 * np.pi]),
