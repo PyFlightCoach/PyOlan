@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 from flightanalysis.builders.manbuilder import ManBuilder
 from flightdata import State
 from pytest import approx, fixture
@@ -29,13 +30,33 @@ def test_parse_olan_sets_exit_direction(mb: ManBuilder):
     assert downwind.aresti.info.end.direction == Direction.DOWNWIND
 
 
-def test_turnable_figure_prefers_opposite_exit_direction(mb: ManBuilder):
-    figure = parse_olan(
-        "(-2,0) ``-5is...''iBb(``````)......'8'",
-        mb,
-    )[0]
+@pytest.mark.parametrize(
+    ("olan", "expected_start", "expected_end"),
+    [
+        (
+            "(-2,0) ``-5is...''iBb(``````)......'8'",
+            Direction.UPWIND,
+            Direction.DOWNWIND,
+        ),
+        (
+            "ed (-2,0) ``-5is...''iBb(``````)......'8'",
+            Direction.DOWNWIND,
+            Direction.UPWIND,
+        ),
+        (
+            ">(-2,0) ``-5is...''iBb(``````)......'8'",
+            Direction.UPWIND,
+            Direction.UPWIND,
+        ),
+    ],
+)
+def test_turnable_figure_direction_selection(
+    mb: ManBuilder, olan: str, expected_start: Direction, expected_end: Direction
+):
+    figure = parse_olan(olan, mb)[0]
 
-    assert figure.aresti.info.end.direction == Direction.DOWNWIND
+    assert figure.aresti.info.start.direction == expected_start
+    assert figure.aresti.info.end.direction == expected_end
 
 
 def test_create_unl_loop_definition(mb: ManBuilder):
@@ -89,6 +110,20 @@ def test_rolling_circle_preserves_turn_and_roll_constraints(mb: ManBuilder):
         approx(2 * np.pi),
     ]
     assert fig.aresti.info.k == 46
+
+
+def test_rolling_circle_exposes_both_turn_and_roll_options(mb: ManBuilder):
+    fig = parse_olan("(5,0) 4% 3jo3", mb)[0]
+
+    assert fig.aresti.ndmps == {
+        "roll_option": [
+            [3 * np.pi / 2, -6 * np.pi],
+            [-3 * np.pi / 2, 6 * np.pi],
+        ]
+    }
+    loop = fig.aresti.elements[0]
+    assert loop.args == ["roll_option[0]"]
+    assert loop.kwargs["rolls"] == "roll_option[1]"
 
 
 def test_parse_olan_preserves_open_aero_k_factor(mb: ManBuilder):

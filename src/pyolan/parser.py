@@ -32,7 +32,15 @@ def _roll_ndmps(olanfig: OlanFig) -> dict[str, list[list[float]]]:
         if roll is None or not roll.roll_arr:
             continue
         angles.extend(np.atleast_1d(roll.angles()).astype(float).tolist())
-    return {"roll_option": [angles]} if angles else {}
+    options: list[list[float]] = [angles]
+    if (
+        angles
+        and olanfig.fig.chars in {"j", "ji", "jo", "jio", "joi"}
+        and len(angles) == 1
+    ):
+        turn = olanfig.fig.oels[0].turnamount * 2 * np.pi
+        options = [[turn, angles[0]], [-turn, -angles[0]]]
+    return {"roll_option": options} if angles else {}
 
 
 def parse_olan(
@@ -55,9 +63,8 @@ def parse_olan(
         ]:
             _suffix = int(_suffix) + 1 if len(_suffix) else "2"
 
-        # Take the initial heading from the end of the previous figure if possible
-        # if not infer it from the wind direction and the draw parameters (default to upwind)
-        # TODO this should prefer a turnaround if possible
+        # Take the initial heading from the end of the previous figure if possible;
+        # otherwise infer it from the wind direction and drawing parameters.
         entry_heading = (
             p.Heading.infer(itrans.att.bearing()[-1])
             if itrans
@@ -71,7 +78,7 @@ def parse_olan(
             info=olanfig.create_maninfo(
                 f"{olanfig.fig.short_name}{_suffix}", entry_direction, None
             ),
-            elements=olanfig.create_elements(),
+            elements=olanfig.create_elements(use_roll_options=True),
             ndmps=_roll_ndmps(olanfig),
         )
 

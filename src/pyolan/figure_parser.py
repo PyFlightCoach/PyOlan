@@ -478,7 +478,7 @@ class OlanFig:
 
         return loops
 
-    def create_elements(self) -> list[a.PE]:
+    def create_elements(self, use_roll_options: bool = False) -> list[a.PE]:
         pes: list[a.PE] = []
 
         rolls = self.element_rolls()
@@ -537,10 +537,21 @@ class OlanFig:
                     pes.append(a.spin(rolls[i].roll_arr[0].turns * 2 * np.pi))
                 case "Turn":
                     if self.final:
+                        angle = el.turnamount * np.pi * 2
+                        rolls = self.final.angles()
+                        if use_roll_options and self.fig.chars in {
+                            "j",
+                            "ji",
+                            "jo",
+                            "jio",
+                            "joi",
+                        } and len(np.atleast_1d(rolls)) == 1:
+                            angle = "roll_option[0]"
+                            rolls = "roll_option[1]"
                         pes.append(
                             a.loop(
-                                el.turnamount * np.pi * 2,
-                                rolls=self.final.angles(),
+                                angle,
+                                rolls=rolls,
                                 ke=np.pi / 2,
                             )
                         )

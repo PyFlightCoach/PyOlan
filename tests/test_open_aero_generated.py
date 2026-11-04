@@ -730,6 +730,30 @@ def test_open_aero_rolls_preserve_signed_loop_directions(
     ] == expected_roll_types
 
 
+@pytest.mark.parametrize(
+    ("pattern", "expected_loop_angles"),
+    [
+        ("+&h&+", [90, 90]),
+        ("+&h&-", [90, -90]),
+        ("+&ta&+", [90, 90]),
+        ("-&ta&+", [-90, 90]),
+        ("+_dhd(&)(&)_+", [45, 45, 45, 45]),
+        ("+&hd(&)_+", [90, 45, 45]),
+        ("+&ita&+", [90, 90]),
+    ],
+)
+def test_open_aero_special_and_compound_roll_directions(
+    pattern, expected_loop_angles
+):
+    parsed = OlanFig.take([pattern])[0]
+
+    assert [
+        round(element.args[0] * 180 / 3.141592653589793)
+        for element in parsed.create_elements()
+        if element.kind == "loop"
+    ] == expected_loop_angles
+
+
 def test_turn_render_tokens_match_parseable_turn_elements():
     checked = 0
     seen = set()

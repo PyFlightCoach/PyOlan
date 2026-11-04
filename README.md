@@ -68,14 +68,22 @@ When a parsed figure contains numeric roll slots, `parse_olan` also emits the
 roll angles in the Aresti definition's `ndmps["roll_option"]` metadata. Empty
 marker-only slots are omitted.
 
-Remaining work
+Rolling-circle figures with a single roll expose paired turn and roll choices
+in the same combination parameter. For example, `3jo3` emits
+`[[3*pi/2, -6*pi], [-3*pi/2, 6*pi]]`; the loop angle references column zero
+and its roll references column one.
+
+Testing status
 --------------
 
-- Extend differential roll-direction checks to more compound OpenAero render
-  plans; canonical signed cases and geometry decomposition for `dz`, `dvz`, and
-  `dvd` are covered.
-- Prefer turnarounds when `parse_olan` has an ambiguous direction choice.
-- Add other inter-figure constraints to generated Aresti definitions.
+- OpenAero differential coverage includes signed, inverted, special-figure,
+  multi-roll, and rolling-circle cases.
+- Ambiguous turnable figures prefer an exit direction opposite to entry when
+  no explicit exit marker overrides it.
+
+Deferred work
+-------------
+
 - Consider whether direct `.seq` integration is preferable to the pinned
   catalogue for some workflows.
 - Improve template positioning where this belongs in FlightAnalysis.
