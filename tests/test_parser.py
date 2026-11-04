@@ -101,6 +101,32 @@ def test_parse_olan_creates_structural_aresti_elements(mb: ManBuilder):
         ] == loop_angles
 
 
+def test_figure_n_ends_on_vertical_down_line(mb: ManBuilder):
+    fig = parse_olan("7% `-''if..in(```3,34.)''-~", mb)[0]
+
+    assert [element.kind for element in fig.aresti.elements] == [
+        "loop",
+        "roll",
+        "loop",
+        "roll",
+        "loop",
+        "line",
+        "loop",
+    ]
+    assert [
+        element.args[0]
+        for element in fig.aresti.elements
+        if element.kind == "loop"
+    ] == [
+        approx(np.pi / 2),
+        approx(3 * np.pi / 4),
+        approx(-3 * np.pi / 4),
+        approx(-np.pi / 2),
+    ]
+    assert fig.aresti.elements[-1].args == [approx(-np.pi / 2)]
+    assert fig.aresti.elements[3].kwargs["rolltypes"] == "roll"
+
+
 def test_tailslide(mb: ManBuilder):
     fig: ParsedOlanFig = parse_olan("~~.,3ita'3....~>", mb)
 
