@@ -1,12 +1,14 @@
 from pathlib import Path
-import numpy as np
 
+import numpy as np
+from flightanalysis.builders.manbuilder import ManBuilder
+from flightdata import State
 from pytest import approx, fixture
 from schemas.positioning import Direction, Heading
 from tuning.builders import load_builder
-from flightanalysis.builders.manbuilder import ManBuilder
+
 from pyolan.parser import ParsedOlanFig, parse_olan
-from flightdata import State
+
 
 @fixture(scope="session")
 def mb() -> ManBuilder:
@@ -47,8 +49,27 @@ def test_turn(mb: ManBuilder):
     assert fig.aresti.elements[0].kind == "roll"
     assert fig.aresti.elements[1].kind == "loop"
     assert fig.aresti.elements[1].kwargs["ke"] == approx(np.radians(30))
+    assert fig.aresti.elements[0].args == [approx(np.radians(60))]
+    assert fig.aresti.elements[2].args == [approx(np.radians(-60))]
+    assert fig.aresti.info.k == 6
 
     assert fig.definition.eds[2].props["ke"] == approx(np.radians(30))
+
+
+def test_rolling_circle_preserves_turn_and_roll_constraints(mb: ManBuilder):
+    fig: ParsedOlanFig = parse_olan("4joi4", mb)[0]
+    element = fig.aresti.elements[0]
+
+    assert element.kind == "loop"
+    assert element.args == [approx(2 * np.pi)]
+    assert element.kwargs["ke"] == approx(np.pi / 2)
+    assert element.kwargs["rolls"] == [
+        approx(-2 * np.pi),
+        approx(2 * np.pi),
+        approx(-2 * np.pi),
+        approx(2 * np.pi),
+    ]
+    assert fig.aresti.info.k == 46
 
 
 def test_tailslide(mb: ManBuilder):

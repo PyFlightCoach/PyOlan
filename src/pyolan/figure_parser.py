@@ -58,14 +58,22 @@ class OlanFig:
         return len(self.fig.oels)
 
     def _catalogue_pattern(self) -> str:
-        body = self.rawfig.strip("-+")
+        body = self.rawfig
+        if body.startswith(("-", "+")):
+            body = body[1:]
+        if body.endswith(("-", "+")):
+            body = body[:-1]
         entry = "-" if self.entry == p.Orientation.INVERTED else "+"
         exit = "-" if self.exit == p.Orientation.INVERTED else "+"
         return f"{entry}{body}{exit}"
 
     def k_factor(self, glider: bool = False) -> int:
         """Return the OpenAero K factor for this exact figure definition."""
-        pattern = self.source_pattern or self._catalogue_pattern()
+        pattern = (
+            self.source_pattern
+            if self.source_pattern.startswith(("-", "+"))
+            else self._catalogue_pattern()
+        )
         try:
             values = _open_aero_k_factors()[pattern]
         except KeyError as exc:
@@ -191,7 +199,7 @@ class OlanFig:
             p.Orientation.INVERTED if rawfig.endswith("-") else p.Orientation.UPRIGHT,
             entry_direction,
             re.match(r">", d) is not None,
-            d,
+            d if d.startswith(("-", "+")) else "",
         ), data[i + 1 :]
 
     def create_info(self):
@@ -409,10 +417,14 @@ class OlanFig:
         entry_direction: p.Direction = None,
         exit_direction: p.Direction = None,
     ) -> a.ManInfo:
+        try:
+            k_factor = self.k_powered
+        except ValueError:
+            k_factor = 10
         return ManInfo.build(
             self.fig.name,
             short_name or self.fig.short_name,
-            10,
+            k_factor,
             p.Position.CENTRE if entry_direction == exit_direction else p.Position.END,
             p.BoxLocation(
                 direction=entry_direction
