@@ -101,7 +101,7 @@ def test_parse_olan_creates_structural_aresti_elements(mb: ManBuilder):
         ] == loop_angles
 
 
-def test_figure_n_ends_on_vertical_down_line(mb: ManBuilder):
+def test_figure_n_ends_on_horizontal_line(mb: ManBuilder):
     fig = parse_olan("7% `-''if..in(```3,34.)''-~", mb)[0]
 
     assert [element.kind for element in fig.aresti.elements] == [
@@ -125,6 +125,7 @@ def test_figure_n_ends_on_vertical_down_line(mb: ManBuilder):
     ]
     assert fig.aresti.elements[-1].args == [approx(-np.pi / 2)]
     assert fig.aresti.elements[3].kwargs["rolltypes"] == "roll"
+    assert np.sin(fig.template.att.bearing()[-1]) == approx(0)
 
 
 def test_tailslide(mb: ManBuilder):
