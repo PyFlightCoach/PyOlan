@@ -694,6 +694,34 @@ def test_independent_roll_markers_match_parseable_element_slots():
     assert checked >= 350
 
 
+@pytest.mark.parametrize(
+    ("pattern", "expected_loop_angles", "expected_roll_types"),
+    [
+        ("+d_-", [45, 45], ["roll"]),
+        ("-d_-", [-45, 45], ["roll"]),
+        ("+v&+", [90, -90], ["roll"]),
+        ("+&n(_)&+", [90, 135, -135, -90], ["roll", "roll", "roll"]),
+    ],
+)
+def test_open_aero_rolls_preserve_signed_loop_directions(
+    pattern, expected_loop_angles, expected_roll_types
+):
+    """Roll placement must retain the OpenAero attitude-dependent signs."""
+    parsed = OlanFig.take([pattern])[0]
+    elements = parsed.create_elements()
+
+    assert [
+        round(element.args[0] * 180 / 3.141592653589793)
+        for element in elements
+        if element.kind == "loop"
+    ] == expected_loop_angles
+    assert [
+        roll.rolltypes()
+        for roll in parsed.element_rolls()
+        if roll is not None
+    ] == expected_roll_types
+
+
 def test_turn_render_tokens_match_parseable_turn_elements():
     checked = 0
     seen = set()
