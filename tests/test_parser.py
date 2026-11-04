@@ -82,6 +82,25 @@ def test_rolling_circle_preserves_turn_and_roll_constraints(mb: ManBuilder):
     assert fig.aresti.info.k == 46
 
 
+def test_parse_olan_creates_structural_aresti_elements(mb: ManBuilder):
+    cases = [
+        ("o", ["loop"], [2 * np.pi]),
+        ("d", ["loop", "line", "loop"], [np.pi / 4, -np.pi / 4]),
+        ("h", ["loop", "line", "stallturn", "line", "loop"], [np.pi / 2, np.pi / 2]),
+        ("ta", ["loop", "line", "tailslide", "line", "loop"], [np.pi / 2, np.pi / 2]),
+    ]
+
+    for code, kinds, loop_angles in cases:
+        elements = parse_olan(code, mb)[0].aresti.elements
+
+        assert [element.kind for element in elements] == kinds
+        assert [
+            element.args[0]
+            for element in elements
+            if element.kind == "loop"
+        ] == loop_angles
+
+
 def test_tailslide(mb: ManBuilder):
     fig: ParsedOlanFig = parse_olan("~~.,3ita'3....~>", mb)
 
