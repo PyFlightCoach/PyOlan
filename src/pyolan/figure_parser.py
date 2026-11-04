@@ -351,7 +351,7 @@ class OlanFig:
                                     rolltypes=rolls[i].rolltypes(),
                                     rollangle=np.radians(90),
                                 )
-                                if rolls[i]
+                                if rolls[i] and rolls[i].roll_arr
                                 else {}
                             ),
                         )

@@ -134,6 +134,15 @@ def test_olan_take_only_roll():
     assert isinstance(els[0], a.PE)
 
 
+def test_marker_only_roll_slot_is_treated_as_no_roll():
+    ofig = OlanFig.take(["+o_+"])[0]
+
+    assert ofig.element_rolls()[0].roll_arr == []
+    assert [(element.kind, element.args, element.kwargs) for element in ofig.create_elements()] == [
+        ("loop", [2 * np.pi], {})
+    ]
+
+
 def test_create_roll_element_preserves_roll_metadata():
     element = OlanFig.take(["22"])[0].create_elements()[0]
 
