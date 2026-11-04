@@ -37,25 +37,39 @@ parse an entire olan sequence, join the templates into one and plot:
     template.plotlabels("manoeuvre").show()
 ```
 
-TODO:
+OpenAero compatibility
+----------------------
+
+PyOlan keeps a pinned OpenAero catalogue at
+`tests/data/openaero/figures.json`. It contains normalized attitudes, drawing
+shapes, roll markers, render plans, and K factors without making OpenAero a
+runtime dependency. Refresh it from a clean OpenAero checkout with:
+
+```
+node ../../../OpenAero/tools/export-figure-catalog.js \
+    tests/data/openaero/figures.json
+```
+
+Render plans distinguish independent rolls (`_`) from embedded looping rolls
+(`!`). The compatibility tests use this distinction when checking primitive
+element counts and roll placement. The 36 renderer-only inverted variants are
+explicitly excluded from PyOlan parsing and covered by
+`test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope`.
+
+Parsed catalogue definitions expose their OpenAero K factors through
+`OlanFig.k_powered`, `OlanFig.k_glider`, or
+`OlanFig.k_factor(glider=True)`. Lookup is exact-definition based because K
+factors vary with orientation and roll pattern; unknown/custom OLAN patterns
+raise `ValueError`.
+
+Remaining work
+--------------
+
 - Extend differential geometry and roll-direction checks to compound OpenAero
   render plans whose arc decomposition differs from PyOlan's element model.
-- Refresh the pinned OpenAero fixture with:
-  `node ../../../OpenAero/tools/export-figure-catalog.js tests/data/openaero/figures.json`.
-- The fixture includes source structural tokens (roll markers and drawing
-  shapes) for differential checks without making OpenAero a runtime dependency.
-- Render plans distinguish independent rolls (`_`) from embedded looping rolls
-  (`!`); use these plans when validating primitive element counts and roll
-  placement.
-- The 36 OpenAero patterns whose normalized base code starts with `i` are
-  renderer-only inverted variants, not currently accepted PyOlan OLAN inputs.
-  Their exact scope is guarded by
-  `test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope`.
-- Modify so it respects the correct olan figure directions (prefers turnarounds when there is ambiguity)
-- Consider closer links with open-aero. Would it be better to read .seq files?
-- Parsed catalogue definitions expose their OpenAero K factors through
- `OlanFig.k_powered`, `OlanFig.k_glider`, or `OlanFig.k_factor(glider=True)`.
- Lookup is exact-definition based because K factors vary with orientation and
- roll pattern; unknown/custom OLAN patterns raise `ValueError`.
-- Think about positioning the generated templates so they fit in the box better (probably better handled in the FlightAnalysis submodule).
-- 
+- Prefer turnarounds when `parse_olan` has an ambiguous direction choice.
+- Add roll-direction and other inter-figure constraints to generated Aresti
+  definitions.
+- Consider whether direct `.seq` integration is preferable to the pinned
+  catalogue for some workflows.
+- Improve template positioning where this belongs in FlightAnalysis.
