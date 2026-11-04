@@ -701,6 +701,14 @@ def test_independent_roll_markers_match_parseable_element_slots():
         ("-d_-", [-45, 45], ["roll"]),
         ("+v&+", [90, -90], ["roll"]),
         ("+&n(_)&+", [90, 135, -135, -90], ["roll", "roll", "roll"]),
+        ("+id_+", [-45, 45], ["roll"]),
+        ("-id_-", [45, -45], ["roll"]),
+        ("+d^-", [45, 45], []),
+        ("-d^+", [-45, -45], []),
+        ("+z_+", [135, -135], ["roll"]),
+        ("-z_-", [-135, 135], ["roll"]),
+        ("+iv$+", [-90, 90], ["roll"]),
+        ("-iv$-", [90, -90], ["roll"]),
     ],
 )
 def test_open_aero_rolls_preserve_signed_loop_directions(

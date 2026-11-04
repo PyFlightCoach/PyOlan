@@ -83,6 +83,7 @@ def parse_olan(
             itrans = g.Transformation(g.Euler(olanfig.entry, 0, entry_heading), g.P0())
 
         tp = State.stack(man.create_template(itrans), "element")
+        exit_direction = None
 
         if np.any(olanfig.can_swap_exit()) and p.Heading.infer(
             tp.att.bearing()[-1]
@@ -92,11 +93,17 @@ def parse_olan(
         ]:
             # If there is a 1/4 roll on a vertical line make sure the next manoeuvre
             # starts in the correct direction
+            exit_heading = (
+                entry_heading.reverse()
+                if olanfig.fig.turnable is not None and not olanfig.exit_downwind
+                else (p.Heading.LTOR if olanfig.exit_downwind else p.Heading.RTOL)
+            )
+            exit_direction = p.Direction.parse_heading(exit_heading, wind)
             itrans = g.Transformation(
                 g.Euler(
                     olanfig.entry,
                     0,
-                    p.Heading.LTOR if olanfig.exit_downwind else p.Heading.RTOL,
+                    exit_heading,
                 )
             )
 
@@ -108,7 +115,7 @@ def parse_olan(
         arestifig.info = olanfig.create_maninfo(
             f"{olanfig.fig.short_name}{_suffix}",
             entry_direction,
-            p.Direction.parse_heading(tp.att.bearing()[-1], wind),
+            exit_direction or p.Direction.parse_heading(tp.att.bearing()[-1], wind),
         )
 
         figs.append(ParsedOlanFig(olanfig, arestifig, mdef, man, tp))

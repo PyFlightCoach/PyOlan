@@ -29,6 +29,15 @@ def test_parse_olan_sets_exit_direction(mb: ManBuilder):
     assert downwind.aresti.info.end.direction == Direction.DOWNWIND
 
 
+def test_turnable_figure_prefers_opposite_exit_direction(mb: ManBuilder):
+    figure = parse_olan(
+        "(-2,0) ``-5is...''iBb(``````)......'8'",
+        mb,
+    )[0]
+
+    assert figure.aresti.info.end.direction == Direction.DOWNWIND
+
+
 def test_create_unl_loop_definition(mb: ManBuilder):
 
     ofig: ParsedOlanFig = parse_olan("`+o34;5f+`", mb)[0]
