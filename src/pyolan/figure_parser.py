@@ -432,5 +432,5 @@ class OlanFig:
                 else self.entry_direction,
                 orientation=self.entry,
             ),
-            p.BoxLocation(orientation=self.exit),
+            p.BoxLocation(direction=exit_direction, orientation=self.exit),
         )

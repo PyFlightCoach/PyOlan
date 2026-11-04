@@ -19,6 +19,16 @@ def test_entry_direction(mb: ManBuilder):
     assert ofigs[0].aresti.info.start.direction == Direction.UPWIND
 
 
+def test_parse_olan_sets_exit_direction(mb: ManBuilder):
+    upwind = parse_olan("d", mb)[0]
+    downwind = parse_olan("ed v", mb)[0]
+
+    assert upwind.aresti.info.start.direction == Direction.UPWIND
+    assert upwind.aresti.info.end.direction == Direction.UPWIND
+    assert downwind.aresti.info.start.direction == Direction.DOWNWIND
+    assert downwind.aresti.info.end.direction == Direction.DOWNWIND
+
+
 def test_create_unl_loop_definition(mb: ManBuilder):
 
     ofig: ParsedOlanFig = parse_olan("`+o34;5f+`", mb)[0]
