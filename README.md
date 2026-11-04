@@ -65,8 +65,8 @@ raise `ValueError`.
 Remaining work
 --------------
 
-- Extend differential geometry and roll-direction checks to compound OpenAero
-  render plans whose arc decomposition differs from PyOlan's element model.
+- Extend differential roll-direction checks to compound OpenAero render plans;
+  geometry decomposition checks now cover `dz`, `dvz`, and `dvd`.
 - Prefer turnarounds when `parse_olan` has an ambiguous direction choice.
 - Add roll-direction and other inter-figure constraints to generated Aresti
   definitions.

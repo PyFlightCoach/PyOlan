@@ -1,5 +1,6 @@
 import json
 import re
+from math import degrees
 from pathlib import Path
 
 import pytest
@@ -786,3 +787,37 @@ def test_open_aero_extended_loop_family_semantics(code, expected):
     ]
 
     assert actual == expected
+
+
+@pytest.mark.parametrize(
+    ("code", "expected_kinds", "expected_angles"),
+    [
+        (
+            "dz",
+            ["loop", "line", "loop", "loop", "line", "loop"],
+            [45, -45, 135, -135],
+        ),
+        (
+            "dvz",
+            ["loop", "line", "loop", "loop", "line", "loop", "loop", "line", "loop"],
+            [90, -90, 90, -90, 90, -90],
+        ),
+        (
+            "dvd",
+            ["loop", "line", "loop", "loop", "line", "loop", "loop", "line", "loop"],
+            [90, -90, -90, 90, -90, 90],
+        ),
+    ],
+)
+def test_compound_geometry_preserves_pyolan_loop_decomposition(
+    code, expected_kinds, expected_angles
+):
+    """Adjacent OpenAero arcs are represented as separate PyOlan loop elements."""
+    elements = OlanFig.take([code])[0].create_elements()
+
+    assert [element.kind for element in elements] == expected_kinds
+    assert [
+        round(degrees(element.args[0]))
+        for element in elements
+        if element.kind == "loop"
+    ] == expected_angles
