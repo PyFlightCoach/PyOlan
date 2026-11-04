@@ -134,10 +134,31 @@ def test_olan_take_only_roll():
     assert isinstance(els[0], a.PE)
 
 
+def test_create_roll_element_preserves_roll_metadata():
+    element = OlanFig.take(["22"])[0].create_elements()[0]
+
+    assert element.kind == "roll"
+    assert element.args == ["2x2"]
+    assert element.kwargs == {"rolltypes": "roll", "padded": False}
+
+
 def test_olan_take_turn():
     ofig = OlanFig.take(["j"])[0]
     els = ofig.create_elements()
     assert len(els) == 3
+
+
+def test_create_rolling_turn_preserves_angles_and_ke():
+    for code, expected_rolls in [
+        ("1j5", [np.radians(1800)]),
+        ("1jo5", [np.radians(-1800)]),
+    ]:
+        element = OlanFig.take([code])[0].create_elements()[0]
+
+        assert element.kind == "loop"
+        assert element.args == [np.radians(90)]
+        np.testing.assert_allclose(element.kwargs["rolls"], expected_rolls[0])
+        assert element.kwargs["ke"] == np.radians(90)
 
 
 def test_olan_take_turn_2():
@@ -173,6 +194,28 @@ def test_olan_take_spin():
     assert ofig.prefix.roll_arr[0].turns == 1
     loop_amounts = ofig.loop_amounts(ofig.element_rolls())
     np.testing.assert_array_equal(loop_amounts, [-0.25, 0, 0.25])
+
+
+def test_create_spin_elements_preserves_spin_angle_and_following_geometry():
+    elements = OlanFig.take(["s"])[0].create_elements()
+
+    assert [(element.kind, element.args) for element in elements] == [
+        ("spin", [np.radians(360)]),
+        ("line", []),
+        ("loop", [np.radians(90)]),
+    ]
+
+
+def test_create_stallturn_and_tailslide_directions():
+    stallturn = OlanFig.take(["h"])[0].create_elements()[2]
+    tailslides = [
+        OlanFig.take([code])[0].create_elements()[2] for code in ("ta", "ita")
+    ]
+
+    assert stallturn.kind == "stallturn"
+    assert stallturn.args == []
+    assert [element.kind for element in tailslides] == ["tailslide", "tailslide"]
+    assert [element.args for element in tailslides] == [[1], [-1]]
 
 
 def test_create_unl_loop():
