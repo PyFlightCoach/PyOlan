@@ -89,6 +89,37 @@ def test_parse_olan_preserves_open_aero_k_factor(mb: ManBuilder):
     assert fig.definition.info.k == 9
 
 
+def test_parse_olan_matches_open_aero_compound_figure_k_factors(mb: ManBuilder):
+    olan = (
+        "3% /+`,2ifpbb(````````,34...)'22`-~~ "
+        "(-2,-1) 4% ``-````,5is,2ib````,24'-```` "
+        "7% `-''if..in(```3,34.)''-~ (1,0) "
+        "2% -```2ac(....',\"|\"32.....')-` "
+        "2% -`,5,\"|\"34p(22).',24....''+++~ (3,0) "
+        '"@C" 5% \',9m6f,48---~~ [1,0] '
+        "6% /-''ita'',3if.+````` 5% ,22b.'',3f+++ "
+        '3% \'\',22m2if "@E" 3% /``+3joi3+'
+    )
+
+    figures = parse_olan(olan, mb)
+
+    assert [figure.aresti.info.k for figure in figures] == [
+        61, 32, 56, 31, 43, 39, 30, 37, 30, 36
+    ]
+
+
+def test_parse_olan_generates_roll_options_in_ndmps(mb: ManBuilder):
+    fig = parse_olan("d1", mb)[0]
+
+    assert fig.aresti.ndmps == {"roll_option": [[2 * np.pi]]}
+
+
+def test_parse_olan_omits_empty_roll_options(mb: ManBuilder):
+    fig = parse_olan("+o_+", mb)[0]
+
+    assert fig.aresti.ndmps == {}
+
+
 def test_parse_olan_creates_structural_aresti_elements(mb: ManBuilder):
     cases = [
         ("o", ["loop"], [2 * np.pi]),

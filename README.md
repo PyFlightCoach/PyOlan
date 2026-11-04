@@ -64,6 +64,10 @@ Parsed catalogue definitions expose their OpenAero K factors through
 factors vary with orientation and roll pattern; unknown/custom OLAN patterns
 raise `ValueError`.
 
+When a parsed figure contains numeric roll slots, `parse_olan` also emits the
+roll angles in the Aresti definition's `ndmps["roll_option"]` metadata. Empty
+marker-only slots are omitted.
+
 Remaining work
 --------------
 
@@ -71,8 +75,7 @@ Remaining work
   plans; canonical signed cases and geometry decomposition for `dz`, `dvz`, and
   `dvd` are covered.
 - Prefer turnarounds when `parse_olan` has an ambiguous direction choice.
-- Add roll-direction and other inter-figure constraints to generated Aresti
-  definitions.
+- Add other inter-figure constraints to generated Aresti definitions.
 - Consider whether direct `.seq` integration is preferable to the pinned
   catalogue for some workflows.
 - Improve template positioning where this belongs in FlightAnalysis.

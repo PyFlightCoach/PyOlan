@@ -26,6 +26,15 @@ class ParsedOlanFig:
         return self.aresti.info.short_name
 
 
+def _roll_ndmps(olanfig: OlanFig) -> dict[str, list[list[float]]]:
+    angles = []
+    for roll in olanfig.element_rolls():
+        if roll is None or not roll.roll_arr:
+            continue
+        angles.extend(np.atleast_1d(roll.angles()).astype(float).tolist())
+    return {"roll_option": [angles]} if angles else {}
+
+
 def parse_olan(
     data: str, mb: ManBuilder, wind: p.Heading = p.Heading.LTOR
 ) -> list[ParsedOlanFig]:
@@ -63,7 +72,7 @@ def parse_olan(
                 f"{olanfig.fig.short_name}{_suffix}", entry_direction, None
             ),
             elements=olanfig.create_elements(),
-            ndmps={},  # TODO consider some roll direction linking and also unusual inter criteria.
+            ndmps=_roll_ndmps(olanfig),
         )
 
         mdef = mb.create_mdef(arestifig)

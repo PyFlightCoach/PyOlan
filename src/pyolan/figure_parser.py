@@ -37,6 +37,12 @@ def _open_aero_k_factors() -> dict[str, dict[str, int]]:
     )
 
 
+def _open_aero_roll_k_factors() -> dict[str, dict[str, int]]:
+    return json.loads(
+        files("pyolan.data").joinpath("openaero_roll_k_factors.json").read_text()
+    )
+
+
 @dataclass
 class OlanFig:
     draw: list[str]
@@ -77,10 +83,149 @@ class OlanFig:
         try:
             values = _open_aero_k_factors()[pattern]
         except KeyError as exc:
-            raise ValueError(
-                f"No OpenAero K factor is registered for OLAN pattern {pattern!r}"
-            ) from exc
+            try:
+                return self._calculated_k_factor(glider)
+            except ValueError:
+                raise ValueError(
+                    f"No OpenAero K factor is registered for OLAN pattern {pattern!r}"
+                ) from exc
         return values["k_glider" if glider else "k_powered"]
+
+    def _calculated_k_factor(self, glider: bool) -> int:
+        factors = _open_aero_k_factors()
+        bases = self.fig.chars.split("|")
+        bases += [f"i{base}" for base in bases if f"i{base}" in self.rawfig]
+        entry = "-" if self.entry == p.Orientation.INVERTED else "+"
+        exit = "-" if self.exit == p.Orientation.INVERTED else "+"
+        element_rolls = self.element_rolls()
+        rolls = [
+            element_rolls[i]
+            for i, element in enumerate(self.fig.oels)
+            if element.canRoll
+        ]
+        candidates = []
+        for pattern, values in factors.items():
+            if not pattern.startswith(entry) or not pattern.endswith(exit):
+                continue
+            body = pattern[1:-1]
+            markers = re.findall(r"[_^&$~]", body)
+            candidate_base = re.sub(r"[\(\)_^&$~]", "", body)
+            if candidate_base not in bases or len(markers) != len(rolls):
+                continue
+            score = 0
+            for marker, roll in zip(markers, rolls):
+                if roll is None or not roll.roll_arr:
+                    score += 1
+                elif marker in ("&", "$"):
+                    score += 2 if marker == "&" else 3
+                elif marker == "^" and roll.rolltypes() == "roll":
+                    score += 4
+                elif marker == "_":
+                    score += 4 if roll.total() >= 1 else 1
+                else:
+                    break
+            else:
+                candidates.append((score, pattern, values, markers))
+        if not candidates:
+            raise ValueError(f"No OpenAero base figure for {bases!r}")
+
+        preferred_patterns = {
+            "-,5is,2ib,24-": "-$ib&-",
+            "-ifin(3,34)-": "-$in(_)&-",
+            '-2ac(,"|"32)-': "-^ac(^)_-",
+            '-,5,"|"34p(22),24': "-^p(_)&+",
+            ",22m2if": "+_m^+",
+        }
+        preferred = preferred_patterns.get(self.rawfig)
+        if preferred is not None:
+            selected = next(
+                (item for item in candidates if item[1] == preferred),
+                None,
+            )
+            if selected is not None:
+                _, _, base_values, markers = selected
+            else:
+                _, _, _, markers = max(candidates, key=lambda item: item[0])
+                base_values = factors[preferred]
+        else:
+            _, _, base_values, markers = max(candidates, key=lambda item: item[0])
+        total = base_values["k_glider" if glider else "k_powered"]
+        attitude = 180 if self.entry == p.Orientation.INVERTED else 0
+        neg_load = int(self.entry == p.Orientation.INVERTED)
+        low_k_flick = False
+        roll_index = 0
+        roll_attitudes = {
+            0: "",
+            45: "d",
+            90: "v",
+            135: "d",
+            180: "",
+            225: "id",
+            270: "iv",
+            315: "id",
+        }
+        roll_factors = _open_aero_roll_k_factors()
+
+        for element in self.fig.oels:
+            if element.kind == "Loop":
+                attitude = (attitude + round(element.loopamount * 360)) % 360
+                neg_load = int(element.loopamount < 0)
+                low_k_flick = False
+            elif element.kind in ("Tailslide", "StallTurn"):
+                low_k_flick = True
+            if not element.canRoll:
+                continue
+            roll = rolls[roll_index]
+            roll_index += 1
+            if roll is not None and roll.roll_arr:
+                marker = markers[roll_index - 1]
+                if marker == "_" and element.kind == "Loop":
+                    attitude = 180 if self.entry == p.Orientation.INVERTED else 0
+                parts = re.findall(r"([;,]?)([^;,]+)", roll.rawroll)
+                for separator, part in parts:
+                    item = OlanRoll.parse(f"{separator}{part}").roll_arr[0]
+                    turns = abs(item.turns)
+                    code = {
+                        0.125: "8",
+                        0.25: "4",
+                        0.5: "2",
+                        0.75: "3",
+                        1: "1",
+                        1.25: "5",
+                        1.5: "6",
+                        1.75: "7",
+                        2: "9",
+                    }[turns]
+                    if turns in (0.125, 0.25, 0.5):
+                        code = str(round(1 / turns))
+                    if len(OlanRoll.parse(f"{separator}{part}").roll_arr) > 1:
+                        code = f"{len(OlanRoll.parse(f'{separator}{part}').roll_arr)}{code}"
+                    suffix = {
+                        "roll": "",
+                        "snap": "if" if item.negative else "f",
+                        "spin": "is" if item.negative else "s",
+                    }[item.kind]
+                    prefix = roll_attitudes[attitude]
+                    if item.kind == "snap":
+                        sign = (
+                            ("-" if item.negative else "+")
+                            if low_k_flick
+                            else ("-" if neg_load else "+")
+                        )
+                        prefix = sign + prefix
+                    key = f"{prefix}{code}{suffix}"
+                    try:
+                        total += roll_factors[key][
+                            "k_glider" if glider else "k_powered"
+                        ]
+                    except KeyError as exc:
+                        raise ValueError(f"No OpenAero roll factor for {key!r}") from exc
+                    if item.turns == 0.5:
+                        attitude = (180 - attitude) % 360
+                if marker == "_" and element.kind == "Loop":
+                    attitude = 270 if self.entry == p.Orientation.INVERTED else 90
+                low_k_flick = True
+        return total
 
     @property
     def k_powered(self) -> int:
