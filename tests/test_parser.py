@@ -238,7 +238,7 @@ def test_iac_unl_2026_n(mb: ManBuilder):
     pass
 
 def test_iac_unl_2026(mb: ManBuilder):
-    olanstr = Path("tests/test_data/iac_unl_2026").read_text()
+    olanstr = (Path(__file__).parent / "test_data" / "iac_unl_2026").read_text()
     figs = parse_olan(olanstr, mb)
     assert len(figs) == 10
     names = [f.aresti.info.short_name for f in figs]
