@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import geometry as g
@@ -88,10 +89,10 @@ def test_turn(mb: ManBuilder):
     fig: ParsedOlanFig = parse_olan("4j", mb)[0]
 
     assert [e.kind for e in fig.aresti.elements] == ["roll", "loop", "roll"]
-    assert fig.aresti.elements[0].args == ["roll_option[0]"]
+    assert fig.aresti.elements[0].args == [["roll_option[0]"]]
     assert fig.aresti.elements[1].args == [approx(2 * np.pi)]
     assert fig.aresti.elements[1].kwargs["ke"] == "roll_option[1]"
-    assert fig.aresti.elements[2].args == ["roll_option[2]"]
+    assert fig.aresti.elements[2].args == [["roll_option[2]"]]
     bank = [np.radians(60), np.radians(30), np.radians(-60)]
     assert fig.aresti.ndmps == {
         "roll_option": [approx(bank), approx([-v for v in bank])]
@@ -100,9 +101,9 @@ def test_turn(mb: ManBuilder):
 
     option = fig.definition.mps.data["roll_option"]
     assert [str(c) for c in option.collectors] == [
-        "e_0_roll.e_0_roll.roll.0",
+        "e_0_0.e_0_0.roll.0",
         "e_1.e_1.ke.1",
-        "e_2_roll.e_2_roll.roll.2",
+        "e_2_0.e_2_0.roll.2",
     ]
 
 
@@ -301,3 +302,52 @@ def test_splits_two_figs(mb: ManBuilder):
 def test_pn(mb: ManBuilder):
     fig = parse_olan("3,8pn(5f,8)", mb)[0]
     assert fig.short_name == "pushN"
+
+
+def test_three_figures_with_the_same_short_name_get_unique_names(mb: ManBuilder):
+    figs = parse_olan("j 2j 4j", mb)
+
+    assert [f.short_name for f in figs] == ["turn", "turn2", "turn3"]
+
+
+# Element names must stay stable: stored segmentation in the database is keyed
+# by them, so a rename makes stored analyses re-segment. The snapshot was
+# generated before turn options were linked through roll_option (PyOlan 501b3f1).
+ELEMENT_NAME_SEQUENCES = {
+    **{
+        f"turn_{code}": code
+        for code in "j 2j 3j 4j 1jo 2jo1 3jo3 4joi4 2jio2 1j5".split()
+    },
+    "iac_unl_2026": (
+        Path(__file__).parent / "test_data" / "iac_unl_2026"
+    ).read_text().strip(),
+    "iac_mixed": (
+        "d'f 5% 44a,if- (-3,6) -4h2,4-^> -,ify...''22 (-1,0) -2% 1dq1 1j1> "
+        "3% ``1,24pb...34..+++ 3% ~`1,48``g~ (5,0) 3% ```9s....'ikz----~~ /-22iy2"
+    ),
+    "imac_example": (
+        "o 12% 3> ``+````````2``rc+`````` 4> ',1~~ 2% 7> m2 (8,19) 1% id. 6% "
+        "8> h.' 8> ,2'b``,2' 12> v'2' (7,18) `````9s..'ik`` 3% 4> 2a"
+    ),
+}
+ELEMENT_NAMES = json.loads(
+    (Path(__file__).parent / "data" / "element_names.json").read_text()
+)
+
+
+@pytest.mark.parametrize(
+    "rules, options",
+    [("IAC", {"category": "unlimited"}), ("IMAC", {})],
+)
+def test_element_names_match_snapshot(rules: str, options: dict):
+    builder = load_builder(rules, **options)
+
+    names = {
+        key: [
+            [fig.olan.rawfig, list(fig.definition.eds.data.keys())]
+            for fig in parse_olan(olan, builder)
+        ]
+        for key, olan in ELEMENT_NAME_SEQUENCES.items()
+    }
+
+    assert names == ELEMENT_NAMES[rules]

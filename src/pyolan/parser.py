@@ -56,7 +56,7 @@ def parse_olan(
         while f"{olanfig.fig.short_name}{_suffix}" in [
             f.aresti.info.short_name for f in figs
         ]:
-            _suffix = int(_suffix) + 1 if len(_suffix) else "2"
+            _suffix = str(int(_suffix) + 1) if _suffix else "2"
 
         # Take the initial heading from the end of the previous figure if possible;
         # otherwise infer it from the wind direction and drawing parameters.

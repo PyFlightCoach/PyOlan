@@ -574,8 +574,11 @@ class OlanFig:
                             )
                         )
                     else:
+                        # The bank rolls are passed as single item lists so the
+                        # builder names them as before (e_0_0, e_2_0). Element
+                        # names must stay stable to match stored segmentation.
                         bank, ke, unbank = (
-                            [f"roll_option[{j}]" for j in range(3)]
+                            (["roll_option[0]"], "roll_option[1]", ["roll_option[2]"])
                             if linked
                             else self.TURN_BANK
                         )
