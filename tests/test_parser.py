@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import geometry as g
 import numpy as np
 import pytest
 from flightanalysis.builders.manbuilder import ManBuilder
@@ -86,14 +87,50 @@ def test_imac_inter_2025(mb: ManBuilder):
 def test_turn(mb: ManBuilder):
     fig: ParsedOlanFig = parse_olan("4j", mb)[0]
 
-    assert fig.aresti.elements[0].kind == "roll"
-    assert fig.aresti.elements[1].kind == "loop"
-    assert fig.aresti.elements[1].kwargs["ke"] == approx(np.radians(30))
-    assert fig.aresti.elements[0].args == [approx(np.radians(60))]
-    assert fig.aresti.elements[2].args == [approx(np.radians(-60))]
+    assert [e.kind for e in fig.aresti.elements] == ["roll", "loop", "roll"]
+    assert fig.aresti.elements[0].args == ["roll_option[0]"]
+    assert fig.aresti.elements[1].args == [approx(2 * np.pi)]
+    assert fig.aresti.elements[1].kwargs["ke"] == "roll_option[1]"
+    assert fig.aresti.elements[2].args == ["roll_option[2]"]
+    bank = [np.radians(60), np.radians(30), np.radians(-60)]
+    assert fig.aresti.ndmps == {
+        "roll_option": [approx(bank), approx([-v for v in bank])]
+    }
     assert fig.aresti.info.k == 6
 
-    assert fig.definition.eds[2].props["ke"] == approx(np.radians(30))
+    option = fig.definition.mps.data["roll_option"]
+    assert [str(c) for c in option.collectors] == [
+        "e_0_roll.e_0_roll.roll.0",
+        "e_1.e_1.ke.1",
+        "e_2_roll.e_2_roll.roll.2",
+    ]
+
+
+@pytest.mark.parametrize("code, exit_bearings", [
+    ("j", [np.pi / 2, -np.pi / 2]),
+    ("2j", [np.pi, np.pi]),
+    ("4j", [0, 0]),
+])
+def test_turn_options_build_mirrored_level_turns(
+    mb: ManBuilder, code: str, exit_bearings: list[float]
+):
+    mdef = parse_olan(code, mb)[0].definition
+    itrans = g.Transformation(g.Euler(0, 0, 0), g.P0())
+
+    sides = []
+    for index, exit_bearing in enumerate(exit_bearings):
+        mdef.mps.data["roll_option"].defaul = index
+        tp = State.stack(mdef.create().create_template(itrans), "element")
+
+        assert abs(np.cos(tp.att.bearing()[-1] - exit_bearing) - 1) < 1e-9
+        assert np.abs(tp.pos.z).max() == approx(0, abs=1e-6)
+        # exits wings level with the same attitude as the entry
+        assert tp.att[-1].transform_point(g.PZ()).z[0] == approx(
+            tp.att[0].transform_point(g.PZ()).z[0]
+        )
+        sides.append(np.sign(tp.pos.y[len(tp) // 2]))
+
+    assert sides == [1, -1]
 
 
 def test_rolling_circle_preserves_turn_and_roll_constraints(mb: ManBuilder):

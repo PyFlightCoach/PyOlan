@@ -360,6 +360,29 @@ class OlanFig:
             p.BoxLocation(height=p.Height.MID),
         )
 
+    TURN_CHARS = frozenset({"j", "ji", "jo", "jio", "joi"})
+    # entry roll, loop KE and exit roll for a right-hand plain turn.
+    TURN_BANK = (np.radians(60), np.radians(30), np.radians(-60))
+
+    def turn_options(self) -> list[list[float]] | None:
+        """Linked parameter options for a single turn, or None if not a turn.
+
+        A turn can be flown either way, so two mirrored options are returned.
+        Plain turns link the entry roll, loop KE and exit roll. Rolling turns
+        with a single roll link the turn angle and the roll angle.
+        """
+        if self.fig.chars not in self.TURN_CHARS:
+            return None
+        if self.final:
+            rolls = np.atleast_1d(self.final.angles()).astype(float)
+            if len(rolls) != 1:
+                return None
+            option = [self.fig.oels[0].turnamount * 2 * np.pi, rolls[0]]
+        else:
+            option = list(self.TURN_BANK)
+        option = [float(v) for v in option]
+        return [option, [-v for v in option]]
+
     def element_rolls(self) -> list[OlanRoll | None]:
         # n==4: p fig (s0) (s1) f
         # n==3: p fig (s0) f
@@ -536,29 +559,29 @@ class OlanFig:
                 case "Spin":
                     pes.append(a.spin(rolls[i].roll_arr[0].turns * 2 * np.pi))
                 case "Turn":
+                    linked = use_roll_options and self.turn_options() is not None
                     if self.final:
                         angle = el.turnamount * np.pi * 2
-                        rolls = self.final.angles()
-                        if use_roll_options and self.fig.chars in {
-                            "j",
-                            "ji",
-                            "jo",
-                            "jio",
-                            "joi",
-                        } and len(np.atleast_1d(rolls)) == 1:
+                        turn_rolls = self.final.angles()
+                        if linked:
                             angle = "roll_option[0]"
-                            rolls = "roll_option[1]"
+                            turn_rolls = "roll_option[1]"
                         pes.append(
                             a.loop(
                                 angle,
-                                rolls=rolls,
+                                rolls=turn_rolls,
                                 ke=np.pi / 2,
                             )
                         )
                     else:
-                        pes.append(a.roll(np.radians(60), padded=False))
-                        pes.append(a.loop(el.turnamount * 2 * np.pi, ke=np.radians(30)))
-                        pes.append(a.roll(np.radians(-60), padded=False))
+                        bank, ke, unbank = (
+                            [f"roll_option[{j}]" for j in range(3)]
+                            if linked
+                            else self.TURN_BANK
+                        )
+                        pes.append(a.roll(bank, padded=False))
+                        pes.append(a.loop(el.turnamount * 2 * np.pi, ke=ke))
+                        pes.append(a.roll(unbank, padded=False))
                 case "Tailslide":
                     pes.append(a.tailslide(el.direction))
                 case _:

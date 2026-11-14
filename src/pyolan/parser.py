@@ -27,20 +27,15 @@ class ParsedOlanFig:
 
 
 def _roll_ndmps(olanfig: OlanFig) -> dict[str, list[list[float]]]:
+    turn_options = olanfig.turn_options()
+    if turn_options is not None:
+        return {"roll_option": turn_options}
     angles = []
     for roll in olanfig.element_rolls():
         if roll is None or not roll.roll_arr:
             continue
         angles.extend(np.atleast_1d(roll.angles()).astype(float).tolist())
-    options: list[list[float]] = [angles]
-    if (
-        angles
-        and olanfig.fig.chars in {"j", "ji", "jo", "jio", "joi"}
-        and len(angles) == 1
-    ):
-        turn = olanfig.fig.oels[0].turnamount * 2 * np.pi
-        options = [[turn, angles[0]], [-turn, -angles[0]]]
-    return {"roll_option": options} if angles else {}
+    return {"roll_option": [angles]} if angles else {}
 
 
 def parse_olan(
