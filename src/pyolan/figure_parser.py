@@ -56,10 +56,8 @@ class OlanFig:
     entry: p.Orientation
     exit: p.Orientation
     entry_direction: p.Direction = p.Direction.UPWIND
-    exit_downwind: bool = (
-        False  ## only used if there is a 1/4 roll on vertical line, otherwise infer
-    )
     source_pattern: str = ""
+    token: str = ""  ## the whole OLAN token, including drawing characters
 
     def __len__(self):
         return len(self.fig.oels)
@@ -344,8 +342,8 @@ class OlanFig:
             p.Orientation.INVERTED if rawfig.startswith("-") else p.Orientation.UPRIGHT,
             p.Orientation.INVERTED if rawfig.endswith("-") else p.Orientation.UPRIGHT,
             entry_direction,
-            re.match(r">", d) is not None,
             d if d.startswith(("-", "+")) else "",
+            d,
         ), data[i + 1 :]
 
     def create_info(self):
@@ -552,12 +550,16 @@ class OlanFig:
         return loops
 
     def create_elements(
-        self, use_roll_options: bool = False, link_lines: bool = True
+        self,
+        use_roll_options: bool = False,
+        link_lines: bool = True,
+        flip_lines: frozenset[int] = frozenset(),
     ) -> list[a.PE]:
         """Create the elements.
 
         With use_roll_options the turn rolls refer to roll_option, and, if link_lines
-        is set, so do the direction-changing lines (spin and roll points).
+        is set, so do the direction-changing lines (spin and roll points). The rolls
+        of the lines in flip_lines are reversed when they are not linked.
         """
         pes: list[a.PE] = []
 
@@ -585,6 +587,7 @@ class OlanFig:
                 case "Line":
                     if rolls[i] and len(rolls[i].roll_arr):
                         ref = [f"roll_option[{k}]" for k in refs.get(i, [])]
+                        flip = -1 if i in flip_lines and not ref else 1
                         if rolls[i].roll_arr[0].kind == "spin":
                             # If there is a spin on the line we need to delete the previous radius and make two elements.
                             assert pes[-1].kind == "loop"
@@ -593,7 +596,7 @@ class OlanFig:
                                 a.spin(
                                     ref[0]
                                     if ref
-                                    else rolls[i].roll_arr[0].turns * 2 * np.pi
+                                    else flip * rolls[i].roll_arr[0].turns * 2 * np.pi
                                 )
                             )
 
@@ -601,7 +604,11 @@ class OlanFig:
                                 # TODO need to know if its F3A or IMAC here
                                 pes.append(
                                     a.roll(
-                                        ref[1:] if ref else rolls[i].angles()[1:],
+                                        ref[1:]
+                                        if ref
+                                        else (
+                                            flip * np.atleast_1d(rolls[i].angles())[1:]
+                                        ).tolist(),
                                         rolltypes=rolls[i].rolltypes()[1:],
                                         padded=True,
                                     )
@@ -612,7 +619,14 @@ class OlanFig:
                         else:
                             pes.append(
                                 a.roll(
-                                    ref or rolls[i].pfc_roll(),
+                                    ref
+                                    or (
+                                        rolls[i].pfc_roll()
+                                        if flip == 1
+                                        else (
+                                            -np.atleast_1d(rolls[i].angles())
+                                        ).tolist()
+                                    ),
                                     rolltypes=rolls[i].rolltypes(),
                                     padded=i > 0 and i < len(self.fig.oels) - 1,
                                 )

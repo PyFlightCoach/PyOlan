@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 from dataclasses import dataclass, replace
 
 import geometry as g
@@ -10,6 +11,7 @@ from flightanalysis.builders.manbuilder import ManBuilder
 from flightdata import State
 from schemas import aresti as a
 
+from .direction import DirectionState
 from .figure_parser import OlanFig
 
 
@@ -31,14 +33,6 @@ def _turn_ndmps(olanfig: OlanFig) -> dict[str, list[list[float]]]:
     return {"roll_option": turn_options} if turn_options is not None else {}
 
 
-def _required_exit_heading(olanfig: OlanFig, entry_heading: p.Heading) -> p.Heading:
-    return (
-        entry_heading.reverse()
-        if olanfig.fig.turnable is not None and not olanfig.exit_downwind
-        else (p.Heading.LTOR if olanfig.exit_downwind else p.Heading.RTOL)
-    )
-
-
 def _along_box(heading: p.Heading) -> bool:
     return heading in (p.Heading.RTOL, p.Heading.LTOR)
 
@@ -55,14 +49,16 @@ def _linked_figure(
     info: a.ManInfo,
     itrans: g.Transformation,
     entry_heading: p.Heading,
+    required: p.Heading | None,
 ) -> tuple[a.Figure, ManDef]:
     """Create the figure, linking the rolls of the direction-changing lines.
 
     Each direction-changing line takes one sign for all of its rolls. The sign
     combinations are pruned using the templates built from the entry transform:
-    along the box, only the combinations that exit as required are kept; for a
-    cross box entry both are kept so the analysis can choose. A cross box exit
-    only emits roll_option when it links more than one element.
+    along the box, only the combinations that exit as required (OpenAero's exit
+    direction, see direction.py) are kept; for a cross box entry both are kept so
+    the analysis can choose, with the one that exits as required first. A cross
+    box exit only emits roll_option when it links more than one element.
     """
     lines = olanfig.direction_lines()
     if not lines:
@@ -86,9 +82,13 @@ def _linked_figure(
     ]
     exit_along = _along_box(exits[0])
     keep = list(range(len(vectors)))
-    if _along_box(entry_heading) and exit_along:
-        required = _required_exit_heading(olanfig, entry_heading)
-        keep = [i for i, e in enumerate(exits) if e == required] or keep
+    if required is not None:
+        matching = [i for i, e in enumerate(exits) if e == required]
+        if _along_box(entry_heading) and exit_along:
+            keep = matching or keep
+        else:
+            # the option that exits as required for the assumed entry comes first
+            keep = matching + [i for i in keep if i not in matching]
 
     # a spin plus a roll on the same line become two elements that must stay linked
     rolls = olanfig.element_rolls()
@@ -97,15 +97,20 @@ def _linked_figure(
         for i in lines
     )
     if not (exit_along or spans_elements):
+        # unlinked: the rolls are reversed as a whole if that is what OpenAero exits
+        signs = list(itertools.product([1, -1], repeat=len(lines)))[keep[0]]
+        flip = frozenset(i for i, sign in zip(lines, signs) if sign < 0)
         figure = figure.model_copy(
             update=dict(
-                elements=olanfig.create_elements(use_roll_options=True, link_lines=False),
+                elements=olanfig.create_elements(
+                    use_roll_options=True, link_lines=False, flip_lines=flip
+                ),
                 ndmps={},
             )
         )
         return figure, mb.create_mdef(figure)
 
-    if len(keep) < len(vectors):
+    if keep != list(range(len(vectors))):
         figure = figure.model_copy(
             update=dict(ndmps={"roll_option": [vectors[i] for i in keep]})
         )
@@ -120,12 +125,16 @@ def parse_olan(
     data = data.split()
     figs: list[ParsedOlanFig] = []
     itrans = None
+    state = DirectionState()
 
     while data:
         try:
             olanfig, data = OlanFig.take(data)
         except Exception:
             break
+
+        # OpenAero's direction state gives the entry and the required exit heading
+        oa = state.apply(olanfig)
 
         # make sure short_name is unique
         _suffix = ""
@@ -136,11 +145,13 @@ def parse_olan(
 
         # Take the initial heading from the end of the previous figure if possible;
         # otherwise infer it from the wind direction and drawing parameters.
-        entry_heading = (
-            p.Heading.infer(itrans.att.bearing()[-1])
-            if itrans
-            else olanfig.entry_direction.wind_swap_heading(wind.reverse())
-        )
+        if itrans:
+            entry_heading = p.Heading.infer(itrans.att.bearing()[-1])
+        elif oa.resolved:
+            entry_heading = oa.entry_heading(wind)
+        else:
+            entry_heading = olanfig.entry_direction.wind_swap_heading(wind.reverse())
+        required = oa.exit_heading(wind) if oa.resolved else None
 
         # need to get the direction (upwind / downwind / cross) from the heading and the wind
         entry_direction = p.Direction.parse_heading(entry_heading, wind)
@@ -157,19 +168,37 @@ def parse_olan(
             ),
             itrans,
             entry_heading,
+            required,
         )
         man = mdef.create()
         tp = State.stack(man.create_template(itrans), "element")
 
-        # The next figure starts where option 0 of this one finishes, and the
-        # info agrees with the geometry.
+        # The next figure starts where option 0 of this one finishes. If the
+        # geometry leaves along the box in the wrong direction (a figure without
+        # roll options that does not turn out as OpenAero says) the next figure
+        # still starts as required.
         itrans = g.Transformation(tp.att[-1], g.P0())
+        actual = p.Heading.infer(tp.att.bearing()[-1])
+        if (
+            required is not None
+            and _along_box(required)
+            and _along_box(actual)
+            and actual != required
+        ):
+            itrans = g.Transformation(g.Euler(olanfig.exit, 0, required), g.P0())
 
-        # update maninfo with the correct centre now that we know the exit direction
+        # update maninfo with the correct centre now that we know the exit direction.
+        # OpenAero's exit is used when it is known, so that a cross box entry states
+        # the along box exit rather than whatever option 0 happens to give.
+        exit_heading = (
+            required
+            if required is not None
+            else p.Heading.infer(tp.att.bearing()[-1])
+        )
         arestifig.info = olanfig.create_maninfo(
             f"{olanfig.fig.short_name}{_suffix}",
             entry_direction,
-            p.Direction.parse_heading(p.Heading.infer(tp.att.bearing()[-1]), wind),
+            p.Direction.parse_heading(exit_heading, wind),
         )
         # The definition was built before the exit was known. Keep the builder's
         # centre points but take the final position and directions, which the

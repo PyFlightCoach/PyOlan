@@ -1,0 +1,654 @@
+[
+ {
+  "input": "3% /+`,2ifpbb(````````,34...)'22`-~~ (-2,-1) 4% ``-````,5is,2ib````,24'-```` ",
+  "figures": [
+   {
+    "token": "/+`,2ifpbb(````````,34...)'22`-~~",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 180
+    }
+   },
+   {
+    "token": "``-````,5is,2ib````,24'-````",
+    "entry": {
+     "direction": 90,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "-5isiBb(1.)8",
+  "figures": [
+   {
+    "token": "-5isiBb(1.)8",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "ed -5isiBb(1.)8",
+  "figures": [
+   {
+    "token": "-5isiBb(1.)8",
+    "entry": {
+     "direction": 0,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": ">(-2,0) ``-5is...''iBb(``````)......'8'",
+  "figures": [
+   {
+    "token": "``-5is...''iBb(``````)......'8'",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "/d'1 5% 2a,f (-3,6) 4h4^> p(2)...' dq 4% 2b.''1.''+``` (-13,0) 3% ~2g~ (2,0) 3% iv```6s.....'' 22y````1.. (-3,0) 8% `24'zt`8''",
+  "figures": [
+   {
+    "token": "/d'1",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "2a,f",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4h4^>",
+    "entry": {
+     "direction": 180,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "p(2)...'",
+    "entry": {
+     "direction": 180,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "dq",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "2b.''1.''+```",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "~2g~",
+    "entry": {
+     "direction": 180,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "iv```6s.....''",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "22y````1..",
+    "entry": {
+     "direction": 180,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "`24'zt`8''",
+    "entry": {
+     "direction": 180,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 270,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4b4",
+  "figures": [
+   {
+    "token": "4b4",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4b4>",
+  "figures": [
+   {
+    "token": "4b4>",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4b4^>",
+  "figures": [
+   {
+    "token": "4b4^>",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4v4",
+  "figures": [
+   {
+    "token": "4v4",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 270,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4v4^",
+  "figures": [
+   {
+    "token": "4v4^",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4h4",
+  "figures": [
+   {
+    "token": "4h4",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4h4^>",
+  "figures": [
+   {
+    "token": "4h4^>",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "-4h4^>-",
+  "figures": [
+   {
+    "token": "-4h4^>-",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "ej 4b4",
+  "figures": [
+   {
+    "token": "4b4",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "eja 4b4",
+  "figures": [
+   {
+    "token": "4b4",
+    "entry": {
+     "direction": 90,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 270,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "eja 4h4^>",
+  "figures": [
+   {
+    "token": "4h4^>",
+    "entry": {
+     "direction": 90,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "ej d",
+  "figures": [
+   {
+    "token": "d",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 270,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "ej 4bb4",
+  "figures": [
+   {
+    "token": "4bb4",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "ej 4n4",
+  "figures": [
+   {
+    "token": "4n4",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "eja 4n4^",
+  "figures": [
+   {
+    "token": "4n4^",
+    "entry": {
+     "direction": 90,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "ej 4y4",
+  "figures": [
+   {
+    "token": "4y4",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4v4 4bb(2)4",
+  "figures": [
+   {
+    "token": "4v4",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 270,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4bb(2)4",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4b4 ;>4bb4",
+  "figures": [
+   {
+    "token": "4b4",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   },
+   {
+    "token": ";>4bb4",
+    "entry": {
+     "direction": 180,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "4h4^> 4v4 4b4 4h4",
+  "figures": [
+   {
+    "token": "4h4^>",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4v4",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 270,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4b4",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4h4",
+    "entry": {
+     "direction": 90,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 270,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "ej 4v4 4h4 4v4 4b4",
+  "figures": [
+   {
+    "token": "4v4",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4h4",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4v4",
+    "entry": {
+     "direction": 180,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 270,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4b4",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "ej 1j 4j",
+  "figures": [
+   {
+    "token": "1j",
+    "entry": {
+     "direction": 270,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "4j",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "1jo1> 1j",
+  "figures": [
+   {
+    "token": "1jo1>",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 90,
+     "attitude": 0
+    }
+   },
+   {
+    "token": "1j",
+    "entry": {
+     "direction": 90,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   }
+  ]
+ }
+]

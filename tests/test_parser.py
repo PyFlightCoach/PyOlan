@@ -49,7 +49,7 @@ def test_parse_olan_sets_exit_direction(mb: ManBuilder):
         (
             ">(-2,0) ``-5is...''iBb(``````)......'8'",
             Direction.UPWIND,
-            Direction.UPWIND,
+            Direction.DOWNWIND,
         ),
     ],
 )

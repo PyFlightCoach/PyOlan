@@ -104,7 +104,7 @@ def test_open_aero_entry_direction_drawing_commands(
 def test_open_aero_vertical_exit_marker_is_preserved():
     figure = OlanFig.take([">d"])[0]
 
-    assert figure.exit_downwind
+    assert figure.token == ">d"
     assert re_draw.sub("", figure.rawfig) == "d"
 
 

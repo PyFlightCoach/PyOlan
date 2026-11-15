@@ -5,7 +5,8 @@ import re
 re_dpre = dict(
     entry=r"^(ed|ej|eja|eu)$",
     subsequence=r"^//$",
-    move=r"^(\[|\()-?‑?\d+,-?‑?\d+(\]|\))$",
+    # a move may be preceded by > (move forward); it is not a direction switch
+    move=r"^>*(\[|\()-?‑?\d+,-?‑?\d+(\]|\))$",
     scale=r"^\d+%$",
     offset=r"^(^|\d+)\>$",
     cross_switch=r"^\^$",
