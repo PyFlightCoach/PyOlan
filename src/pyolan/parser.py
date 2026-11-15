@@ -26,16 +26,92 @@ class ParsedOlanFig:
         return self.aresti.info.short_name
 
 
-def _roll_ndmps(olanfig: OlanFig) -> dict[str, list[list[float]]]:
+def _turn_ndmps(olanfig: OlanFig) -> dict[str, list[list[float]]]:
     turn_options = olanfig.turn_options()
-    if turn_options is not None:
-        return {"roll_option": turn_options}
-    angles = []
-    for roll in olanfig.element_rolls():
-        if roll is None or not roll.roll_arr:
-            continue
-        angles.extend(np.atleast_1d(roll.angles()).astype(float).tolist())
-    return {"roll_option": [angles]} if angles else {}
+    return {"roll_option": turn_options} if turn_options is not None else {}
+
+
+def _required_exit_heading(olanfig: OlanFig, entry_heading: p.Heading) -> p.Heading:
+    return (
+        entry_heading.reverse()
+        if olanfig.fig.turnable is not None and not olanfig.exit_downwind
+        else (p.Heading.LTOR if olanfig.exit_downwind else p.Heading.RTOL)
+    )
+
+
+def _along_box(heading: p.Heading) -> bool:
+    return heading in (p.Heading.RTOL, p.Heading.LTOR)
+
+
+def _template(mdef: ManDef, itrans: g.Transformation, option: int = 0) -> State:
+    if "roll_option" in mdef.mps.data:
+        mdef.mps.data["roll_option"].defaul = option
+    return State.stack(mdef.create().create_template(itrans), "element")
+
+
+def _linked_figure(
+    olanfig: OlanFig,
+    mb: ManBuilder,
+    info: a.ManInfo,
+    itrans: g.Transformation,
+    entry_heading: p.Heading,
+) -> tuple[a.Figure, ManDef]:
+    """Create the figure, linking the rolls of the direction-changing lines.
+
+    Each direction-changing line takes one sign for all of its rolls. The sign
+    combinations are pruned using the templates built from the entry transform:
+    along the box, only the combinations that exit as required are kept; for a
+    cross box entry both are kept so the analysis can choose. A cross box exit
+    only emits roll_option when it links more than one element.
+    """
+    lines = olanfig.direction_lines()
+    if not lines:
+        figure = a.Figure(
+            info=info,
+            elements=olanfig.create_elements(use_roll_options=True),
+            ndmps=_turn_ndmps(olanfig),
+        )
+        return figure, mb.create_mdef(figure)
+
+    vectors = olanfig.roll_option_vectors()
+    figure = a.Figure(
+        info=info,
+        elements=olanfig.create_elements(use_roll_options=True),
+        ndmps={"roll_option": vectors},
+    )
+    mdef = mb.create_mdef(figure)
+    exits = [
+        p.Heading.infer(_template(mdef, itrans, i).att.bearing()[-1])
+        for i in range(len(vectors))
+    ]
+    exit_along = _along_box(exits[0])
+    keep = list(range(len(vectors)))
+    if _along_box(entry_heading) and exit_along:
+        required = _required_exit_heading(olanfig, entry_heading)
+        keep = [i for i, e in enumerate(exits) if e == required] or keep
+
+    # a spin plus a roll on the same line become two elements that must stay linked
+    rolls = olanfig.element_rolls()
+    spans_elements = any(
+        rolls[i].roll_arr[0].kind == "spin" and len(rolls[i].roll_arr) > 1
+        for i in lines
+    )
+    if not (exit_along or spans_elements):
+        figure = figure.model_copy(
+            update=dict(
+                elements=olanfig.create_elements(use_roll_options=True, link_lines=False),
+                ndmps={},
+            )
+        )
+        return figure, mb.create_mdef(figure)
+
+    if len(keep) < len(vectors):
+        figure = figure.model_copy(
+            update=dict(ndmps={"roll_option": [vectors[i] for i in keep]})
+        )
+        mdef = mb.create_mdef(figure)
+    mdef.mps.data["roll_option"].defaul = 0
+    return figure, mdef
 
 
 def parse_olan(
@@ -69,55 +145,31 @@ def parse_olan(
         # need to get the direction (upwind / downwind / cross) from the heading and the wind
         entry_direction = p.Direction.parse_heading(entry_heading, wind)
 
-        arestifig = a.Figure(
-            info=olanfig.create_maninfo(
-                f"{olanfig.fig.short_name}{_suffix}", entry_direction, None
-            ),
-            elements=olanfig.create_elements(use_roll_options=True),
-            ndmps=_roll_ndmps(olanfig),
-        )
-
-        mdef = mb.create_mdef(arestifig)
-        man = mdef.create()
-
         # if itrans cannot be picked up from the previous manouevre assume the olan figure is correct
         if not itrans:
             itrans = g.Transformation(g.Euler(olanfig.entry, 0, entry_heading), g.P0())
 
+        arestifig, mdef = _linked_figure(
+            olanfig,
+            mb,
+            olanfig.create_maninfo(
+                f"{olanfig.fig.short_name}{_suffix}", entry_direction, None
+            ),
+            itrans,
+            entry_heading,
+        )
+        man = mdef.create()
         tp = State.stack(man.create_template(itrans), "element")
-        exit_direction = None
 
-        if np.any(olanfig.can_swap_exit()) and p.Heading.infer(
-            tp.att.bearing()[-1]
-        ) in [
-            p.Heading.RTOL,
-            p.Heading.LTOR,
-        ]:
-            # If there is a 1/4 roll on a vertical line make sure the next manoeuvre
-            # starts in the correct direction
-            exit_heading = (
-                entry_heading.reverse()
-                if olanfig.fig.turnable is not None and not olanfig.exit_downwind
-                else (p.Heading.LTOR if olanfig.exit_downwind else p.Heading.RTOL)
-            )
-            exit_direction = p.Direction.parse_heading(exit_heading, wind)
-            itrans = g.Transformation(
-                g.Euler(
-                    olanfig.entry,
-                    0,
-                    exit_heading,
-                )
-            )
-
-        else:
-            # if not just take the exit direction from the end of this one
-            itrans = g.Transformation(tp.att[-1], g.P0())
+        # The next figure starts where option 0 of this one finishes, and the
+        # info agrees with the geometry.
+        itrans = g.Transformation(tp.att[-1], g.P0())
 
         # update maninfo with the correct centre now that we know the exit direction
         arestifig.info = olanfig.create_maninfo(
             f"{olanfig.fig.short_name}{_suffix}",
             entry_direction,
-            exit_direction or p.Direction.parse_heading(tp.att.bearing()[-1], wind),
+            p.Direction.parse_heading(p.Heading.infer(tp.att.bearing()[-1]), wind),
         )
 
         figs.append(ParsedOlanFig(olanfig, arestifig, mdef, man, tp))

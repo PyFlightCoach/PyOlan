@@ -10,6 +10,7 @@ from pytest import approx, fixture
 from schemas.positioning import Direction, Heading
 from tuning.builders import load_builder
 
+from pyolan.figure_parser import OlanFig
 from pyolan.parser import ParsedOlanFig, parse_olan
 
 
@@ -190,10 +191,12 @@ def test_parse_olan_matches_open_aero_compound_figure_k_factors(mb: ManBuilder):
     ]
 
 
-def test_parse_olan_generates_roll_options_in_ndmps(mb: ManBuilder):
+def test_parse_olan_does_not_link_rolls_that_keep_the_exit_direction(mb: ManBuilder):
+    # a full roll does not change the exit direction, so it keeps its own combo
     fig = parse_olan("d1", mb)[0]
 
-    assert fig.aresti.ndmps == {"roll_option": [[2 * np.pi]]}
+    assert fig.aresti.ndmps == {}
+    assert "roll_option" not in fig.definition.mps.data
 
 
 def test_parse_olan_omits_empty_roll_options(mb: ManBuilder):
@@ -351,3 +354,93 @@ def test_element_names_match_snapshot(rules: str, options: dict):
     }
 
     assert names == ELEMENT_NAMES[rules]
+
+
+FIXTURES = Path(__file__).parent / "data" / "aresti"
+CASE_2 = (
+    "3% /+`,2ifpbb(````````,34...)'22`-~~ (-2,-1) 4% ``-````,5is,2ib````,24'-```"
+)
+
+
+def _same(got, want) -> bool:
+    """Compare nested args, strings exactly and floats approximately."""
+    if isinstance(want, (list, tuple)):
+        return len(got) == len(want) and all(_same(g_, w) for g_, w in zip(got, want))
+    return got == want if isinstance(want, str) else got == approx(want)
+
+
+def _exit_bearing(figure: ParsedOlanFig, option: int, itrans: g.Transformation):
+    mdef = figure.definition
+    mdef.mps.data["roll_option"].defaul = option
+    try:
+        tp = State.stack(mdef.create().create_template(itrans), "element")
+    finally:
+        mdef.mps.data["roll_option"].defaul = 0
+    return tp.att.bearing()[-1]
+
+
+def test_spin_and_quarter_rolls_match_corrected_figure(mb: ManBuilder):
+    expected = json.loads(
+        (FIXTURES / "double_humpty_spin_quarter_rolls.aresti.json").read_text()
+    )["figures"][0]
+    fig = parse_olan("-5isiBb(1.)8", mb)[0].aresti
+
+    for e, x in zip(fig.elements, expected["elements"]):
+        assert (e.kind, e.kwargs) == (x["kind"], x["kwargs"])
+        assert _same(e.args, x["args"])
+    assert len(fig.elements) == len(expected["elements"])
+    assert len(fig.ndmps["roll_option"]) == len(expected["ndmps"]["roll_option"])
+    for got, want in zip(fig.ndmps["roll_option"], expected["ndmps"]["roll_option"]):
+        assert got == approx(want)
+    assert fig.info.end.direction == Direction.DOWNWIND
+
+
+def test_spin_and_quarter_rolls_every_option_exits_reversed(mb: ManBuilder):
+    fig = parse_olan("-5isiBb(1.)8", mb)[0]
+    itrans = g.Transformation(
+        g.Euler(fig.olan.entry, 0, Heading.RTOL), g.P0()
+    )
+    exits = [_exit_bearing(fig, i, itrans) for i in range(2)]
+
+    assert exits == approx([0, 0], abs=1e-6)
+    # info agrees with the geometry
+    assert fig.aresti.info.end.direction == Direction.parse_heading(
+        Heading.infer(fig.template.att.bearing()[-1]), Heading.LTOR
+    )
+
+
+def test_cross_box_exit_with_single_roll_emits_no_roll_option(mb: ManBuilder):
+    fig = parse_olan(CASE_2, mb)[0]
+
+    assert fig.aresti.info.end.direction == Direction.CROSS
+    assert fig.aresti.ndmps == {}
+    assert "roll_option" not in fig.definition.mps.data
+
+
+def test_cross_box_entry_links_spin_and_roll(mb: ManBuilder):
+    figs = parse_olan(CASE_2, mb)
+    fig = figs[1]
+
+    assert fig.aresti.info.start.direction == Direction.CROSS
+    spin, roll = fig.aresti.elements[:2]
+    assert spin.kind == "spin" and spin.args == ["roll_option[0]"]
+    assert roll.kind == "roll" and roll.args == [["roll_option[1]"]]
+    assert len(fig.aresti.ndmps["roll_option"]) == 2
+    option = fig.definition.mps.data["roll_option"]
+    assert len(option.collectors) == 2
+
+    entry = g.Transformation(
+        g.Euler(fig.olan.entry, 0, Heading.OUTTOIN), g.P0()
+    )
+    exits = np.array([_exit_bearing(fig, i, entry) for i in range(2)])
+    assert abs(np.cos(exits[0] - exits[1]) + 1) < 1e-9  # differ by 180 degrees
+
+
+def test_direction_lines_use_net_roll_wrapping_to_quarter(mb: ManBuilder):
+    def lines(code):
+        return OlanFig.take([code])[0].direction_lines()
+
+    for code in ("b4", "b3", "b5", "b,4", "b8", "4b4"):
+        assert lines(code), code
+    for code in ("b24", "b84", "b1", "b2", "b22", "b"):
+        assert not lines(code), code

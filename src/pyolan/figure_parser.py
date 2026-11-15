@@ -13,6 +13,7 @@ The create_elements method will create the pyflightcoach principal elements for 
 from __future__ import annotations
 import re
 import json
+import itertools
 from dataclasses import dataclass
 from functools import lru_cache
 from importlib.resources import files
@@ -414,7 +415,13 @@ class OlanFig:
             rolls[roll_positions[3]] = self.final
         return rolls
 
-    def can_swap_exit(self) -> bool:
+    def can_swap_exit(self) -> np.ndarray | bool:
+        """Per element mask of direction-changing lines.
+
+        A direction-changing line is a vertical line whose net roll, including a
+        spin on that line, wraps to plus or minus 90 degrees. Flying that roll the
+        other way exits the figure in the opposite direction.
+        """
         if all([el.loopamount == 0 for el in self.fig.oels]):
             return False
         roll_totals = np.array([r.total() if r else 0 for r in self.element_rolls()])
@@ -423,8 +430,51 @@ class OlanFig:
 
         direction = np.concatenate((np.array([0]), (loops.cumsum() % 1)[:-1]))
         is_vertical = (direction == 0.25) | (direction == 0.75)
+        is_line = np.array([e.kind == "Line" for e in self.fig.oels])
 
-        return is_vertical & (roll_totals % 1 == 0.25)
+        return (
+            is_vertical
+            & is_line
+            & np.isclose(np.abs(roll_totals) % 0.5, 0.25)
+        )
+
+    def direction_lines(self) -> list[int]:
+        """Indices of the direction-changing lines (see can_swap_exit)."""
+        return [int(i) for i in np.flatnonzero(self.can_swap_exit())]
+
+    def _linked_roll_refs(self) -> tuple[dict[int, list[int]], int]:
+        """Map each direction-changing line to its roll_option indices.
+
+        Every roll point on the line, including a spin, gets one index.
+        Returns the map and the total number of indices.
+        """
+        rolls = self.element_rolls()
+        refs: dict[int, list[int]] = {}
+        k = 0
+        for i in self.direction_lines():
+            n = len(rolls[i].roll_arr)
+            refs[i] = list(range(k, k + n))
+            k += n
+        return refs, k
+
+    def roll_option_vectors(self) -> list[list[float]]:
+        """All sign combinations of the linked direction-changing line rolls.
+
+        Each line takes one sign, applied to every roll point on it so the OLAN
+        relative signs are preserved. The first line is positive (as written)
+        in the first vectors.
+        """
+        rolls = self.element_rolls()
+        lines = self.direction_lines()
+        vectors = []
+        for signs in itertools.product([1, -1], repeat=len(lines)):
+            vec: list[float] = []
+            for i, sign in zip(lines, signs):
+                vec.extend(
+                    (sign * np.atleast_1d(rolls[i].angles()).astype(float)).tolist()
+                )
+            vectors.append(vec)
+        return vectors
 
     def loop_amounts(self, element_rolls: list[OlanRoll]) -> list[float]:
         if all([el.loopamount == 0 for el in self.fig.oels]):
@@ -501,11 +551,19 @@ class OlanFig:
 
         return loops
 
-    def create_elements(self, use_roll_options: bool = False) -> list[a.PE]:
+    def create_elements(
+        self, use_roll_options: bool = False, link_lines: bool = True
+    ) -> list[a.PE]:
+        """Create the elements.
+
+        With use_roll_options the turn rolls refer to roll_option, and, if link_lines
+        is set, so do the direction-changing lines (spin and roll points).
+        """
         pes: list[a.PE] = []
 
         rolls = self.element_rolls()
         loops = self.loop_amounts(rolls)
+        refs = self._linked_roll_refs()[0] if use_roll_options and link_lines else {}
 
         for i, el in enumerate(self.fig.oels):
             match el.kind:
@@ -526,17 +584,24 @@ class OlanFig:
                     )
                 case "Line":
                     if rolls[i] and len(rolls[i].roll_arr):
+                        ref = [f"roll_option[{k}]" for k in refs.get(i, [])]
                         if rolls[i].roll_arr[0].kind == "spin":
                             # If there is a spin on the line we need to delete the previous radius and make two elements.
                             assert pes[-1].kind == "loop"
                             pes.pop(-1)
-                            pes.append(a.spin(rolls[i].roll_arr[0].turns * 2 * np.pi))
+                            pes.append(
+                                a.spin(
+                                    ref[0]
+                                    if ref
+                                    else rolls[i].roll_arr[0].turns * 2 * np.pi
+                                )
+                            )
 
                             if len(rolls[i].roll_arr) > 1:
                                 # TODO need to know if its F3A or IMAC here
                                 pes.append(
                                     a.roll(
-                                        rolls[i].angles()[1:],
+                                        ref[1:] if ref else rolls[i].angles()[1:],
                                         rolltypes=rolls[i].rolltypes()[1:],
                                         padded=True,
                                     )
@@ -547,7 +612,7 @@ class OlanFig:
                         else:
                             pes.append(
                                 a.roll(
-                                    rolls[i].pfc_roll(),
+                                    ref or rolls[i].pfc_roll(),
                                     rolltypes=rolls[i].rolltypes(),
                                     padded=i > 0 and i < len(self.fig.oels) - 1,
                                 )

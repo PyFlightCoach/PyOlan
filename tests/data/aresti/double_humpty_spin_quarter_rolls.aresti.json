@@ -1,0 +1,109 @@
+{
+  "name": "sdvd",
+  "rules": "IAC",
+  "options": {
+    "category": "primary"
+  },
+  "figures": [
+    {
+      "info": {
+        "name": "Double Humpty",
+        "short_name": "dhump",
+        "k": 39,
+        "position": "END",
+        "start": {
+          "height": null,
+          "direction": "UPWIND",
+          "orientation": "INVERTED"
+        },
+        "end": {
+          "height": null,
+          "direction": "DOWNWIND",
+          "orientation": "UPRIGHT"
+        },
+        "centre_points": [],
+        "centred_els": []
+      },
+      "elements": [
+        {
+          "kind": "spin",
+          "args": [
+            "roll_option[0]"
+          ],
+          "kwargs": {},
+          "centred": false
+        },
+        {
+          "kind": "line",
+          "args": [],
+          "kwargs": {},
+          "centred": false
+        },
+        {
+          "kind": "loop",
+          "args": [
+            3.141592653589793
+          ],
+          "kwargs": {},
+          "centred": false
+        },
+        {
+          "kind": "roll",
+          "args": [
+            6.283185307179586
+          ],
+          "kwargs": {
+            "rolltypes": "roll",
+            "padded": true
+          },
+          "centred": false
+        },
+        {
+          "kind": "loop",
+          "args": [
+            3.141592653589793
+          ],
+          "kwargs": {},
+          "centred": false
+        },
+        {
+          "kind": "roll",
+          "args": [
+            [
+              "roll_option[1]",
+              "roll_option[2]"
+            ]
+          ],
+          "kwargs": {
+            "rolltypes": "roll",
+            "padded": true
+          },
+          "centred": false
+        },
+        {
+          "kind": "loop",
+          "args": [
+            1.5707963267948966
+          ],
+          "kwargs": {},
+          "centred": false
+        }
+      ],
+      "ndmps": {
+        "roll_option": [
+          [
+            7.853981633974483,
+            -0.7853981633974483,
+            -0.7853981633974483
+          ],
+          [
+            -7.853981633974483,
+            0.7853981633974483,
+            0.7853981633974483
+          ]
+        ]
+      },
+      "relax_back": false
+    }
+  ]
+}
