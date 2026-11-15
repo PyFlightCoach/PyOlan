@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import geometry as g
 import numpy as np
@@ -170,6 +170,19 @@ def parse_olan(
             f"{olanfig.fig.short_name}{_suffix}",
             entry_direction,
             p.Direction.parse_heading(p.Heading.infer(tp.att.bearing()[-1]), wind),
+        )
+        # The definition was built before the exit was known. Keep the builder's
+        # centre points but take the final position and directions, which the
+        # analysis uses (e.g. the cross box exit constraint).
+        mdef = replace(
+            mdef,
+            info=mdef.info.model_copy(
+                update=dict(
+                    position=arestifig.info.position,
+                    start=arestifig.info.start,
+                    end=arestifig.info.end,
+                )
+            ),
         )
 
         figs.append(ParsedOlanFig(olanfig, arestifig, mdef, man, tp))

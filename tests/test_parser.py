@@ -444,3 +444,15 @@ def test_direction_lines_use_net_roll_wrapping_to_quarter(mb: ManBuilder):
         assert lines(code), code
     for code in ("b24", "b84", "b1", "b2", "b22", "b"):
         assert not lines(code), code
+
+
+def test_definition_info_matches_final_aresti_info(mb: ManBuilder):
+    figs = parse_olan(
+        "3% /+`,2ifpbb(````````,34...)'22`-~~ (-2,-1) 4% ``-````,5is,2ib````,24'-```",
+        mb,
+    )
+    for fig in figs:
+        for key in ("position", "start", "end"):
+            assert getattr(fig.definition.info, key) == getattr(fig.aresti.info, key)
+    assert figs[1].definition.info.start.direction == Direction.CROSS
+    assert figs[1].definition.info.end.direction != Direction.CROSS
