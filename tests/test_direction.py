@@ -10,6 +10,7 @@ headless OpenAero harness; see docs/plans/olan-roll-options.md in the workspace.
 import json
 from pathlib import Path
 
+import geometry as g
 import pytest
 import schemas.positioning as p
 from pytest import fixture
@@ -52,12 +53,8 @@ def test_direction_state_matches_open_aero(seq):
         )
 
 
-# Figures whose template (option 0) leaves in the wrong direction. They have no
-# direction-changing roll to choose, and PyOlan's loop signs for a half roll in the
-# top of a loop do not give OpenAero's exit.
-XFAIL_TEMPLATE = {
-    "p(2)...'": "half roll on the loop of a P: the loop signs give the opposite heading",
-}
+# Figures whose template (option 0) is known to leave in the wrong direction.
+XFAIL_TEMPLATE: dict[str, str] = {}
 
 
 _PARSED: dict[str, list] = {}
@@ -99,4 +96,8 @@ def test_parsed_exit_matches_open_aero(request, mb, seq, n):
             request.applymarker(
                 pytest.mark.xfail(reason=XFAIL_TEMPLATE[expected["token"]], strict=True)
             )
+        # the template leaves in the OLAN exit attitude
+        body_z = fig.template.att[-1].transform_point(g.PZ()).z[0]
+        assert abs(body_z) > 0.5
+        assert (body_z < 0) == (fig.olan.exit == p.Orientation.UPRIGHT)
         assert p.Heading.infer(fig.template.att.bearing()[-1]) == heading

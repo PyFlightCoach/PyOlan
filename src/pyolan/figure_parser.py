@@ -398,7 +398,8 @@ class OlanFig:
                 return None
 
         if nrolls == 1:
-            rolls[roll_positions[0]] = self.final
+            # OpenAero accepts the roll in brackets too, e.g. o(2)
+            rolls[roll_positions[0]] = self.final or safe_get_item(self.suffix, 0)
         elif nrolls == 2:
             rolls[roll_positions[0]] = self.prefix
             rolls[roll_positions[1]] = self.final
@@ -509,16 +510,18 @@ class OlanFig:
         else:
             entry_swap = np.ones(len(self)) * swap(self.entry == p.Orientation.UPRIGHT)
 
-        # At half roll increments the loop directions are swapped
-        # if the line is vertical the swap is cancelled
+        # At half roll increments the directions of the following loops are
+        # swapped; if the line is vertical the swap is cancelled. The swap starts
+        # after the rolling element: a roll inside a loop (e.g. p(2)) does not
+        # change the direction of that loop, which the builder flies with the roll.
         roll_swap = []
         is_swapped = 1
         for hrp, isvert in zip(np.where(roll_totals % 1 == 0.5, 0.5, 0), is_vertical):
-            if hrp == 0.5:
-                is_swapped = -is_swapped
             if isvert:
                 is_swapped = 1
             roll_swap.append(is_swapped)
+            if hrp == 0.5 and not isvert:
+                is_swapped = -is_swapped
 
         loops = loops * entry_swap * np.array(roll_swap)
 
@@ -532,22 +535,33 @@ class OlanFig:
                 else len(loops) + self.fig.turnable
             )
 
-            # infer exit attitude - if climbing then pull to inverted, push to upright
-            # if diving pull to upright, push to inverted
-            pos_exit_direction = -swap(direction[-2] < 0.5)
-
-            exit_loop_direction = (
-                swap(self.exit == p.Orientation.UPRIGHT) * pos_exit_direction
-            )
-
-            turn_swap = np.where(
-                np.arange(len(loops)) >= turn_index,
-                swap(np.sign(loops[-1]) == exit_loop_direction),
-                1,
-            )
-            loops = loops * turn_swap
+            # reverse all elements from the turnable element when the exit
+            # attitude they give does not match the OLAN exit attitude.
+            if self.exit_attitude(loops, element_rolls) != self.exit:
+                loops = np.where(np.arange(len(loops)) >= turn_index, -loops, loops)
 
         return loops
+
+    def exit_attitude(
+        self, loops: np.ndarray, element_rolls: list[OlanRoll | None]
+    ) -> p.Orientation:
+        """The exit attitude given signed loop amounts (pull positive).
+
+        Tracks the flight path angle and which side of it the canopy is on in the
+        plane of the figure. A loop follows its geometric path, so a half roll in
+        a loop (or on a line) only moves the canopy to the other side. Quarter
+        rolls change the plane but not the pull or push needed afterwards, so they
+        are ignored here.
+        """
+        angle = 0.0  # flight path angle in turns, 0 = along the entry heading
+        canopy = 1 if self.entry == p.Orientation.UPRIGHT else -1
+        for amount, roll in zip(loops, element_rolls):
+            angle += amount * canopy
+            if roll is not None and roll.roll_arr and abs(roll.total()) % 1 == 0.5:
+                canopy = -canopy
+        # upright when the canopy points up: horizontal with canopy at +90 degrees
+        up = (round(angle * 4) % 4 == 0) == (canopy > 0)
+        return p.Orientation.UPRIGHT if up else p.Orientation.INVERTED
 
     def create_elements(
         self,

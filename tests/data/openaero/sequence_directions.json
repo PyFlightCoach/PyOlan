@@ -650,5 +650,325 @@
     }
    }
   ]
+ },
+ {
+  "input": "p(2)",
+  "figures": [
+   {
+    "token": "p(2)",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "p(2)-",
+  "figures": [
+   {
+    "token": "p(2)-",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "-p(2)",
+  "figures": [
+   {
+    "token": "-p(2)",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "-p(2)-",
+  "figures": [
+   {
+    "token": "-p(2)-",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "rp(2)",
+  "figures": [
+   {
+    "token": "rp(2)",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "-rp(2)-",
+  "figures": [
+   {
+    "token": "-rp(2)-",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "o(2)-",
+  "figures": [
+   {
+    "token": "o(2)-",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "-o(2)",
+  "figures": [
+   {
+    "token": "-o(2)",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "p(1)",
+  "figures": [
+   {
+    "token": "p(1)",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "p(22)",
+  "figures": [
+   {
+    "token": "p(22)",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "pp",
+  "figures": [
+   {
+    "token": "pp",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "rpp",
+  "figures": [
+   {
+    "token": "rpp",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "q(1)",
+  "figures": [
+   {
+    "token": "q(1)",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "-q(1)-",
+  "figures": [
+   {
+    "token": "-q(1)-",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "q2-",
+  "figures": [
+   {
+    "token": "q2-",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "pp(1)",
+  "figures": [
+   {
+    "token": "pp(1)",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "rpp(1)",
+  "figures": [
+   {
+    "token": "rpp(1)",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "o2-",
+  "figures": [
+   {
+    "token": "o2-",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 180,
+     "attitude": 180
+    }
+   }
+  ]
+ },
+ {
+  "input": "-o2",
+  "figures": [
+   {
+    "token": "-o2",
+    "entry": {
+     "direction": 180,
+     "attitude": 180
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
+ },
+ {
+  "input": "o1",
+  "figures": [
+   {
+    "token": "o1",
+    "entry": {
+     "direction": 0,
+     "attitude": 0
+    },
+    "exit": {
+     "direction": 0,
+     "attitude": 0
+    }
+   }
+  ]
  }
 ]
