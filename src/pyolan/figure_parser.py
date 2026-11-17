@@ -44,6 +44,26 @@ def _open_aero_roll_k_factors() -> dict[str, dict[str, int]]:
     )
 
 
+def horizontal_fractions(start: float, amount: float, tol: float = 1e-9) -> list[float]:
+    """Fractions of a loop at which the flight path is horizontal.
+
+    start is the path angle at the start of the loop and amount the signed
+    geometric change in path angle over it, both in turns. The path is
+    horizontal where the angle is a multiple of 1/2 (the apex of an upright or
+    inverted loop and the nadir of one). Only interior points count: a loop that
+    starts or ends level has no apex to centre a roll on.
+    """
+    if abs(amount) < tol:
+        return []
+    low, high = sorted((start, start + amount))
+    found = []
+    for k in range(int(np.floor(low * 2)) - 1, int(np.ceil(high * 2)) + 2):
+        fraction = (k / 2 - start) / amount
+        if tol < fraction < 1 - tol:
+            found.append(float(fraction))
+    return found
+
+
 @dataclass
 class OlanFig:
     draw: list[str]
@@ -581,6 +601,37 @@ class OlanFig:
         up = (round(angles[-1] * 4) % 4 == 0) == (canopies[-1] > 0)
         return p.Orientation.UPRIGHT if up else p.Orientation.INVERTED
 
+    ROLL_ANGLE = np.radians(90)
+
+    def _loop_roll_kwargs(
+        self, roll: OlanRoll, start: float, amount: float
+    ) -> dict[str, object]:
+        """The roll arguments for a loop, centring the roll on its apex or nadir.
+
+        The rules ask for a roll in a loop to be symmetric about the apex (or
+        nadir), however much of the loop it uses. start is the path angle at the
+        start of the loop and amount the geometric change in path angle over it,
+        both in turns. A loop with one level point inside it has the roll
+        centred on that point. One with none (the level point is at an end) has
+        the roll spanning as much of the loop as it can.
+        """
+        kwargs: dict[str, object] = dict(
+            rolls=roll.pfc_roll(),
+            rolltypes=roll.rolltypes(),
+            rollangle=self.ROLL_ANGLE,
+        )
+        points = horizontal_fractions(start, amount)
+        if len(points) > 1:
+            raise ValueError(
+                f"loop of {amount} turns from path angle {start} is level at more "
+                f"than one interior point ({points}), so the roll has no single apex"
+            )
+        if points:
+            kwargs["rollposition"] = points[0]
+        else:
+            kwargs["rollangle"] = min(self.ROLL_ANGLE, abs(2 * np.pi * amount))
+        return kwargs
+
     def create_elements(
         self,
         use_roll_options: bool = False,
@@ -597,6 +648,7 @@ class OlanFig:
 
         rolls = self.element_rolls()
         loops = self.loop_amounts(rolls)
+        angles, canopies = self.path_angles(loops, rolls)
         refs = self._linked_roll_refs()[0] if use_roll_options and link_lines else {}
 
         for i, el in enumerate(self.fig.oels):
@@ -606,10 +658,8 @@ class OlanFig:
                         a.loop(
                             p.r(loops[i]),
                             **(
-                                dict(
-                                    rolls=rolls[i].pfc_roll(),
-                                    rolltypes=rolls[i].rolltypes(),
-                                    rollangle=np.radians(90),
+                                self._loop_roll_kwargs(
+                                    rolls[i], angles[i], loops[i] * canopies[i]
                                 )
                                 if rolls[i] and rolls[i].roll_arr
                                 else {}
