@@ -542,25 +542,43 @@ class OlanFig:
 
         return loops
 
-    def exit_attitude(
+    def path_angles(
         self, loops: np.ndarray, element_rolls: list[OlanRoll | None]
-    ) -> p.Orientation:
-        """The exit attitude given signed loop amounts (pull positive).
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """The flight path angle and canopy side at the start of each element.
 
-        Tracks the flight path angle and which side of it the canopy is on in the
-        plane of the figure. A loop follows its geometric path, so a half roll in
-        a loop (or on a line) only moves the canopy to the other side. Quarter
-        rolls change the plane but not the pull or push needed afterwards, so they
-        are ignored here.
+        loops are the signed loop amounts (pull positive) and element_rolls the
+        rolls of each element, as returned by loop_amounts and element_rolls.
+        Tracks the flight path angle in the plane of the figure, in turns, with 0
+        along the entry heading and positive climbing, and which side of the path
+        the canopy is on (1 up, -1 down). A loop follows its geometric path, so a
+        half roll in a loop (or on a line) only moves the canopy to the other side.
+        Quarter rolls change the plane but not the pull or push needed afterwards,
+        so they are ignored here.
+
+        Both arrays have one more item than there are elements: the last is the
+        state after the final element. Within an element the path angle moves
+        linearly by ``loops[i] * canopy[i]``, the canopy flipping after it.
         """
-        angle = 0.0  # flight path angle in turns, 0 = along the entry heading
+        angle = 0.0
         canopy = 1 if self.entry == p.Orientation.UPRIGHT else -1
+        angles = [angle]
+        canopies = [canopy]
         for amount, roll in zip(loops, element_rolls):
             angle += amount * canopy
             if roll is not None and roll.roll_arr and abs(roll.total()) % 1 == 0.5:
                 canopy = -canopy
+            angles.append(angle)
+            canopies.append(canopy)
+        return np.array(angles), np.array(canopies)
+
+    def exit_attitude(
+        self, loops: np.ndarray, element_rolls: list[OlanRoll | None]
+    ) -> p.Orientation:
+        """The exit attitude given signed loop amounts (pull positive)."""
+        angles, canopies = self.path_angles(loops, element_rolls)
         # upright when the canopy points up: horizontal with canopy at +90 degrees
-        up = (round(angle * 4) % 4 == 0) == (canopy > 0)
+        up = (round(angles[-1] * 4) % 4 == 0) == (canopies[-1] > 0)
         return p.Orientation.UPRIGHT if up else p.Orientation.INVERTED
 
     def create_elements(

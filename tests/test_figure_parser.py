@@ -242,3 +242,26 @@ def test_create_spin_on_line():
 def test_imac_adv_reversing_loop():
     fig = OlanFig.take(["48,2rpp(,f)2"])[0]
     assert fig.fig.chars == "rpp"
+
+
+def test_path_angles_follow_the_geometric_path():
+    # p(2): a 3/4 loop carrying a half roll, a line, then a 1/4 loop. The half roll
+    # moves the canopy, so the last loop (+1/4 pull) brings the path back to level.
+    fig = OlanFig.take(["p(2)"])[0]
+    rolls = fig.element_rolls()
+    loops = fig.loop_amounts(rolls)
+
+    angles, canopies = fig.path_angles(loops, rolls)
+
+    np.testing.assert_allclose(angles, [0, 0, 0.75, 0.75, 0.5])
+    np.testing.assert_array_equal(canopies, [1, 1, -1, -1, -1])
+    assert fig.exit_attitude(loops, rolls) == fig.exit
+
+
+def test_path_angles_inverted_entry_descends_on_a_pull():
+    fig = OlanFig.take(["ip(2)"])[0]
+    rolls = fig.element_rolls()
+    angles, canopies = fig.path_angles(fig.loop_amounts(rolls), rolls)
+
+    np.testing.assert_allclose(angles, [0, 0, -0.75, -0.75, -0.5])
+    np.testing.assert_array_equal(canopies, [1, 1, -1, -1, -1])
