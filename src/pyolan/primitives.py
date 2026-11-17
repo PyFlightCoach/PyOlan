@@ -220,7 +220,7 @@ olan_figs = create_ofig_dict(
             "reverse Q Loop",
             "rQloop",
             "rq",
-            [lo(1 / 4), lo(1 / 8), li(), lo(7 / 8, True), li()],
+            [lo(1 / 8), li(), lo(7 / 8, True), li()],
             True,
         ),
         OFig(
@@ -434,7 +434,7 @@ olan_figs.update(
         [
             OFig("Horizontal S", "hS", "cm", [li(), lo(5 / 8), li(), lo(-5 / 8), li()], True),
             OFig("Reversing Loop", "rloop", "or", [li(), lo(3 / 4, True), lo(-1 / 4), li()], True),
-            OFig("Reverse Reversing Loop", "rloop", "rao|ro", [li(), lo(1 / 4, True), lo(-3 / 4), li()], True),
+            OFig("Reverse Reversing Loop", "rloop", "rao|ro", [li(), lo(1 / 4), lo(-3 / 4, True), li()], True),
             OFig("Alternating Turn", "turn", "jj", [tu("i"), tu("i")]),
             OFig("Outside Rolling Turns", "rturn", "jojo", [tu("o"), tu("o")]),
             OFig("Inside Outside Rolling Turns", "rturn", "jijo", [tu("i"), tu("o")]),
