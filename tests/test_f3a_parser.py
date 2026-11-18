@@ -658,3 +658,74 @@ def test_vertical_knife_edge_eight_is_flown_in_knife_edge():
     fig = parse_f3a_description("14.17 Vertical knife-edge eight (K6)")
     assert [e.kind for e in fig.elements] == ["roll", "line", "loop", "loop", "loop", "line", "roll"]
     assert all(e.kwargs["ke"] == pytest.approx(np.pi / 2) for e in fig.elements if e.kind == "loop")
+
+
+# ---------------------------------------------------------------- groups 17 and 18
+
+
+def _closure(text: str, mb, **params) -> float:
+    mdef = mb.create_mdef(parse_f3a_description(text))
+    for key, value in params.items():
+        mdef.mps.data[key].defaul = value
+    if "roll_option" in mdef.mps.data:
+        mdef.mps.data["roll_option"].defaul = 0
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
+    )
+    z = State.stack(templates, "element").pos.z
+    return float(z[-1] - z[0])
+
+
+def test_top_hat_has_a_roll_centred_on_each_vertical_line():
+    for text in ("Top hat with 2/4pt rolls", "Top hat from top with 2/2pt rolls, inverted entry"):
+        assert _kinds(text) == ["loop", "roll", "loop", "line", "loop", "roll", "loop"]
+    # up, over, down: the two corners at the top turn the other way to the others
+    elements = parse_f3a_description("Top hat with 2/2pt rolls").elements
+    first, second, third, fourth = (np.sign(e.args[0]) for e in elements if e.kind == "loop")
+    assert second == third == -first == -fourth
+    # a single roll phrase leaves a vertical line without one
+    with pytest.raises(F3AParseError, match="both vertical lines"):
+        parse_f3a_description("Top hat with half roll")
+
+
+def test_humpty_bump_is_a_quarter_half_quarter_loop_with_a_roll_on_each_vertical_line():
+    assert _kinds("Humpty bump, half roll up, 2/4pt roll down") == ["loop", "roll", "loop", "roll", "loop"]
+    for text in (
+        "Humpty bump, half roll up, 2/4pt roll down",
+        "Humpty bump from top, half roll down, 2/4pt roll up, inverted entry",
+    ):
+        assert sorted(abs(t) for t in _loop_turns(text)) == [0.25, 0.25, 0.5]
+    # "up" and "down" name the lines, and the order they are given in does not matter
+    first = parse_f3a_description("Humpty bump, half roll up, full snap down").elements
+    swapped = parse_f3a_description("Humpty bump, full snap down, half roll up").elements
+    assert [e.kwargs.get("rolls") for e in first] == [e.kwargs.get("rolls") for e in swapped]
+    # from the top the down line comes first
+    top = parse_f3a_description("Humpty bump from top, half roll down, full snap up").elements
+    assert [e.kwargs.get("rolls") for e in top] == [e.kwargs.get("rolls") for e in first]
+    for text in (
+        "Humpty bump, half roll up",
+        "Humpty bump, half roll up, half roll up",
+        "Humpty bump, half roll, full roll",
+    ):
+        with pytest.raises(F3AParseError, match="roll up and a roll down|unexpected"):
+            parse_f3a_description(text)
+
+
+@pytest.mark.parametrize(
+    "text, params",
+    [
+        ("Top hat with 2/4pt rolls", {}),
+        ("Top hat from top with 2/2pt rolls", {}),
+        ("Humpty bump, half roll up, 2/4pt roll down", {}),
+        ("Humpty bump from top, 2/4pt roll down, full roll up", {}),
+    ],
+)
+def test_top_hat_and_humpty_bump_finish_at_their_entry_height(text, params, mb):
+    assert _closure(text, mb, **params) == pytest.approx(0, abs=1e-6)
+
+
+def test_humpty_bump_with_a_snap_finishes_a_little_below_its_entry(mb):
+    # Builder inconsistency, not tied by the parser: the pads of a snap line are
+    # sized for a 15 m snap but the snap flies 17.6 m, so the down line is 2.6 m
+    # longer than the up line (the figure still closes to well within the box).
+    assert abs(_closure("Humpty bump, 2/4pt roll up, full snap down", mb)) == pytest.approx(2.557, abs=0.01)
