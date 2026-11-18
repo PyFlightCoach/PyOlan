@@ -141,7 +141,7 @@ def test_geometric_contradiction_is_an_error():
 
 def test_knife_edge_loop_links_the_mirror_image():
     fig = parse_f3a_description("01.7 Knife-edge loop (K6)")
-    assert [e.kind for e in fig.elements] == ["roll", "loop", "roll"]
+    assert [e.kind for e in fig.elements] == ["roll", "loop", "line", "roll"]
     assert fig.elements[1].kwargs["ke"] == pytest.approx(np.pi / 2)
     first, mirror = fig.ndmps["roll_option"]
     assert mirror == [-v for v in first]
@@ -204,9 +204,12 @@ def test_two_loops_put_the_rolls_at_the_far_point_of_each_loop():
         parse_f3a_description("Two loops with half rolls at bottom (K3)")
 
 
-def test_avalanche_negative_snap():
-    loop = parse_f3a_description("03.5 Avalanche with 1 negative snap (from top) (K4)").elements[0]
-    assert loop.kwargs["rolltypes"] == parse_roll("1 negative snap").rolltypes()
+def test_snap_sign_is_parsed_but_the_builder_cannot_carry_it():
+    # an unstated sign is either; a stated one is checked for spelling only,
+    # because the builder's snap has no positive or negative flavour
+    for text in ("1 negative snap", "1 positive snap", "snap"):
+        loop = parse_f3a_description(f"Avalanche with {text} (from top)").elements[0]
+        assert loop.kwargs["rolltypes"] == "snap"
 
 
 def test_triangular_loop_roll_placement():
@@ -223,10 +226,48 @@ def test_triangular_loop_roll_placement():
         parse_f3a_description("Triangular loop with full roll at bottom (from bottom)")
 
 
-def test_square_loop_rolls_include_the_exit_line():
+def test_square_loop_exit_roll_follows_a_line_and_ends_the_figure():
     kinds = _kinds("Square loop with half rolls (K5)")
-    assert kinds == ["loop", "roll", "loop", "roll", "loop", "roll", "loop", "roll"]
+    assert kinds == ["loop", "roll", "loop", "roll", "loop", "roll", "loop", "line", "roll"]
+    assert not parse_f3a_description("Square loop with half rolls").elements[-1].kwargs["padded"]
     assert _kinds("Square loop with full snap over top").count("roll") == 1
+
+
+def _leg_lengths(fig, mb) -> list[float]:
+    """Path length of each run of non-loop elements between loops (entry and exit lines excluded)."""
+    mdef = mb.create_mdef(fig)
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
+    )
+    legs: list[float] = []
+    previous_loop = True
+    for name, st in templates.items():
+        if name in ("entry_line", "exit_line"):
+            continue
+        index = int(name.split("_")[1])
+        length = float(np.sum(np.linalg.norm(np.diff(st.pos.data, axis=0), axis=1)))
+        if fig.elements[index].kind == "loop":
+            previous_loop = True
+            continue
+        if previous_loop:
+            legs.append(0.0)
+        previous_loop = False
+        legs[-1] += length
+    return legs
+
+
+@pytest.mark.parametrize(
+    "text, sloping",
+    [
+        ("Triangular loop with full roll (from bottom)", (0, 2)),
+        ("Triangular loop with 1/2 rolls (from bottom)", (0, 2)),
+        ("Triangular loop (base at bottom) with half rolls in 45 degree legs", (0, 1)),
+        ("Triangular loop from top (base at top) with 2/4pt rolls in 45 degree legs", (0, 1)),
+    ],
+)
+def test_triangle_45_degree_legs_are_the_same_length(text, sloping, mb):
+    legs = _leg_lengths(parse_f3a_description(text), mb)
+    assert legs[sloping[0]] == pytest.approx(legs[sloping[1]])
 
 
 def test_text_only_gives_position_from_the_shape():

@@ -569,6 +569,10 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                 padded = 0 < i < last
                 roll = item.roll
                 if roll is not None:
+                    if i == last and i > 0:
+                        # F3A: a roll that ends the figure follows a line, and the
+                        # figure finishes at the end of the roll
+                        pes.append(a.line())
                     if linked and item.linked:
                         rolls = [ref() for _ in roll.roll_arr]
                     else:
