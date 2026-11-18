@@ -35,10 +35,11 @@ IMPLEMENTED_GROUPS = tuple(
 # a 45 degree line does not close: it exits at mid height. Decided 2026-11-18:
 # line lengths are left to scoring and the layout, not tied by the parser.
 OPEN_FIGURE_N = {"26.5", "26.6", "26.7", "26.8"}
-# The drawings put the entry of a cobra roll from top at "middle" height (the V
-# descends to low). The template measures heights against the figure's own
-# range, so the entry of a V is "high". Open question for the user.
-OPEN_COBRA_FROM_TOP = {f"08.{n}" for n in range(5, 11)}
+# A cobra roll from top is a V: its entry height is "middle" in the drawings but
+# can be middle or high depending on the manoeuvre before it (decided
+# 2026-11-18), and the template measures heights against the figure's own range.
+# Entry and exit heights are not compared for these.
+FLEXIBLE_START_HEIGHT = {f"08.{n}" for n in range(5, 11)}
 
 
 # ---------------------------------------------------------------- normalising
@@ -148,8 +149,8 @@ def test_geometric_contradiction_is_an_error():
 
 def test_knife_edge_loop_links_the_mirror_image():
     fig = parse_f3a_description("01.7 Knife-edge loop (K6)")
-    assert [e.kind for e in fig.elements] == ["roll", "loop", "line", "roll"]
-    assert fig.elements[1].kwargs["ke"] == pytest.approx(np.pi / 2)
+    assert [e.kind for e in fig.elements] == ["roll", "line", "loop", "line", "roll"]
+    assert fig.elements[2].kwargs["ke"] == pytest.approx(np.pi / 2)
     first, mirror = fig.ndmps["roll_option"]
     assert mirror == [-v for v in first]
     # the 1/4 rolls go back the way they came, so the exit is upright again
@@ -320,12 +321,18 @@ def test_triangle_45_degree_legs_are_the_same_length(text, sloping, mb):
     assert legs[sloping[0]] == pytest.approx(legs[sloping[1]])
 
 
-def test_six_sided_loop_is_six_equal_sixth_loops():
+def test_six_sided_loop_has_45_degree_lines():
+    # corners 1/8, 1/4, 1/8, 1/8, 1/4, 1/8 give lines at 45, 135, 180, 225 and 315 degrees
+    turns = [1 / 8, 1 / 4, 1 / 8, 1 / 8, 1 / 4, 1 / 8]
     fig = parse_f3a_description("07.1 Six sided loop (K4)")
     assert [e.kind for e in fig.elements] == ["loop", "line"] * 5 + ["loop"]
-    assert [e.args[0] for e in fig.elements if e.kind == "loop"] == pytest.approx([np.pi / 3] * 6)
+    assert [e.args[0] for e in fig.elements if e.kind == "loop"] == pytest.approx(
+        [2 * np.pi * t for t in turns]
+    )
     from_top = parse_f3a_description("07.3 Six sided loop from top (K4)")
-    assert [e.args[0] for e in from_top.elements if e.kind == "loop"] == pytest.approx([-np.pi / 3] * 6)
+    assert [e.args[0] for e in from_top.elements if e.kind == "loop"] == pytest.approx(
+        [-2 * np.pi * t for t in turns]
+    )
     with pytest.raises(F3AParseError, match="half rolls"):
         parse_f3a_description("Six sided loop with half rolls")
 
@@ -356,6 +363,43 @@ def test_golf_ball_shape_and_roll_placement():
         parse_f3a_description(
             "Golf ball (45 degrees up, 3/4 inside loop, 45 degrees down, pull to level), inverted entry"
         )
+
+
+def test_rolls_that_start_or_end_a_figure_have_a_line_to_the_next_element():
+    # F3A: a line between the roll and its neighbouring loop; the lines share a
+    # comparison parameter of 20 m that need not match the figure's other lines
+    fig = parse_f3a_description("01.7 Knife-edge loop (K6)")
+    assert [e.kind for e in fig.elements] == ["roll", "line", "loop", "line", "roll"]
+    assert [e.kwargs.get("length") for e in fig.elements if e.kind == "line"] == ["roll_line_length"] * 2
+    assert fig.ndmps["roll_line_length"].value == 20
+    assert fig.ndmps["roll_line_length"].like == "line_length"
+    # a figure with no such roll does not get the parameter
+    assert "roll_line_length" not in parse_f3a_description("Loop (K2)").ndmps
+
+
+@pytest.mark.parametrize(
+    "text, radius",
+    [
+        ("Cuban eight", 55),
+        ("Cuban eight with full rolls", 55),
+        ("Cuban eight from top with half rolls", 55),
+        ("Reverse cuban eight with full rolls", 55),
+        ("Knife-edge Cuban eight", 55),
+        # the roll and its pads are longer than two radii at the default radius
+        ("Cuban eight with 2/4pt rolls", 70),
+        ("Reverse cuban eight from top with 2/4pt rolls", 70),
+    ],
+)
+def test_cuban_eight_finishes_at_its_entry_height(text, radius, mb):
+    mdef = mb.create_mdef(parse_f3a_description(text))
+    mdef.mps.data["loop_radius"].defaul = radius
+    if "roll_option" in mdef.mps.data:
+        mdef.mps.data["roll_option"].defaul = 0
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
+    )
+    tp = State.stack(templates, "element")
+    assert tp.pos.z[-1] - tp.pos.z[0] == pytest.approx(0, abs=1e-6)
 
 
 def test_text_only_gives_position_from_the_shape():
@@ -412,8 +456,6 @@ def _cases():
         marks = []
         if entry["number"] in OPEN_FIGURE_N:
             marks.append(pytest.mark.xfail(strict=True, reason="figure N line lengths are left to scoring and layout"))
-        if entry["number"] in OPEN_COBRA_FROM_TOP:
-            marks.append(pytest.mark.xfail(strict=True, reason="cobra roll from top: drawing entry height is middle, template says high"))
         yield pytest.param(entry, id=entry["number"], marks=marks)
 
 
@@ -423,6 +465,9 @@ def test_matches_usg_drawing(entry, mb):
     figures = parsed.figures if isinstance(parsed, a.Option) else [parsed]
     keys = ("entry_attitude", "exit_attitude", "entry_height", "exit_height", "kind")
     expected = {k: entry[k] for k in keys}
+    if entry["number"] in FLEXIBLE_START_HEIGHT:
+        expected["entry_height"] = expected["exit_height"] = "high"
+        assert entry["entry_height"] == entry["exit_height"] == "middle"
     position = p.Position.CENTRE if entry["kind"] == "centre" else p.Position.END
     for fig in figures:
         assert fig.info.k == entry["k"]

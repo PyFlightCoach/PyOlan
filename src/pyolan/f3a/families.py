@@ -24,6 +24,9 @@ Conventions decided per family (check against the drawings at review):
   line). The base is opposite the start height unless "(base at ...)" says
   otherwise. A lone roll goes on the base, plural rolls ("1/2 rolls") on every
   leg and "in 45 degree legs" on the two sloping legs.
+- a roll that starts or ends a figure is separated from its neighbouring loop by
+  a line (see steps.figure_ndmps): 20 m by default, a comparison parameter shared
+  by those lines, not tied to the figure's other lines.
 - square loop (05): four quarter loops in one sense. Legs are numbered in
   flight order (up or down, far side, down or up, exit line); plural rolls go
   on all four and "over top" or "at bottom" on the far side.
@@ -91,12 +94,16 @@ def _polygon(
     corners: list[Fraction],
     rolls: dict[int, OlanRoll],
     knife_edge: bool = False,
+    lengths: dict[int, str] | None = None,
 ) -> list[Clause]:
     """A loop of straight legs joined by corner loops, all turning one way.
 
     Legs are numbered from 1 between the corners; the line after the last
-    corner is the leg after the last one. Rolls are given by leg number.
+    corner is the leg after the last one. Rolls are given by leg number, and
+    lengths gives a builder expression (such as "2*loop_radius") for the legs
+    that must have a particular length for the figure to close.
     """
+    lengths = lengths or {}
     quarter = OlanRoll("1/4 roll", require_roll("1/4 roll").roll_arr)
     clauses: list[Clause] = [Entry(mods.entry)]
     if knife_edge:
@@ -107,7 +114,12 @@ def _polygon(
         theta = (theta + amount * sense) % 1
         if i < len(corners) or i in rolls:
             clauses.append(
-                Line(frozenset({theta}), knife_edge=True if knife_edge else None, label=f"leg {i}")
+                Line(
+                    frozenset({theta}),
+                    knife_edge=True if knife_edge else None,
+                    label=f"leg {i}",
+                    length=lengths.get(i),
+                )
             )
         if i in rolls:
             clauses.append(Roll(rolls[i]))

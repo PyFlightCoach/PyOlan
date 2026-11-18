@@ -59,6 +59,7 @@ class Line:
     angles: frozenset[Fraction] | None = None
     knife_edge: bool | None = None
     label: str = ""
+    length: str | None = None  # a builder expression such as "2*loop_radius"
 
 
 @dataclass
@@ -112,6 +113,7 @@ LEVEL = frozenset({Fraction(0), Fraction(1, 2)})
 class RLine:
     rolls: list[OlanRoll] = field(default_factory=list)
     linked: bool = False  # the roll direction is linked to the mirror option
+    length: str | None = None  # a builder expression for the line length
 
     @property
     def roll(self) -> OlanRoll | None:
@@ -356,7 +358,7 @@ def _fly(
 
     for i, clause in enumerate(clauses[1:], start=1):
         match clause:
-            case Line(angles=angles, knife_edge=knife_edge):
+            case Line(angles=angles, knife_edge=knife_edge, length=length):
                 if angles is not None and flight.theta not in angles:
                     if len(items) == 1 and not items[0].rolls:
                         add_loop(_shortest(flight.theta, angles, forward), None, None)
@@ -364,7 +366,10 @@ def _fly(
                         raise F3AParseError(
                             f"line at path angle {flight.theta}, expected {sorted(angles)}"
                         )
-                current_line()
+                if length is not None:
+                    current_line().length = length
+                else:
+                    current_line()
                 if knife_edge is not None and knife_edge != flight.knife_edge():
                     raise F3AParseError(
                         f"line at path angle {flight.theta} is "
@@ -554,6 +559,25 @@ def mirror_parameters(items: list[Item]) -> list[float]:
     return values
 
 
+ROLL_LINE = "roll_line_length"
+ROLL_LINE_DEFAULT = 20.0  # m; a line next to a roll that starts or ends a figure
+
+
+def figure_ndmps(items: list[Item]) -> dict[str, a.NewComparison]:
+    """The comparison parameter shared by the lines next to the start and end rolls.
+
+    F3A puts a line between a roll that starts or ends a figure and its
+    neighbouring loop. Those lines are compared with each other, and need not
+    match the figure's other lines.
+    """
+    last = len(items) - 1
+    first_roll = last > 0 and isinstance(items[0], RLine) and items[0].rolls
+    end_roll = last > 0 and isinstance(items[last], RLine) and items[last].rolls
+    if first_roll or end_roll:
+        return {ROLL_LINE: a.NewComparison(value=ROLL_LINE_DEFAULT, like="line_length")}
+    return {}
+
+
 def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
     """The elements; with linked the mirror parameters refer to roll_option."""
     pes: list[a.PE] = []
@@ -572,14 +596,18 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                     if i == last and i > 0:
                         # F3A: a roll that ends the figure follows a line, and the
                         # figure finishes at the end of the roll
-                        pes.append(a.line())
+                        pes.append(a.line(length=ROLL_LINE))
                     if linked and item.linked:
                         rolls = [ref() for _ in roll.roll_arr]
                     else:
                         rolls = roll.pfc_roll()
-                    pes.append(a.roll(rolls, rolltypes=roll.rolltypes(), padded=padded))
+                    extra = {"line_length": item.length} if item.length and padded else {}
+                    pes.append(a.roll(rolls, rolltypes=roll.rolltypes(), padded=padded, **extra))
+                    if i == 0 and last > 0:
+                        # and so does one that starts it
+                        pes.append(a.line(length=ROLL_LINE))
                 elif padded:
-                    pes.append(a.line())
+                    pes.append(a.line(length=item.length) if item.length else a.line())
             case RLoop():
                 angle = ref() if linked and item.ke else float(item.angle)
                 kwargs = _loop_roll_kwargs(item) if item.roll is not None else {}

@@ -38,6 +38,7 @@ from .steps import (
     Roll,
     StallTurn,
     create_elements,
+    figure_ndmps,
     mirror_parameters,
     resolve,
 )
@@ -184,9 +185,13 @@ def _figure(desc: Description, resolved: Resolved) -> a.Figure:
         return a.Figure(
             info=info,
             elements=create_elements(resolved.items, linked=True),
-            ndmps={"roll_option": [mirror, [-v for v in mirror]]},
+            ndmps={"roll_option": [mirror, [-v for v in mirror]]} | figure_ndmps(resolved.items),
         )
-    return a.Figure(info=info, elements=create_elements(resolved.items, linked=False), ndmps={})
+    return a.Figure(
+        info=info,
+        elements=create_elements(resolved.items, linked=False),
+        ndmps=figure_ndmps(resolved.items),
+    )
 
 
 def parse_f3a_description(

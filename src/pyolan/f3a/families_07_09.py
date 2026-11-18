@@ -2,11 +2,13 @@
 
 Conventions decided per family (checked against the USG drawings):
 
-- six sided loop (07): a regular hexagon flown as six 1/6 loops joined by five
-  equal lines, all turning one way. The entry and exit lines are the base
-  of the hexagon (the drawing draws them over the first and last side), so the
-  figure starts and ends at the height of its base. It starts at the bottom of
-  the hexagon (loops go up) unless ``from top`` (loops go down). No rolls.
+- six sided loop (07): a hexagon with 45 degree sloping sides (F3A has no 60
+  degree lines), flown as corners of 1/8, 1/4, 1/8, 1/8, 1/4 and 1/8 joined by
+  five equal lines at 45, 135, 180, 225 and 315 degrees, all turning one way.
+  The entry and exit lines are the base of the hexagon (the drawing draws them
+  over the first and last side), so the figure starts and ends at the height
+  of its base. It starts at the bottom of the hexagon (loops go up) unless
+  ``from top`` (loops go down). No rolls.
 - cobra roll (08): entry line, 1/8 loop to a 45 degree leg, the leg, a 1/4 loop
   over the apex (the other way), the second 45 degree leg and a 1/8 loop back to
   level. The rolls are plural: one in each 45 degree leg (centred, as the
@@ -61,7 +63,8 @@ def six_sided_loop(name: str, mods: Modifiers, phrases: list[str]) -> list[Claus
     if phrases:
         raise F3AParseError(f"{name}: unexpected {phrases!r}")
     sense = _sense(mods)
-    return _legs(mods, [(Fraction(1, 6), sense)] * 6, {})
+    turns = [Fraction(1, 8), Fraction(1, 4), Fraction(1, 8), Fraction(1, 8), Fraction(1, 4), Fraction(1, 8)]
+    return _legs(mods, [(t, sense) for t in turns], {})
 
 
 def _plural_roll(name: str, phrases: list[str]) -> OlanRoll | None:
