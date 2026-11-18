@@ -170,25 +170,7 @@ def _position(desc: Description, resolved: Resolved) -> p.Position:
     return p.Position.END if resolved.reverses else p.Position.CENTRE
 
 
-def parse_f3a_description(
-    text: str, number: str | None = None, k: int | None = None
-) -> a.Figure:
-    """Parse a catalogue line such as ``01.9 Knife-edge loop from top (K6)``.
-
-    The number and K may be passed separately; if the text has them too they
-    must agree. Turnaround figures (lettered groups)
-    reverse the direction of flight, so where a loop's sense is open it is
-    chosen to travel back rather than forward.
-    """
-    desc = split_description(text, number)
-    if k is not None:
-        if desc.k is not None and desc.k != k:
-            raise F3AParseError(f"K {k} does not match the text's K {desc.k}")
-        desc = replace(desc, k=k)
-    clauses = description_clauses(desc)
-    forward = desc.group is None or desc.group.isdigit()
-    resolved = resolve(clauses, forward=forward)
-
+def _figure(desc: Description, resolved: Resolved) -> a.Figure:
     info = ManInfo.build(
         _display_name(desc.raw),
         desc.number or "f3a",
@@ -205,3 +187,29 @@ def parse_f3a_description(
             ndmps={"roll_option": [mirror, [-v for v in mirror]]},
         )
     return a.Figure(info=info, elements=create_elements(resolved.items, linked=False), ndmps={})
+
+
+def parse_f3a_description(
+    text: str, number: str | None = None, k: int | None = None
+) -> a.Figure | a.Option:
+    """Parse a catalogue line such as ``01.9 Knife-edge loop from top (K6)``.
+
+    The number and K may be passed separately; if the text has them too they
+    must agree.
+
+    Roll and yaw directions are the pilot's choice. Roll directions are left
+    to the builder's reversible rolls, or linked in a mirror roll_option where
+    they set the knife-edge side. A loop whose direction the words leave open
+    gives an Option with one figure for each direction; the first keeps the
+    travel direction (forwards for centre figures, backwards for turnarounds),
+    as the drawings show.
+    """
+    desc = split_description(text, number)
+    if k is not None:
+        if desc.k is not None and desc.k != k:
+            raise F3AParseError(f"K {k} does not match the text's K {desc.k}")
+        desc = replace(desc, k=k)
+    clauses = description_clauses(desc)
+    forward = desc.group is None or desc.group.isdigit()
+    figures = [_figure(desc, resolved) for resolved in resolve(clauses, forward=forward)]
+    return figures[0] if len(figures) == 1 else a.Option(figures=figures)

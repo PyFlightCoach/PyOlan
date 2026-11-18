@@ -15,6 +15,7 @@ import numpy as np
 import pytest
 import schemas.positioning as p
 from flightdata import State
+from schemas import aresti as a
 from tuning.builders import load_builder
 
 from pyolan.f3a import F3AParseError, parse_f3a_description
@@ -24,10 +25,12 @@ from pyolan.f3a.rolls import parse_roll
 FIXTURE = json.loads(
     (Path(__file__).parent / "data" / "f3a" / "usg_drawings.json").read_text()
 )
+FIXTURE_BY_NUMBER = {entry["number"]: entry for entry in FIXTURE}
 IMPLEMENTED_GROUPS = ("01", "06", "22", "26")
 
 # The template's lines all take the builder's line_length, so a figure N with
-# a 45 degree line does not close: it exits at mid height.
+# a 45 degree line does not close: it exits at mid height. Decided 2026-11-18:
+# line lengths are left to scoring and the layout, not tied by the parser.
 OPEN_FIGURE_N = {"26.5", "26.6", "26.7", "26.8"}
 
 
@@ -165,6 +168,28 @@ def test_square_loop_on_corner_half_rolls_push_the_following_corners():
     assert np.sign(loops).tolist() == [1, -1, -1, 1, 1]
 
 
+def test_rolling_loop_roll_is_integrated_through_the_whole_loop():
+    (loop,) = parse_f3a_description("01.1 Rolling loop with one roll (from bottom) (K5)").elements
+    assert loop.kwargs["rollangle"] == pytest.approx(2 * np.pi)
+    (loop,) = parse_f3a_description("01.3 Loop with 8-point roll (from bottom) (K5)").elements
+    assert loop.kwargs["rollangle"] == pytest.approx(np.pi / 2)
+    assert loop.kwargs["rollposition"] == pytest.approx(0.5)
+
+
+def test_open_loop_direction_gives_an_option_drawn_first():
+    fig = parse_f3a_description(FIXTURE_BY_NUMBER["26.1"]["description"], "26.1")
+    assert isinstance(fig, a.Option)
+    drawn, other = fig.figures
+    # the 1/8 knife-edge loop after the stall turn yaws the other way
+    assert drawn.ndmps["roll_option"][0][1] == -other.ndmps["roll_option"][0][1]
+    assert drawn.ndmps["roll_option"][0][0] == other.ndmps["roll_option"][0][0]
+
+
+def test_stated_loop_direction_gives_one_figure():
+    fig = parse_f3a_description(FIXTURE_BY_NUMBER["26.5"]["description"], "26.5")
+    assert isinstance(fig, a.Figure)
+
+
 def test_text_only_gives_position_from_the_shape():
     fig = parse_f3a_description("Square loop on corner (K3)")
     assert fig.info.position == p.Position.CENTRE
@@ -218,17 +243,19 @@ def _cases():
             continue
         marks = []
         if entry["number"] in OPEN_FIGURE_N:
-            marks.append(pytest.mark.xfail(strict=True, reason="figure N line lengths are not linked"))
+            marks.append(pytest.mark.xfail(strict=True, reason="figure N line lengths are left to scoring and layout"))
         yield pytest.param(entry, id=entry["number"], marks=marks)
 
 
 @pytest.mark.parametrize("entry", _cases())
 def test_matches_usg_drawing(entry, mb):
-    fig = parse_f3a_description(entry["description"], entry["number"], entry["k"])
-    assert fig.info.k == entry["k"]
-    assert fig.info.short_name == entry["number"]
-    position = p.Position.CENTRE if entry["kind"] == "centre" else p.Position.END
-    assert fig.info.position == position
+    parsed = parse_f3a_description(entry["description"], entry["number"], entry["k"])
+    figures = parsed.figures if isinstance(parsed, a.Option) else [parsed]
     keys = ("entry_attitude", "exit_attitude", "entry_height", "exit_height", "kind")
     expected = {k: entry[k] for k in keys}
-    assert _template_metadata(fig, mb, entry["entry_attitude"]) == expected
+    position = p.Position.CENTRE if entry["kind"] == "centre" else p.Position.END
+    for fig in figures:
+        assert fig.info.k == entry["k"]
+        assert fig.info.short_name == entry["number"]
+        assert fig.info.position == position
+        assert _template_metadata(fig, mb, entry["entry_attitude"]) == expected

@@ -75,6 +75,7 @@ class Loop:
     pull: bool | None = None  # True pulled, False pushed
     knife_edge: bool | None = None
     roll: OlanRoll | None = None
+    integrated: bool = False  # the roll spans the whole loop, not 90 degrees of it
 
 
 @dataclass
@@ -129,6 +130,7 @@ class RLoop:
     start: Fraction  # path angle at the start, turns
     geometric: Fraction  # signed change in path angle, turns
     roll: OlanRoll | None = None
+    integrated: bool = False
 
 
 @dataclass
@@ -310,8 +312,18 @@ def _next_angles(clauses: list[Clause], i: int) -> frozenset[Fraction] | None:
 # ---------------------------------------------------------------- resolution
 
 
+class _Branch(Exception):
+    """A loop whose sense the description leaves open; both are valid."""
+
+    def __init__(self, index: int, senses: list[int]):
+        self.index, self.senses = index, senses
+
+
 def _fly(
-    clauses: list[Clause], signs: dict[int, int], forward: bool
+    clauses: list[Clause],
+    signs: dict[int, int],
+    forward: bool,
+    senses: dict[int, int] | None = None,
 ) -> tuple[list[Item], _Flight, p.Orientation]:
     entry = clauses[0]
     if not isinstance(entry, Entry):
@@ -325,7 +337,12 @@ def _fly(
             flight.line()
         return items[-1]
 
-    def add_loop(geometric: Fraction, roll: OlanRoll | None, knife_edge: bool | None):
+    def add_loop(
+        geometric: Fraction,
+        roll: OlanRoll | None,
+        knife_edge: bool | None,
+        integrated: bool = False,
+    ):
         start = flight.theta
         angle, ke = flight.plane_loop(geometric)
         if knife_edge is not None and knife_edge != ke:
@@ -333,7 +350,7 @@ def _fly(
                 f"the {abs(geometric)} loop from path angle {start} is "
                 f"{'' if ke else 'not '}in knife-edge"
             )
-        items.append(RLoop(angle, ke, start, geometric, roll))
+        items.append(RLoop(angle, ke, start, geometric, roll, integrated))
         if roll is not None:
             flight.roll(roll)
 
@@ -360,12 +377,17 @@ def _fly(
                 line.rolls.append(roll)
                 line.linked = line.linked or i in signs
                 flight.roll(roll)
-            case Loop(amount=amount, sense=sense, pull=pull, knife_edge=ke, roll=roll):
+            case Loop(
+                amount=amount, sense=sense, pull=pull, knife_edge=ke, roll=roll,
+                integrated=integrated,
+            ):
                 if sense is None and pull is not None:
                     pitch = _aligned(flight.by, PLANE_AXIS)
                     if not pitch:
                         raise F3AParseError("a pulled or pushed loop needs level wings")
                     sense = (1 if pull else -1) * pitch
+                if sense is None and senses and i in senses:
+                    sense = senses[i]
                 if sense is not None:
                     geometric = amount * sense
                 else:
@@ -375,17 +397,21 @@ def _fly(
                         if targets is None or (flight.theta + amount * s) % 1 in targets
                     ]
                     if len(candidates) > 1:
+                        # the pilot may fly either; the one that keeps the travel
+                        # direction (as the drawings show) comes first
                         pref = 1 if forward else -1
-                        candidates = [
-                            s for s in candidates
-                            if pref * np.cos(_turns(flight.theta + amount * s)) > 1e-9
-                        ] or candidates
+                        candidates.sort(
+                            key=lambda s: -pref * np.cos(_turns(flight.theta + amount * s))
+                        )
+                        raise _Branch(i, candidates)
                     if len(candidates) != 1:
                         raise F3AParseError(
                             f"cannot tell which way the {amount} loop goes from path angle {flight.theta}"
                         )
                     geometric = amount * candidates[0]
-                add_loop(geometric, signed(roll, signs.get(i, 1)) if roll else None, ke)
+                add_loop(
+                    geometric, signed(roll, signs.get(i, 1)) if roll else None, ke, integrated
+                )
             case StallTurn():
                 if flight.theta != Fraction(1, 4) or not isinstance(items[-1], RLine):
                     raise F3AParseError("a stall turn needs a vertical upline")
@@ -426,7 +452,37 @@ def _fly(
     return items, flight, entry.attitude
 
 
-def resolve(clauses: list[Clause], forward: bool = True) -> Resolved:
+def resolve(clauses: list[Clause], forward: bool = True) -> list[Resolved]:
+    """Every way of flying the clauses that the description allows.
+
+    A loop whose sense the words leave open (both senses reach the next line)
+    gives one resolution for each sense, the one keeping the travel direction
+    first. Roll directions are not branched: see _resolve_signs.
+    """
+    return _resolve_senses(clauses, forward, {})
+
+
+def _resolve_senses(
+    clauses: list[Clause], forward: bool, senses: dict[int, int]
+) -> list[Resolved]:
+    try:
+        return [_resolve_signs(clauses, forward, senses)]
+    except _Branch as branch:
+        results: list[Resolved] = []
+        errors: list[str] = []
+        for sense in branch.senses:
+            try:
+                results += _resolve_senses(clauses, forward, senses | {branch.index: sense})
+            except F3AParseError as exc:
+                errors.append(str(exc))
+        if not results:
+            raise F3AParseError("; ".join(dict.fromkeys(errors)))
+        return results
+
+
+def _resolve_signs(
+    clauses: list[Clause], forward: bool, senses: dict[int, int]
+) -> Resolved:
     """Fly the clauses, choosing quarter roll directions that satisfy them all.
 
     The first quarter roll is a free choice (the mirror image is equally valid),
@@ -441,7 +497,7 @@ def resolve(clauses: list[Clause], forward: bool = True) -> Resolved:
     for combination in itertools.product([1, -1], repeat=len(free)):
         signs = dict(zip(free, combination))
         try:
-            items, flight, entry = _fly(clauses, signs, forward)
+            items, flight, entry = _fly(clauses, signs, forward, senses)
         except F3AParseError as exc:
             errors.append(str(exc))
             continue
@@ -465,6 +521,11 @@ def _loop_roll_kwargs(item: RLoop) -> dict:
     kwargs: dict[str, object] = dict(
         rolls=roll.pfc_roll(), rolltypes=roll.rolltypes(), rollangle=ROLL_ANGLE
     )
+    if item.integrated:
+        # spread over the whole loop
+        kwargs["rollangle"] = abs(_turns(item.geometric))
+        kwargs["rollposition"] = 0.5
+        return kwargs
     points = horizontal_fractions(float(item.start), float(item.geometric))
     if len(points) > 1:
         raise F3AParseError("a roll in a loop needs a single apex or nadir")

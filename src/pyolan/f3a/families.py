@@ -6,8 +6,9 @@ it is given or raise an error that names the phrase.
 
 Conventions decided per family (check against the drawings at review):
 
-- loop (01): the loop starts at the bottom unless ``from top``. A roll in it is
-  centred on the apex (or nadir). A knife-edge loop has a 1/4 roll on the entry
+- loop (01): the loop starts at the bottom unless ``from top``. A rolling loop's
+  roll is integrated through the whole loop; any other roll in it takes 90
+  degrees centred on the apex (or nadir). A knife-edge loop has a 1/4 roll on the entry
   and exit lines and exits in its entry attitude.
 - square loop on corner (06): legs are numbered in flight order; ``four
   <roll>s`` puts one in each leg. The diamond keeps its shape after half rolls
@@ -85,7 +86,15 @@ def loop(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
     clauses: list[Clause] = [Entry(mods.entry)]
     if knife_edge:
         clauses.append(Roll(quarter))
-    clauses.append(Loop(Fraction(1), sense=sense, knife_edge=knife_edge, roll=roll))
+    clauses.append(
+        Loop(
+            Fraction(1),
+            sense=sense,
+            knife_edge=knife_edge,
+            roll=roll,
+            integrated=name == "rolling loop",
+        )
+    )
     if knife_edge:
         clauses.append(Roll(quarter))
     clauses.append(Exit(mods.exit if mods.exit is not None else mods.entry if knife_edge else None))
