@@ -344,4 +344,4 @@ def find_family(text: str) -> tuple[Family, str]:
 
 # Families of later groups live in their own modules (they register themselves
 # with @family on import, and use the helpers above).
-from . import families_07_09, families_10  # noqa: E402,F401
+from . import families_07_09, families_10, families_11_12, families_13_14  # noqa: E402,F401
