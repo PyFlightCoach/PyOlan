@@ -613,17 +613,45 @@ def test_vertical_eight_loops_and_waist_rolls():
     assert _loop_turns("14.7 Vertical eight (from middle) (K3)") == [1, -1]
     assert _kinds("Vertical knife-edge eight, middle entry and exit, top first").count("loop") == 2
     assert _kinds("Vertical eight (from bottom)") == ["loop", "loop", "loop"]
-    # plural rolls: at both waist crossings; "after first half loop": the first only
-    assert _kinds("Vertical eight (from bottom) with half rolls") == [
-        "loop", "roll", "loop", "roll", "loop"
-    ]
-    assert _kinds("Vertical eight (from top) with half roll after first half loop") == [
-        "loop", "roll", "loop", "loop"
-    ]
-    assert _kinds("Vertical eight (from middle) with half roll") == ["loop", "roll", "loop"]
-    assert _kinds("Vertical Knife-edge eight with two half roll").count("roll") == 4
     with pytest.raises(F3AParseError, match="one crossing"):
         parse_f3a_description("Vertical eight (from middle) with half rolls")
+
+
+def _rolled_pieces(text: str) -> tuple[list[str], list[int]]:
+    elements = parse_f3a_description(text).elements
+    return (
+        [e.kind for e in elements],
+        [i for i, e in enumerate(elements) if "rolls" in e.kwargs],
+    )
+
+
+def test_hourglass_top_line_is_shorter_than_the_45_degree_legs():
+    # decided 2026-11-18: the top line need not match the 45 degree legs
+    top = "(0.7071067811865476*(line_length-(2*loop_radius)))"
+    fig = parse_f3a_description("Hourglass")
+    assert [e.kwargs.get("length") for e in fig.elements if e.kind == "line"] == [None, top, None]
+    fig = parse_f3a_description("Hourglass (middle entry, top first)")
+    assert [e.kwargs.get("length") for e in fig.elements if e.kind == "line"].count(top) == 2
+
+
+def test_vertical_eight_waist_roll_is_integrated_into_the_loops():
+    # half of the roll in the last 1/8 of the loop before the waist and half in the
+    # first 1/8 of the loop after it (decided 2026-11-18): 3/8 | 1/8r 1/8r | 3/4 | 1/8r 1/8r | 3/8
+    kinds, rolled = _rolled_pieces("Vertical eight (from bottom) with half rolls")
+    assert kinds == ["loop"] * 7 and rolled == [1, 2, 4, 5]
+    kinds, rolled = _rolled_pieces("Vertical eight (from top) with half roll after first half loop")
+    assert kinds == ["loop"] * 5 and rolled == [1, 2]
+    kinds, rolled = _rolled_pieces("Vertical eight (from middle) with half roll")
+    assert kinds == ["loop"] * 4 and rolled == [1, 2]
+    kinds, rolled = _rolled_pieces("Vertical Knife-edge eight with two half roll")
+    assert kinds == ["roll", "line"] + ["loop"] * 7 + ["line", "roll"] and rolled == [3, 4, 6, 7]
+    # both pieces of a roll go the same way: linked in the mirror option. The pieces
+    # that start on the knife-edge also link their yaw angle (an eighth of a turn).
+    fig = parse_f3a_description("Vertical eight (from bottom) with half rolls")
+    first, mirror = fig.ndmps["roll_option"]
+    assert mirror == [-v for v in first]
+    refs = [int(fig.elements[i].kwargs["rolls"].split("[")[1][:-1]) for i in (1, 2, 4, 5)]
+    assert [first[n] for n in refs] == pytest.approx([np.pi / 2] * 4)
 
 
 def test_vertical_knife_edge_eight_is_flown_in_knife_edge():

@@ -133,6 +133,7 @@ class RLoop:
     geometric: Fraction  # signed change in path angle, turns
     roll: OlanRoll | None = None
     integrated: bool = False
+    linked: bool = False  # the roll direction is linked to the mirror option
 
 
 @dataclass
@@ -344,6 +345,7 @@ def _fly(
         roll: OlanRoll | None,
         knife_edge: bool | None,
         integrated: bool = False,
+        linked: bool = False,
     ):
         start = flight.theta
         angle, ke = flight.plane_loop(geometric)
@@ -352,7 +354,7 @@ def _fly(
                 f"the {abs(geometric)} loop from path angle {start} is "
                 f"{'' if ke else 'not '}in knife-edge"
             )
-        items.append(RLoop(angle, ke, start, geometric, roll, integrated))
+        items.append(RLoop(angle, ke, start, geometric, roll, integrated, linked))
         if roll is not None:
             flight.roll(roll)
 
@@ -414,8 +416,14 @@ def _fly(
                             f"cannot tell which way the {amount} loop goes from path angle {flight.theta}"
                         )
                     geometric = amount * candidates[0]
+                # pieces of one roll spread over neighbouring loops must go the
+                # same way, so a free quarter roll in a loop is linked to the mirror
                 add_loop(
-                    geometric, signed(roll, signs.get(i, 1)) if roll else None, ke, integrated
+                    geometric,
+                    signed(roll, signs.get(i, 1)) if roll else None,
+                    ke,
+                    integrated,
+                    linked=integrated and i in signs,
                 )
             case StallTurn():
                 if flight.theta != Fraction(1, 4) or not isinstance(items[-1], RLine):
@@ -552,8 +560,11 @@ def mirror_parameters(items: list[Item]) -> list[float]:
         match item:
             case RLine(linked=True):
                 values.extend(np.atleast_1d(item.roll.angles()).astype(float).tolist())
-            case RLoop(ke=True):
-                values.append(float(item.angle))
+            case RLoop():
+                if item.ke:
+                    values.append(float(item.angle))
+                if item.linked and item.roll is not None:
+                    values.extend(np.atleast_1d(item.roll.angles()).astype(float).tolist())
             case RTurn():
                 values.extend([float(item.angle), float(item.roll)])
     return values
@@ -611,6 +622,13 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
             case RLoop():
                 angle = ref() if linked and item.ke else float(item.angle)
                 kwargs = _loop_roll_kwargs(item) if item.roll is not None else {}
+                if linked and item.linked and item.roll is not None:
+                    kwargs["rolls"] = ref()
+                if item.integrated and linked and item.ke:
+                    # the angle is a reference, so the builder cannot see that the
+                    # roll spans it; leaving the roll angle out means the whole loop
+                    kwargs.pop("rollangle", None)
+                    kwargs.pop("rollposition", None)
                 if item.ke:
                     kwargs["ke"] = KE
                 pes.append(a.loop(angle, **kwargs))

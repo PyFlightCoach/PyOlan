@@ -9,7 +9,8 @@ Conventions decided per family (checked against the USG drawings):
   a 3/8 loop, a 45 degree downline crossing the upline, a 3/8 loop back to the
   base and the exit line. Corners are 3/8, 3/8, 3/8, 3/8 and the two 45 degree
   lines are the same length (one shared ``line_length``), so the figure
-  finishes at its entry height. Plural rolls ("half rolls up and down", "down
+  finishes at its entry height. The top line is TOP_LINE long, not the 45 degree
+  legs' length (decided 2026-11-18), so the two triangles look alike. Plural rolls ("half rolls up and down", "down
   and up" from the top) put the same roll on both 45 degree lines, centred on
   the line, where the lines cross as the drawings show.
 - hourglass from the middle (``(middle entry, top first)`` or ``bottom
@@ -21,7 +22,8 @@ Conventions decided per family (checked against the USG drawings):
   first is the mirror image. The long diagonal is one ``line_length`` (as in
   the other hourglass); the two half diagonals are the same length,
   ``(line_length - 2*(sqrt(2)-1)*loop_radius)/2`` (a builder expression), which puts the crossing at the
-  entry height, so the figure finishes at its entry height too. A single roll
+  entry height, so the figure finishes at its entry height too. The top and
+  base lines are shorter (see TOP_LINE) so the template looks like an hourglass. A single roll
   ("half roll down" top first, "up" bottom first) goes on the long diagonal,
   centred at the crossing, as the drawings show; the half diagonals have none.
   A roll and its pads longer than ``line_length`` would lengthen the diagonal.
@@ -33,13 +35,16 @@ Conventions decided per family (checked against the USG drawings):
   waist, entry and exit on its level): a full pulled loop up (the upper circle),
   then a full pushed loop down. "top first" and no word are the same; "bottom
   first" swaps them.
-- vertical eight rolls: at the waist, where the loops join, and they are rolls
-  on a short line there (the roll and its pads, no longer than they need,
-  ``loop_radius`` is the line length given to the builder). Plural rolls ("half
-  rolls", "two half roll") are at both waist crossings (after the first half loop
-  and after the full loop); "half roll after first half loop" is the first only;
-  a single "half roll" from the middle is at the one waist crossing. The
-  geometric path does not change with a roll: only pull and push do.
+- vertical eight rolls: at the waist, where the loops join, and integrated into
+  the loops (decided 2026-11-18): half of the roll in the last 1/8 of the loop
+  before the waist and half in the first 1/8 of the loop after it (a half roll is
+  a 1/4 roll in each, spread over that 1/8 of the loop). A full loop with a
+  crossing at both ends is split into 1/8, 3/4 and 1/8 pieces. The two pieces of a
+  roll go the same way (linked in the mirror ``roll_option``). Plural rolls
+  ("half rolls", "two half roll") are at both waist crossings (after the first
+  half loop and after the full loop); "half roll after first half loop" is the
+  first only; a single "half roll" from the middle is at the one waist crossing.
+  The geometric path does not change with a roll: only pull and push do.
 - knife-edge vertical eight: the same shape, flown in knife-edge, with a 1/4 roll
   on the entry and exit lines (as the other knife-edge families).
 """
@@ -49,7 +54,7 @@ from __future__ import annotations
 import re
 from fractions import Fraction
 
-from ..rolls import OlanRoll
+from ..rolls import OlanRoll, ORoll
 from .errors import F3AParseError
 from .rolls import require_roll
 from .steps import Clause, Entry, Exit, Line, Loop, Roll
@@ -62,9 +67,12 @@ SQRT2_MINUS_1 = 0.41421356237309503
 # diagonals are equal and put the crossing at the entry height
 HALF_DIAGONAL = f"((line_length-({2 * SQRT2_MINUS_1}*loop_radius))/2)"
 
-# the line at the waist of a vertical eight that holds a roll: as short as the
-# roll and its pads allow
-WAIST_LINE = "loop_radius"
+# The top line of an hourglass. Seen as sharp triangles with the 45 degree legs
+# crossing at their middle, the base of each is (L + 2t)/sqrt(2) between its
+# corners, t = 2.414 loop_radius being the tangent length of a 3/8 loop; less t at
+# each end that is 0.7071*(L - 2*loop_radius). With it the top triangle is the
+# same size as the lower one, whose "base" is the gap between the entry and exit.
+TOP_LINE = "(0.7071067811865476*(line_length-(2*loop_radius)))"
 
 _BOTH_RE = re.compile(r"^(?P<roll>.+? rolls) (?P<dirs>up and down|down and up)$")
 _ONE_RE = re.compile(r"^(?P<roll>.+?) (?P<dir>up|down)$")
@@ -102,12 +110,14 @@ def hourglass(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
             raise F3AParseError(f"{name}: from the middle, say whether the top or bottom goes first")
         sense = 1 if mods.first == "top" else -1
         corners = [Fraction(1, 8), Fraction(3, 8), Fraction(3, 8), Fraction(-3, 8), Fraction(-3, 8), Fraction(-1, 8)]
-        lengths = {1: HALF_DIAGONAL, 5: HALF_DIAGONAL}
+        lengths = {1: HALF_DIAGONAL, 5: HALF_DIAGONAL, 2: TOP_LINE, 4: TOP_LINE}
         return _polygon(mods, sense, corners, {3: roll} if roll else {}, lengths=lengths)
     if mods.first is not None:
         raise F3AParseError(f"{name}: 'first' goes with a start in the middle")
     corners = [Fraction(3, 8), Fraction(-3, 8), Fraction(-3, 8), Fraction(3, 8)]
-    return _polygon(mods, _sense(mods), corners, {1: roll, 3: roll} if roll else {})
+    return _polygon(
+        mods, _sense(mods), corners, {1: roll, 3: roll} if roll else {}, lengths={2: TOP_LINE}
+    )
 
 
 # ---------------------------------------------------------------- vertical eight
@@ -160,14 +170,48 @@ def _vertical_eight(
     clauses: list[Clause] = [Entry(mods.entry)]
     if knife_edge:
         clauses.append(Roll(quarter))
-    for i, amount in enumerate(loops, start=1):
-        clauses.append(Loop(amount, sense=sense, knife_edge=ke))
-        if i in rolls:
-            clauses.append(Line(knife_edge=ke, label="waist", length=WAIST_LINE))
-            clauses.append(Roll(rolls[i]))
+    clauses += _eight_loops(name, loops, rolls, sense, ke)
     if knife_edge:
         clauses.append(Roll(quarter))
     clauses.append(Exit(mods.exit if mods.exit is not None else mods.entry if knife_edge else None))
+    return clauses
+
+
+EIGHTH = Fraction(1, 8)
+
+
+def _half_of(name: str, roll: OlanRoll) -> OlanRoll:
+    """Half of a single roll: the part that goes in one of the two loops."""
+    if len(roll.roll_arr) != 1 or roll.roll_arr[0].kind != "roll":
+        raise F3AParseError(f"{name}: a roll at the waist must be a single roll, got {roll.rawroll!r}")
+    r = roll.roll_arr[0]
+    return OlanRoll(f"{roll.rawroll}/2", [ORoll(r.kind, r.turns / 2, r.negative)])
+
+
+def _eight_loops(
+    name: str, loops: list[Fraction], rolls: dict[int, OlanRoll], sense: int, ke: bool | None
+) -> list[Clause]:
+    """The loops of a vertical eight, split so a waist roll is integrated into the
+    last 1/8 of the loop before it and the first 1/8 of the loop after it."""
+    clauses: list[Clause] = []
+    for k, amount in enumerate(loops, start=1):
+        sign = 1 if amount > 0 else -1
+        head, tail = rolls.get(k - 1), rolls.get(k)
+        middle = abs(amount) - (EIGHTH if head else 0) - (EIGHTH if tail else 0)
+        if middle < 0:
+            raise F3AParseError(f"{name}: a loop of {abs(amount)} is too short for rolls at both ends")
+        if head:
+            # in the knife-edge eight the roll takes the aircraft from knife-edge to
+            # level at the waist, so this piece starts level: a pitch loop
+            clauses.append(
+                Loop(sign * EIGHTH, sense=sense, roll=_half_of(name, head), integrated=True)
+            )
+        if middle:
+            clauses.append(Loop(sign * middle, sense=sense, knife_edge=ke))
+        if tail:
+            clauses.append(
+                Loop(sign * EIGHTH, sense=sense, knife_edge=ke, roll=_half_of(name, tail), integrated=True)
+            )
     return clauses
 
 
