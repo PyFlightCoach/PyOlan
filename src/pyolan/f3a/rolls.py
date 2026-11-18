@@ -3,6 +3,7 @@
 Examples (normalised text): ``half roll``, ``full roll``, ``one roll``,
 ``2 rolls``, ``1/4 roll``, ``3/4 roll``, ``8-point roll``, ``2/4-point roll``,
 ``snap roll``, ``full snap``, ``1 1/2 snap``, ``1 negative snap``,
+``1 positive snap`` (the default),
 ``1 1/4 snap roll``, ``three consecutive 1/4 rolls``.
 
 Directions are not part of the phrase: every roll is returned positive and the
@@ -44,9 +45,9 @@ def parse_amount(text: str) -> Fraction:
         raise F3AParseError(f"not an amount: {text!r}") from exc
 
 
-_POINT_RE = re.compile(rf"^(?:(?P<count>\d+)/)?(?P<points>\d+)-point roll$")
+_POINT_RE = re.compile(rf"^(?:(?P<count>\d+)/)?(?P<points>\d+)-point rolls?$")
 _SNAP_RE = re.compile(
-    rf"^(?:(?P<amount>{AMOUNT}) )?(?P<negative>negative )?snap(?: rolls?)?$"
+    rf"^(?:(?P<amount>{AMOUNT}) )?(?:(?P<sign>negative|positive) )?snap(?: rolls?)?$"
 )
 _ROLL_RE = re.compile(rf"^(?:(?P<amount>{AMOUNT}) )?rolls?$")
 _CONSECUTIVE_RE = re.compile(rf"^(?P<count>{AMOUNT}) consecutive (?P<amount>{AMOUNT}) rolls$")
@@ -73,7 +74,7 @@ def parse_roll(phrase: str) -> OlanRoll | None:
         rolls = [ro(_float(parse_amount(match.group("amount")))) for _ in range(int(count))]
     elif match := _SNAP_RE.match(phrase):
         amount = parse_amount(match.group("amount")) if match.group("amount") else Fraction(1)
-        rolls = [sn(_float(amount), bool(match.group("negative")))]
+        rolls = [sn(_float(amount), match.group("sign") == "negative")]
     elif match := _ROLL_RE.match(phrase):
         # "half rolls" is the plural of half roll, used for several slots
         amount = parse_amount(match.group("amount")) if match.group("amount") else Fraction(1)

@@ -15,6 +15,18 @@ Conventions decided per family (check against the drawings at review):
   (the following corners are pushed).
 - rolling circle (22): one level 360 degree turn, the rolls spread over it,
   towards the inside or the outside of the turn.
+- two loops (02) and avalanche (03): consecutive loops in one sense. A roll
+  "at top" (from bottom) or "at bottom" (from top) is in the loop's far point
+  and takes 90 degrees centred on it, as in the loop.
+- triangular loop (04): one loop in the shape of a triangle with 45 degree
+  legs. It starts at the apex (corners 1/8, 3/8, 3/8, 1/8, the base flown
+  backwards) or on the base (3/8, 1/4, 3/8: the base is the entry and exit
+  line). The base is opposite the start height unless "(base at ...)" says
+  otherwise. A lone roll goes on the base, plural rolls ("1/2 rolls") on every
+  leg and "in 45 degree legs" on the two sloping legs.
+- square loop (05): four quarter loops in one sense. Legs are numbered in
+  flight order (up or down, far side, down or up, exit line); plural rolls go
+  on all four and "over top" or "at bottom" on the far side.
 """
 
 from __future__ import annotations
@@ -64,6 +76,52 @@ def _sense(mods: Modifiers) -> int:
 
 
 _LOCATION_RE = re.compile(r"^(?P<roll>.+?) (?P<where>on top|at top|at bottom)$")
+
+
+def _far_point(name: str, where: str, mods: Modifiers) -> None:
+    """Check a roll's "top" or "bottom" is the far point of the loop."""
+    far = "bottom" if mods.start == "top" else "top"
+    if where.split()[-1] != far:
+        raise F3AParseError(f"{name}: a roll {where} of a loop from {mods.start or 'bottom'}")
+
+
+def _polygon(
+    mods: Modifiers,
+    sense: int,
+    corners: list[Fraction],
+    rolls: dict[int, OlanRoll],
+    knife_edge: bool = False,
+) -> list[Clause]:
+    """A loop of straight legs joined by corner loops, all turning one way.
+
+    Legs are numbered from 1 between the corners; the line after the last
+    corner is the leg after the last one. Rolls are given by leg number.
+    """
+    quarter = OlanRoll("1/4 roll", require_roll("1/4 roll").roll_arr)
+    clauses: list[Clause] = [Entry(mods.entry)]
+    if knife_edge:
+        clauses.append(Roll(quarter))
+    theta = Fraction(0)
+    for i, amount in enumerate(corners, start=1):
+        clauses.append(Loop(amount, sense=sense, knife_edge=True if knife_edge else None))
+        theta = (theta + amount * sense) % 1
+        if i < len(corners) or i in rolls:
+            clauses.append(
+                Line(frozenset({theta}), knife_edge=True if knife_edge else None, label=f"leg {i}")
+            )
+        if i in rolls:
+            clauses.append(Roll(rolls[i]))
+    unused = set(rolls) - set(range(1, len(corners) + 1))
+    if unused:
+        raise F3AParseError(f"no leg {sorted(unused)} to roll in")
+    if knife_edge:
+        clauses.append(Roll(quarter))
+    clauses.append(Exit(mods.exit if mods.exit is not None else mods.entry if knife_edge else None))
+    return clauses
+
+
+def _is_plural(phrase: str) -> bool:
+    return phrase.endswith(" rolls") or phrase.endswith(" snaps")
 
 
 @family("rolling loop", "knife-edge loop", "loop")
@@ -147,6 +205,121 @@ def rolling_circle(name: str, mods: Modifiers, phrases: list[str]) -> list[Claus
         Turn(Fraction(1), roll=roll, inside=match.group("io") == "inside"),
         Exit(mods.exit),
     ]
+
+
+_FIRST_RE = re.compile(r"^(?P<roll>.+?) first (?P<where>top|bottom)$")
+_SECOND_RE = re.compile(r"^(?P<roll>.+?) second$")
+
+
+@family("two loops")
+def two_loops(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
+    sense = _sense(mods)
+    rolls: list[OlanRoll] = []
+    for phrase in phrases:
+        if match := _LOCATION_RE.match(phrase):
+            if rolls:
+                raise F3AParseError(f"{name}: unexpected {phrase!r}")
+            _far_point(name, match.group("where"), mods)
+            rolls = [require_roll(match.group("roll"))] * 2
+        elif match := _FIRST_RE.match(phrase):
+            if rolls:
+                raise F3AParseError(f"{name}: unexpected {phrase!r}")
+            _far_point(name, match.group("where"), mods)
+            rolls = [require_roll(match.group("roll"))]
+        elif (match := _SECOND_RE.match(phrase)) and len(rolls) == 1:
+            rolls.append(require_roll(match.group("roll")))
+        else:
+            raise F3AParseError(f"{name}: unexpected {phrase!r}")
+    if len(rolls) != 2:
+        raise F3AParseError(f"{name}: expected a roll in each loop, got {phrases!r}")
+    return [
+        Entry(mods.entry),
+        Loop(Fraction(1), sense=sense, roll=rolls[0]),
+        Loop(Fraction(1), sense=sense, roll=rolls[1]),
+        Exit(mods.exit),
+    ]
+
+
+@family("avalanche")
+def avalanche(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
+    if len(phrases) != 1:
+        raise F3AParseError(f"{name}: expected one snap, got {phrases!r}")
+    roll = require_roll(phrases[0])
+    if not all(r.kind == "snap" for r in roll.roll_arr):
+        raise F3AParseError(f"{name}: expected a snap, got {phrases[0]!r}")
+    return [Entry(mods.entry), Loop(Fraction(1), sense=_sense(mods), roll=roll), Exit(mods.exit)]
+
+
+_BASE_RE = re.compile(r"^\(base at (?P<base>top|bottom)\)$")
+_LEGS_45_RE = re.compile(r"^(?P<roll>.+?) in 45 (?:degree )?legs$")
+_ON_BASE_RE = re.compile(r"^(?P<roll>.+?) (?:on|at) (?P<where>horizontal leg|top|bottom)$")
+
+
+@family("triangular loop", "knife-edge triangular loop")
+def triangular_loop(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
+    knife_edge = name.startswith("knife-edge")
+    start = mods.start or "bottom"
+    base = None
+    spec: list[str] = []
+    for phrase in phrases:
+        if match := _BASE_RE.match(phrase):
+            base = match.group("base")
+        else:
+            spec.append(phrase)
+    base = base or ("bottom" if start == "top" else "top")
+    sense = _sense(mods)
+    apex_start = base != start
+    if knife_edge and (not apex_start or mods.start):
+        raise F3AParseError(f"{name}: only the loop with its apex at the start is described")
+    if apex_start:
+        corners = [Fraction(1, 8), Fraction(3, 8), Fraction(3, 8), Fraction(1, 8)]
+        base_leg, sloping = 2, (1, 3)
+    else:
+        corners = [Fraction(3, 8), Fraction(1, 4), Fraction(3, 8)]
+        base_leg, sloping = None, (1, 2)
+    rolls: dict[int, OlanRoll] = {}
+
+    def put(legs: tuple[int | None, ...], roll: OlanRoll, phrase: str) -> None:
+        for leg in legs:
+            if leg is None or leg in rolls:
+                raise F3AParseError(f"{name}: {phrase!r} has no leg to roll in")
+            rolls[leg] = roll
+
+    for phrase in spec:
+        if match := _LEGS_45_RE.match(phrase):
+            put(sloping, require_roll(match.group("roll")), phrase)
+        elif match := _ON_BASE_RE.match(phrase):
+            where = match.group("where")
+            if where != "horizontal leg" and where != base:
+                raise F3AParseError(f"{name}: the base is at the {base}, not {where!r}")
+            put((base_leg,), require_roll(match.group("roll")), phrase)
+        elif _is_plural(phrase):
+            if not apex_start:
+                raise F3AParseError(f"{name}: unexpected {phrase!r}")
+            put((1, 2, 3), require_roll(phrase), phrase)
+        elif (roll := parse_roll(phrase)) is not None:
+            put((base_leg,), roll, phrase)
+        else:
+            raise F3AParseError(f"{name}: unexpected {phrase!r}")
+    return _polygon(mods, sense, corners, rolls, knife_edge)
+
+
+_SIDE_RE = re.compile(r"^(?P<roll>.+?) (?P<where>over top|at top|at bottom)$")
+
+
+@family("square loop")
+def square_loop(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
+    rolls: dict[int, OlanRoll] = {}
+    for phrase in phrases:
+        if match := _SIDE_RE.match(phrase):
+            _far_point(name, match.group("where"), mods)
+            rolls[2] = require_roll(match.group("roll"))
+        elif _is_plural(phrase):
+            roll = require_roll(phrase)
+            rolls.update({leg: roll for leg in (1, 2, 3, 4)})
+        else:
+            raise F3AParseError(f"{name}: unexpected {phrase!r}")
+    return _polygon(mods, _sense(mods), [Fraction(1, 4)] * 4, rolls)
 
 
 def find_family(text: str) -> tuple[Family, str]:

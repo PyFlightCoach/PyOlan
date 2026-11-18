@@ -26,7 +26,7 @@ FIXTURE = json.loads(
     (Path(__file__).parent / "data" / "f3a" / "usg_drawings.json").read_text()
 )
 FIXTURE_BY_NUMBER = {entry["number"]: entry for entry in FIXTURE}
-IMPLEMENTED_GROUPS = ("01", "06", "22", "26")
+IMPLEMENTED_GROUPS = ("01", "02", "03", "04", "05", "06", "22", "26")
 
 # The template's lines all take the builder's line_length, so a figure N with
 # a 45 degree line does not close: it exits at mid height. Decided 2026-11-18:
@@ -92,6 +92,8 @@ def test_normalise_number():
         ("1 1/4 snap roll", "s", [1.25]),
         ("1 1/2 snap", "s", [1.5]),
         ("three consecutive 1/4 rolls", "rrr", [0.25] * 3),
+        ("1 positive snap", "s", [1]),
+        ("2/4-point rolls", "rr", [0.25, 0.25]),
     ],
 )
 def test_parse_roll(phrase, kinds, turns):
@@ -188,6 +190,43 @@ def test_open_loop_direction_gives_an_option_drawn_first():
 def test_stated_loop_direction_gives_one_figure():
     fig = parse_f3a_description(FIXTURE_BY_NUMBER["26.5"]["description"], "26.5")
     assert isinstance(fig, a.Figure)
+
+
+def _kinds(text: str) -> list[str]:
+    return [e.kind for e in parse_f3a_description(text).elements]
+
+
+def test_two_loops_put_the_rolls_at_the_far_point_of_each_loop():
+    fig = parse_f3a_description("02.5 Two loops with full roll first top, half roll second (from bottom) (K4)")
+    first, second = fig.elements
+    assert first.kwargs["rolls"] != second.kwargs["rolls"]
+    with pytest.raises(F3AParseError, match="at bottom"):
+        parse_f3a_description("Two loops with half rolls at bottom (K3)")
+
+
+def test_avalanche_negative_snap():
+    loop = parse_f3a_description("03.5 Avalanche with 1 negative snap (from top) (K4)").elements[0]
+    assert loop.kwargs["rolltypes"] == parse_roll("1 negative snap").rolltypes()
+
+
+def test_triangular_loop_roll_placement():
+    # apex start: a lone roll goes on the base, plural rolls on all three legs
+    assert _kinds("Triangular loop with full roll (from bottom)") == [
+        "loop", "line", "loop", "roll", "loop", "line", "loop"
+    ]
+    assert _kinds("Triangular loop with 1/2 rolls (from bottom)").count("roll") == 3
+    # base start: the sloping legs
+    assert _kinds("Triangular loop (base at bottom) with half rolls in 45 degree legs") == [
+        "loop", "roll", "loop", "roll", "loop"
+    ]
+    with pytest.raises(F3AParseError, match="base is at the top"):
+        parse_f3a_description("Triangular loop with full roll at bottom (from bottom)")
+
+
+def test_square_loop_rolls_include_the_exit_line():
+    kinds = _kinds("Square loop with half rolls (K5)")
+    assert kinds == ["loop", "roll", "loop", "roll", "loop", "roll", "loop", "roll"]
+    assert _kinds("Square loop with full snap over top").count("roll") == 1
 
 
 def test_text_only_gives_position_from_the_shape():
