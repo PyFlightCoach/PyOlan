@@ -10,6 +10,7 @@ from flightanalysis import ManDef, Manoeuvre
 from flightanalysis.builders.manbuilder import ManBuilder
 from flightdata import State
 from schemas import aresti as a
+from schemas import sequence_position
 
 from .direction import DirectionState
 from .figure_parser import OlanFig
@@ -218,5 +219,13 @@ def parse_olan(
 
     if len(figs) == 0:
         raise Exception("No valid figures found in OLAN data")
+
+    # Rules that judge the line before the first figure and after the last one need each
+    # figure's place in the sequence, both in the figure that is stored and in its definition.
+    if mb.uses_sequence_position:
+        for i, fig in enumerate(figs):
+            position = sequence_position(i, len(figs))
+            fig.aresti.info.sequence_position = position
+            fig.definition = mb.with_sequence_position(fig.definition, position)
 
     return figs
