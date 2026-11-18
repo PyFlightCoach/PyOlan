@@ -47,7 +47,11 @@ _ATTITUDE = {"upright": p.Orientation.UPRIGHT, "inverted": p.Orientation.INVERTE
 
 # shared modifiers, removed from the text wherever they are (order matters)
 _MODIFIERS: list[tuple[re.Pattern, str]] = [
-    (re.compile(r"\(?\bfrom (top|bottom)\)?"), "start"),
+    # "from top", "(from bottom)", "from middle (top first)": start height and, from
+    # the middle, which half goes first
+    (re.compile(r"\(?\bfrom (top|middle|bottom)(?: \((top|bottom) first\))?\)?"), "start"),
+    # "(top entry)", "(middle entry, top first)", "middle entry and exit, top first"
+    (re.compile(r"\(?\b(top|middle|bottom) entry(?: and exit)?(?:,? (top|bottom) first)?\)?"), "entry"),
     (re.compile(r"\binverted entry and exit\b"), "inverted both"),
     (re.compile(r"\binverted entry\b"), "inverted entry"),
     (re.compile(r"\bexit inverted\b"), "inverted exit"),
@@ -64,8 +68,11 @@ def _shared_modifiers(text: str) -> tuple[Modifiers, str]:
             continue
         text = pattern.sub(" ", text)
         match kind:
-            case "start":
-                mods.start = found[0]
+            case "start" | "entry":
+                if mods.start is not None:
+                    raise F3AParseError("the start height is given more than once")
+                mods.start, mods.first = found[0][0], found[0][1] or None
+                mods.entry_form = kind == "entry"
             case "inverted both":
                 mods.entry = mods.exit = p.Orientation.INVERTED
             case "inverted entry":
@@ -156,6 +163,8 @@ def description_clauses(desc: Description) -> list[Clause]:
         return step_clauses(text)[1]
     mods, rest = _shared_modifiers(text)
     fam, rest = find_family(re.sub(r"\s+", " ", rest).strip(" ,"))
+    if not fam.entry_heights and (mods.start == "middle" or mods.first or mods.entry_form):
+        raise F3AParseError(f"{fam.name}: a start at {mods.start!r} (first {mods.first!r}) is not supported")
     return fam.build(fam.name, mods, _phrases(rest))
 
 

@@ -53,22 +53,26 @@ class Modifiers:
 
     entry: p.Orientation = p.Orientation.UPRIGHT
     exit: p.Orientation | None = None
-    start: str | None = None  # "top" or "bottom"
+    start: str | None = None  # "top", "middle" or "bottom"
+    first: str | None = None  # from the middle: which half goes first, "top" or "bottom"
+    entry_form: bool = False  # written "(top entry)" rather than "from top"
 
 
 @dataclass(frozen=True)
 class Family:
     name: str  # normalised family name, as it starts the description
     build: Callable[[str, Modifiers, list[str]], list[Clause]]
+    # accepts a start at the middle, "top first" and the "(top entry)" form
+    entry_heights: bool = False
 
 
 FAMILIES: list[Family] = []
 
 
-def family(*names: str):
+def family(*names: str, entry_heights: bool = False):
     def register(build):
         for name in names:
-            FAMILIES.append(Family(name, build))
+            FAMILIES.append(Family(name, build, entry_heights))
         return build
 
     return register

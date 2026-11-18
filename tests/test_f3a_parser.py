@@ -40,6 +40,10 @@ OPEN_FIGURE_N = {"26.5", "26.6", "26.7", "26.8"}
 # 2026-11-18), and the template measures heights against the figure's own range.
 # Entry and exit heights are not compared for these.
 FLEXIBLE_START_HEIGHT = {f"08.{n}" for n in range(5, 11)}
+# The USG text layer gives 14.21 "Height : low->low" but its drawing (like 14.22's,
+# whose description is the same words) has the entry and exit at the waist of
+# the knife-edge eight, "middle entry and exit": a typo in the USG metadata.
+FIXTURE_HEIGHT_TYPO = {"14.21": "middle"}
 
 
 # ---------------------------------------------------------------- normalising
@@ -468,9 +472,161 @@ def test_matches_usg_drawing(entry, mb):
     if entry["number"] in FLEXIBLE_START_HEIGHT:
         expected["entry_height"] = expected["exit_height"] = "high"
         assert entry["entry_height"] == entry["exit_height"] == "middle"
+    if entry["number"] in FIXTURE_HEIGHT_TYPO:
+        assert entry["entry_height"] == entry["exit_height"] == "low"
+        expected["entry_height"] = expected["exit_height"] = FIXTURE_HEIGHT_TYPO[entry["number"]]
     position = p.Position.CENTRE if entry["kind"] == "centre" else p.Position.END
     for fig in figures:
         assert fig.info.k == entry["k"]
         assert fig.info.short_name == entry["number"]
         assert fig.info.position == position
         assert _template_metadata(fig, mb, entry["entry_attitude"]) == expected
+
+
+# ---------------------------------------------------------------- groups 11 and 12
+
+
+def _rolls_of(fig):
+    return [e for e in fig.elements if e.kind == "roll"]
+
+
+def test_two_reversed_point_rolls_are_one_roll_with_opposite_stops():
+    fig = parse_f3a_description("11.5 45 degree down with two 2/4 pt rolls reversed (K4)")
+    (roll,) = _rolls_of(fig)
+    quarter = np.pi / 2
+    assert roll.args[0] == pytest.approx([quarter, quarter, -quarter, -quarter])
+    assert [e.kind for e in fig.elements] == ["loop", "roll", "loop"]
+
+
+def test_forty_five_degree_up_and_down_mirror_each_other():
+    up = parse_f3a_description("11.11 45 degree up with full snap roll (K3)")
+    down = parse_f3a_description("11.1 45 degree down with full snap roll (K3)")
+    assert [e.args[0] for e in up.elements if e.kind == "loop"] == pytest.approx([np.pi / 4, -np.pi / 4])
+    assert [e.args[0] for e in down.elements if e.kind == "loop"] == pytest.approx([-np.pi / 4, np.pi / 4])
+
+
+def test_figure_z_has_two_3_8_loops_in_opposite_senses_and_a_centred_roll():
+    # the half roll turns the pilot over between the loops, so both are pulled
+    # (inverted entry: both pushed); from top the loops go down instead
+    def loops(text):
+        fig = parse_f3a_description(text)
+        assert [e.kind for e in fig.elements] == ["loop", "roll", "loop"]
+        return [e.args[0] for e in fig.elements if e.kind == "loop"]
+
+    three_eighths = 3 * np.pi / 4
+    assert loops("12.1 Figure Z with half roll up (K3)") == pytest.approx([three_eighths] * 2)
+    assert loops("12.2 Figure Z with half roll up, inverted entry (K3)") == pytest.approx(
+        [-three_eighths] * 2
+    )
+    assert loops("12.5 Figure Z with 2/2pt roll up (K4)") == pytest.approx(
+        [three_eighths, -three_eighths]
+    )
+    assert loops("12.7 Figure Z from top with half roll down (K3)") == pytest.approx(
+        [-three_eighths] * 2
+    )
+
+
+def test_figure_z_roll_direction_word_must_match_the_start():
+    with pytest.raises(F3AParseError, match="not up"):
+        parse_f3a_description("Figure Z from top with half roll up (K3)")
+    with pytest.raises(F3AParseError, match="not down"):
+        parse_f3a_description("Figure Z with half roll down (K3)")
+    # the word may be missing, as in 12.11
+    parse_f3a_description("Figure Z from top with 2/2pt roll (K4)")
+
+
+def test_forty_five_degree_line_rejects_unknown_words():
+    with pytest.raises(F3AParseError):
+        parse_f3a_description("45 degree down with full snap roll sideways (K3)")
+    with pytest.raises(F3AParseError):
+        parse_f3a_description("45 degree down with three 2/4 pt rolls reversed (K3)")
+
+
+# ---------------------------------------------------------------- groups 13 and 14
+
+
+def test_start_at_the_middle_is_only_accepted_by_the_families_that_use_it():
+    for text in (
+        "Loop from middle",
+        "Loop (top entry)",
+        "Cuban eight (middle entry, top first)",
+        "Hourglass (from bottom) (top first)",
+    ):
+        with pytest.raises(F3AParseError):
+            parse_f3a_description(text)
+    # both spellings of a start at the middle
+    parse_f3a_description("Vertical eight (from middle)")
+    parse_f3a_description("Vertical knife-edge eight, middle entry and exit, top first")
+    with pytest.raises(F3AParseError, match="top or bottom goes first"):
+        parse_f3a_description("Hourglass (middle entry)")
+
+
+def test_hourglass_corners_and_roll_placement():
+    # four 3/8 corners, 45 degree lines up and down with the same roll on both
+    assert _loop_turns("13.1 Hourglass (K4)") == [0.375, -0.375, -0.375, 0.375]
+    assert _loop_turns("13.19 Hourglass (top entry) (K4)") == [-0.375, 0.375, 0.375, -0.375]
+    assert _kinds("Hourglass") == ["loop", "line", "loop", "line", "loop", "line", "loop"]
+    assert _kinds("Hourglass with half rolls up and down") == [
+        "loop", "roll", "loop", "line", "loop", "roll", "loop"
+    ]
+    # from the middle: one roll, on the long diagonal
+    assert _kinds("Hourglass (middle entry, top first) half roll down") == [
+        "loop", "line", "loop", "line", "loop", "roll", "loop", "line", "loop", "line", "loop"
+    ]
+    assert _loop_turns("Hourglass (middle entry, top first)") == [0.125, 0.375, 0.375, -0.375, -0.375, -0.125]
+    assert _loop_turns("Hourglass (middle entry, bottom first)") == [-0.125, -0.375, -0.375, 0.375, 0.375, 0.125]
+    with pytest.raises(F3AParseError, match="down line"):
+        parse_f3a_description("Hourglass (middle entry, top first) half roll up")
+    with pytest.raises(F3AParseError, match="rolls up and down"):
+        parse_f3a_description("Hourglass with half roll up")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Hourglass (middle entry, top first)",
+        "Hourglass (middle entry, top first) 2/4pt roll down",
+        "Hourglass (middle entry, bottom first) half roll up",
+        "Hourglass (middle entry, bottom first) 2/4pt roll up",
+        "Vertical eight (from middle) with half roll",
+        "Vertical eight (from bottom) with half rolls",
+    ],
+)
+def test_middle_entry_figures_cross_at_the_entry_height(text, mb):
+    # finishes at its entry height, and the figure is as far above it as below it
+    # (the long diagonal of an hourglass runs through the entry height)
+    mdef = mb.create_mdef(parse_f3a_description(text))
+    if "roll_option" in mdef.mps.data:
+        mdef.mps.data["roll_option"].defaul = 0
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
+    )
+    z = State.stack(templates, "element").pos.z
+    assert z[-1] - z[0] == pytest.approx(0, abs=1e-6)
+    if "middle" in text:
+        assert z.max() - z[0] == pytest.approx(z[0] - z.min(), abs=1e-6)
+
+
+def test_vertical_eight_loops_and_waist_rolls():
+    assert _loop_turns("14.1 Vertical eight (from bottom) (K3)") == [0.5, -1, 0.5]
+    assert _loop_turns("14.11 Vertical eight (from top) (K3)") == [-0.5, 1, -0.5]
+    assert _loop_turns("14.7 Vertical eight (from middle) (K3)") == [1, -1]
+    assert _kinds("Vertical knife-edge eight, middle entry and exit, top first").count("loop") == 2
+    assert _kinds("Vertical eight (from bottom)") == ["loop", "loop", "loop"]
+    # plural rolls: at both waist crossings; "after first half loop": the first only
+    assert _kinds("Vertical eight (from bottom) with half rolls") == [
+        "loop", "roll", "loop", "roll", "loop"
+    ]
+    assert _kinds("Vertical eight (from top) with half roll after first half loop") == [
+        "loop", "roll", "loop", "loop"
+    ]
+    assert _kinds("Vertical eight (from middle) with half roll") == ["loop", "roll", "loop"]
+    assert _kinds("Vertical Knife-edge eight with two half roll").count("roll") == 4
+    with pytest.raises(F3AParseError, match="one crossing"):
+        parse_f3a_description("Vertical eight (from middle) with half rolls")
+
+
+def test_vertical_knife_edge_eight_is_flown_in_knife_edge():
+    fig = parse_f3a_description("14.17 Vertical knife-edge eight (K6)")
+    assert [e.kind for e in fig.elements] == ["roll", "line", "loop", "loop", "loop", "line", "roll"]
+    assert all(e.kwargs["ke"] == pytest.approx(np.pi / 2) for e in fig.elements if e.kind == "loop")
