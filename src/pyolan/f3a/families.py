@@ -328,3 +328,8 @@ def find_family(text: str) -> tuple[Family, str]:
         if text == fam.name or text.startswith(fam.name + " ") or text.startswith(fam.name + ","):
             return fam, text[len(fam.name):]
     raise F3AParseError(f"no figure family matches {text!r}")
+
+
+# Families of later groups live in their own modules (they register themselves
+# with @family on import, and use the helpers above).
+from . import families_07_08, families_09_10  # noqa: E402,F401

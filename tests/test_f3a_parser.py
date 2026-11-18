@@ -26,7 +26,10 @@ FIXTURE = json.loads(
     (Path(__file__).parent / "data" / "f3a" / "usg_drawings.json").read_text()
 )
 FIXTURE_BY_NUMBER = {entry["number"]: entry for entry in FIXTURE}
-IMPLEMENTED_GROUPS = ("01", "02", "03", "04", "05", "06", "22", "26")
+# one group per line; add a group here when its family is implemented
+IMPLEMENTED_GROUPS = tuple(
+    (Path(__file__).parent / "data" / "f3a" / "implemented_groups.txt").read_text().split()
+)
 
 # The template's lines all take the builder's line_length, so a figure N with
 # a 45 degree line does not close: it exits at mid height. Decided 2026-11-18:
