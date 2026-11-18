@@ -87,3 +87,21 @@ Deferred work
 - Consider whether direct `.seq` integration is preferable to the pinned
   catalogue for some workflows.
 - Improve template positioning where this belongs in FlightAnalysis.
+
+## F3A catalogue descriptions (`pyolan.f3a`)
+
+`parse_f3a_description("01.9 Knife-edge loop from top (K6)")` turns an F3A unknown
+catalogue line into a `schemas.aresti.Figure` (or an `Option`). The plan, conventions
+and review decisions are in `docs/plans/f3a-unknown-import.md` in FCScoreFuture;
+`tests/data/f3a/usg_drawings.json` holds the drawing metadata the tests check against and
+`tests/data/f3a/implemented_groups.txt` lists the groups with a family.
+
+Reviewing a group against the FAI USG drawings (run from the FCScoreFuture root; the drawings
+are Roland Poidevin's, so they are downloaded to the untracked `.test-artifacts/` and not committed):
+
+```sh
+.venv/bin/python packages/PyOlan/scripts/fetch_usg_drawings.py .test-artifacts/usg-drawings 13 14
+.venv/bin/python packages/PyOlan/scripts/f3a_review_sheet.py 13 14   # .test-artifacts/f3a-review/group13.png ...
+```
+
+Each sheet shows the drawing of every entry beside the f3a builder's template of the parsed figure.
