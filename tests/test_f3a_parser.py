@@ -35,6 +35,10 @@ IMPLEMENTED_GROUPS = tuple(
 # a 45 degree line does not close: it exits at mid height. Decided 2026-11-18:
 # line lengths are left to scoring and the layout, not tied by the parser.
 OPEN_FIGURE_N = {"26.5", "26.6", "26.7", "26.8"}
+# The drawings put the entry of a cobra roll from top at "middle" height (the V
+# descends to low). The template measures heights against the figure's own
+# range, so the entry of a V is "high". Open question for the user.
+OPEN_COBRA_FROM_TOP = {f"08.{n}" for n in range(5, 11)}
 
 
 # ---------------------------------------------------------------- normalising
@@ -236,6 +240,49 @@ def test_square_loop_exit_roll_follows_a_line_and_ends_the_figure():
     assert _kinds("Square loop with full snap over top").count("roll") == 1
 
 
+def _loop_turns(text: str) -> list[float]:
+    fig = parse_f3a_description(text)
+    return [round(float(e.args[0]) / (2 * np.pi), 3) for e in fig.elements if e.kind == "loop"]
+
+
+def test_cuban_eight_has_a_roll_on_each_45_degree_line():
+    for text in (
+        "Cuban eight with 2/4pt rolls",
+        "Reverse cuban eight (from bottom) with full rolls",
+        "Cuban eight from top with half rolls",
+    ):
+        assert _kinds(text) == ["loop", "roll", "loop", "roll", "loop"]
+    # without rolls the 45 degree lines are plain lines
+    assert _kinds("Cuban eight") == ["loop", "line", "loop", "line", "loop"]
+
+
+def test_cuban_eight_loop_amounts_and_order():
+    # 5/8 loop, 3/4 loop the other way, 1/8 loop; reversed for the reverse figure
+    assert _loop_turns("Cuban eight with full rolls") == [0.625, -0.75, 0.125]
+    assert _loop_turns("Reverse cuban eight (from bottom) with full rolls") == [0.125, -0.75, 0.625]
+    # from top is the mirror image
+    assert _loop_turns("Cuban eight from top with full rolls") == [-0.625, 0.75, -0.125]
+
+
+def test_cuban_eight_half_rolls_give_inside_loops_and_full_rolls_an_outside_one():
+    # half rolls invert the second loop, so it is pulled; a full roll leaves it pushed
+    assert _loop_turns("Cuban eight with 2/4pt rolls")[1] > 0
+    assert _loop_turns("Cuban eight with full rolls")[1] < 0
+
+
+def test_knife_edge_cuban_eight_has_quarter_rolls_on_entry_and_exit():
+    kinds = _kinds("Knife-edge Cuban eight")
+    assert kinds[0] == kinds[-1] == "roll" and kinds.count("loop") == 3
+    assert _kinds("Knife-edge Cuban eight with full rolls").count("roll") == 4
+
+
+def test_cuban_eight_rolls_must_be_plural_and_known():
+    with pytest.raises(F3AParseError, match="full roll"):
+        parse_f3a_description("Cuban eight with full roll")
+    with pytest.raises(F3AParseError, match="banana"):
+        parse_f3a_description("Cuban eight with full rolls, banana")
+
+
 def _leg_lengths(fig, mb) -> list[float]:
     """Path length of each run of non-loop elements between loops (entry and exit lines excluded)."""
     mdef = mb.create_mdef(fig)
@@ -271,6 +318,44 @@ def _leg_lengths(fig, mb) -> list[float]:
 def test_triangle_45_degree_legs_are_the_same_length(text, sloping, mb):
     legs = _leg_lengths(parse_f3a_description(text), mb)
     assert legs[sloping[0]] == pytest.approx(legs[sloping[1]])
+
+
+def test_six_sided_loop_is_six_equal_sixth_loops():
+    fig = parse_f3a_description("07.1 Six sided loop (K4)")
+    assert [e.kind for e in fig.elements] == ["loop", "line"] * 5 + ["loop"]
+    assert [e.args[0] for e in fig.elements if e.kind == "loop"] == pytest.approx([np.pi / 3] * 6)
+    from_top = parse_f3a_description("07.3 Six sided loop from top (K4)")
+    assert [e.args[0] for e in from_top.elements if e.kind == "loop"] == pytest.approx([-np.pi / 3] * 6)
+    with pytest.raises(F3AParseError, match="half rolls"):
+        parse_f3a_description("Six sided loop with half rolls")
+
+
+def test_cobra_roll_puts_one_roll_in_each_45_degree_leg():
+    assert _kinds("08.1 Cobra roll with 2/4pt rolls (K3)") == [
+        "loop", "roll", "loop", "roll", "loop"
+    ]
+    loops = [e.args[0] for e in parse_f3a_description("Cobra roll with 2/2pt rolls").elements if e.kind == "loop"]
+    assert np.sign(loops).tolist() == [1, -1, 1]
+    # a half roll leaves the apex inverted, so the apex is flown the same way as
+    # the corners (all pulled from bottom, all pushed from top)
+    for text, sign in (("Cobra roll with half rolls", 1), ("Cobra roll from top with half rolls", -1)):
+        loops = [e.args[0] for e in parse_f3a_description(text).elements if e.kind == "loop"]
+        assert np.sign(loops).tolist() == [sign] * 3
+    with pytest.raises(F3AParseError, match="plural"):
+        parse_f3a_description("Cobra roll with half roll")
+
+
+def test_golf_ball_shape_and_roll_placement():
+    plain = _kinds("09.1 Golf ball (45 degrees up, 3/4 inside loop, 45 degrees down, pull to level), (K3)")
+    assert plain == ["loop", "line", "loop", "line", "loop"]
+    fig = parse_f3a_description("09.5 Golf ball with 2/4pt rolls (K3)")
+    assert [e.kind for e in fig.elements] == ["loop", "roll", "loop", "roll", "loop"]
+    with pytest.raises(F3AParseError, match="outside loop"):
+        parse_f3a_description("Golf ball (45 degrees up, 3/4 outside loop, 45 degrees down, pull to level)")
+    with pytest.raises(F3AParseError, match="inverted entry"):
+        parse_f3a_description(
+            "Golf ball (45 degrees up, 3/4 inside loop, 45 degrees down, pull to level), inverted entry"
+        )
 
 
 def test_text_only_gives_position_from_the_shape():
@@ -327,6 +412,8 @@ def _cases():
         marks = []
         if entry["number"] in OPEN_FIGURE_N:
             marks.append(pytest.mark.xfail(strict=True, reason="figure N line lengths are left to scoring and layout"))
+        if entry["number"] in OPEN_COBRA_FROM_TOP:
+            marks.append(pytest.mark.xfail(strict=True, reason="cobra roll from top: drawing entry height is middle, template says high"))
         yield pytest.param(entry, id=entry["number"], marks=marks)
 
 
