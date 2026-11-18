@@ -393,6 +393,15 @@ def _fly(
                     if not pitch:
                         raise F3AParseError("a pulled or pushed loop needs level wings")
                     sense = (1 if pull else -1) * pitch
+                elif sense is not None and pull is not None:
+                    # both given: the geometry is fixed, so the roll signs must make
+                    # the loop pulled or pushed as stated (the search tries others)
+                    pitch = _aligned(flight.by, PLANE_AXIS)
+                    if not pitch or (sense * pitch > 0) != pull:
+                        raise F3AParseError(
+                            f"the {amount} loop from path angle {flight.theta} is not "
+                            f"{'pulled' if pull else 'pushed'}"
+                        )
                 if sense is None and senses and i in senses:
                     sense = senses[i]
                 if sense is not None:

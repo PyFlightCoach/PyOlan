@@ -729,3 +729,49 @@ def test_humpty_bump_with_a_snap_finishes_a_little_below_its_entry(mb):
     # sized for a 15 m snap but the snap flies 17.6 m, so the down line is 2.6 m
     # longer than the up line (the figure still closes to well within the box).
     assert abs(_closure("Humpty bump, 2/4pt roll up, full snap down", mb)) == pytest.approx(2.557, abs=0.01)
+
+
+# ---------------------------------------------------------------- groups 15 and 16
+
+
+def test_square_eights_corners_and_waist_rolls():
+    def turns(text):
+        return [e.args[0] / (2 * np.pi) for e in parse_f3a_description(text).elements if e.kind == "loop"]
+
+    # signs are relative to the aircraft, so only the sizes are checked here
+    assert [abs(t) for t in turns("Square horizontal eight")] == [0.25] * 8
+    assert [abs(t) for t in turns("Square vertical eight (from bottom)")] == [0.25] * 8
+    # half rolls are on both passes of the waist (legs 2 and 6), not in the loops
+    kinds, _ = _rolled_pieces("Square vertical eight (from top) with half rolls")
+    assert [i for i, k in enumerate(kinds) if k == "roll"] == [3, 11]
+    # from the middle one roll goes on the line between the squares
+    kinds, _ = _rolled_pieces("Square vertical eight (from middle) with half roll")
+    assert [i for i, k in enumerate(kinds) if k == "roll"] == [7]
+    for text in (
+        "Square vertical eight (from bottom) with half roll",
+        "Square vertical eight (from middle) with half rolls",
+        "Square horizontal eight with half rolls",
+    ):
+        with pytest.raises(F3AParseError, match="unexpected"):
+            parse_f3a_description(text)
+
+
+def test_figure_m_has_a_pushed_centre_half_loop_and_stall_turns():
+    # the centre half loop is negative (a push) whatever the entry attitude; the
+    # 1/4 loops that join the entry and exit lines are pulled upright, pushed inverted
+    for text, corner in (
+        ("Figure M with 3/4 rolls Centre half-loop is always flown negative (inverted)", 1),
+        ("Figure M with 3/4 pt rolls", 1),
+        ("Figure M with 3/4 rolls, inverted entry", -1),
+    ):
+        fig = parse_f3a_description(text)
+        assert [e.kind for e in fig.elements].count("stallturn") == 2
+        angles = [e.args[0] for e in fig.elements if e.kind == "loop"]
+        assert angles == pytest.approx([corner * np.pi / 2, -np.pi, corner * np.pi / 2])
+    with pytest.raises(F3AParseError, match="expected rolls on the up and the down"):
+        parse_f3a_description("Figure M with 3/4 rolls up")
+
+
+def test_figure_m_with_unequal_rolls_finishes_at_its_entry_height(mb):
+    assert _closure("Figure M with 3/4pt rolls up, 1/4 rolls down", mb) == pytest.approx(0, abs=1e-6)
+    assert _closure("Figure M with 3/4 rolls", mb) == pytest.approx(0, abs=1e-6)
