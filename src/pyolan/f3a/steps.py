@@ -67,6 +67,8 @@ class Roll:
     """A roll on the current line. A line is started if a loop came before."""
 
     roll: OlanRoll
+    # quarter-roll signs in the same group flip together; groups flip independently
+    group: int = 0
 
 
 @dataclass
@@ -114,6 +116,7 @@ class RLine:
     rolls: list[OlanRoll] = field(default_factory=list)
     linked: bool = False  # the roll direction is linked to the mirror option
     length: str | None = None  # a builder expression for the line length
+    group: int = 0  # which mirror option the roll is linked to
 
     @property
     def roll(self) -> OlanRoll | None:
@@ -377,12 +380,14 @@ def _fly(
                         f"line at path angle {flight.theta} is "
                         f"{'' if flight.knife_edge() else 'not '}in knife-edge"
                     )
-            case Roll(roll=roll):
+            case Roll(roll=roll, group=group):
                 line = current_line()
                 sign = signs.get(i, 1)
                 roll = signed(roll, sign)
                 line.rolls.append(roll)
                 line.linked = line.linked or i in signs
+                if i in signs:
+                    line.group = group
                 flight.roll(roll)
             case Loop(
                 amount=amount, sense=sense, pull=pull, knife_edge=ke, roll=roll,
@@ -558,24 +563,35 @@ def _loop_roll_kwargs(item: RLoop) -> dict:
     return kwargs
 
 
-def mirror_parameters(items: list[Item]) -> list[float]:
-    """The values that change sign when the figure is mirrored in its plane.
+def option_name(group: int) -> str:
+    """The figure parameter holding the mirror options of a group of linked values."""
+    return "roll_option" if group == 0 else f"roll_option_{group + 1}"
+
+
+def mirror_parameters(items: list[Item]) -> dict[int, list[float]]:
+    """The values that change sign when the figure is mirrored in its plane, by
+    group (most figures have the one group 0; a Roll's group makes its quarter
+    rolls an option of their own).
 
     Only knife-edge loops, turns and the quarter rolls that set the knife-edge
     side need linking; other roll directions are left to the builder.
     """
-    values: list[float] = []
+    values: dict[int, list[float]] = {}
     for item in items:
         match item:
             case RLine(linked=True):
-                values.extend(np.atleast_1d(item.roll.angles()).astype(float).tolist())
+                values.setdefault(item.group, []).extend(
+                    np.atleast_1d(item.roll.angles()).astype(float).tolist()
+                )
             case RLoop():
                 if item.ke:
-                    values.append(float(item.angle))
+                    values.setdefault(0, []).append(float(item.angle))
                 if item.linked and item.roll is not None:
-                    values.extend(np.atleast_1d(item.roll.angles()).astype(float).tolist())
+                    values.setdefault(0, []).extend(
+                        np.atleast_1d(item.roll.angles()).astype(float).tolist()
+                    )
             case RTurn():
-                values.extend([float(item.angle), float(item.roll)])
+                values.setdefault(0, []).extend([float(item.angle), float(item.roll)])
     return values
 
 
@@ -601,10 +617,10 @@ def figure_ndmps(items: list[Item]) -> dict[str, a.NewComparison]:
 def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
     """The elements; with linked the mirror parameters refer to roll_option."""
     pes: list[a.PE] = []
-    k = itertools.count()
+    counts: dict[int, itertools.count] = {}
 
-    def ref() -> str:
-        return f"roll_option[{next(k)}]"
+    def ref(group: int = 0) -> str:
+        return f"{option_name(group)}[{next(counts.setdefault(group, itertools.count()))}]"
 
     last = len(items) - 1
     for i, item in enumerate(items):
@@ -618,7 +634,7 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                         # figure finishes at the end of the roll
                         pes.append(a.line(length=ROLL_LINE))
                     if linked and item.linked:
-                        rolls = [ref() for _ in roll.roll_arr]
+                        rolls = [ref(item.group) for _ in roll.roll_arr]
                     else:
                         rolls = roll.pfc_roll()
                     extra = {"line_length": item.length} if item.length and padded else {}

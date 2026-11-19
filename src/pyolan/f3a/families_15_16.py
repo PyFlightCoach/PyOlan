@@ -44,7 +44,10 @@ Conventions decided per family (checked against the USG drawings):
   default lines would leave the figure above its entry height.
   The signs of the quarter-turn rolls are chosen so that the half loop is a push
   (Loop with both sense and pull, steps.py) and the figure exits in its
-  entry attitude; they are linked in the mirror ``roll_option``.
+  entry attitude. Within a vertical the up and down rolls are linked (the other
+  combinations leave the figure in the wrong attitude); each vertical is its own
+  mirror option (``roll_option`` and ``roll_option_2``), so the pilot chooses the
+  direction of each independently (decided 2026-11-19).
 """
 
 from __future__ import annotations
@@ -137,7 +140,9 @@ def figure_m(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
     length = UNEQUAL_LINES if up.rawroll != down.rawroll else None
     clauses: list[Clause] = [Entry(mods.entry), Line(UP, length=length)]
     for stroke in (1, 2):
-        clauses += [Roll(up), StallTurn(), Line(DOWN_LINE, length=length), Roll(down)]
+        # each vertical's rolls are linked, the two verticals are flown either way
+        group = stroke - 1
+        clauses += [Roll(up, group), StallTurn(), Line(DOWN_LINE, length=length), Roll(down, group)]
         if stroke == 1:
             # the centre half loop is always pushed, towards the direction of travel
             clauses += [Loop(Fraction(1, 2), sense=1, pull=False), Line(UP, length=length)]

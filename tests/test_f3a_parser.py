@@ -397,8 +397,9 @@ def test_rolls_that_start_or_end_a_figure_have_a_line_to_the_next_element():
 def test_cuban_eight_finishes_at_its_entry_height(text, radius, mb):
     mdef = mb.create_mdef(parse_f3a_description(text))
     mdef.mps.data["loop_radius"].defaul = radius
-    if "roll_option" in mdef.mps.data:
-        mdef.mps.data["roll_option"].defaul = 0
+    for name in mdef.mps.data:
+        if name.startswith("roll_option"):
+            mdef.mps.data[name].defaul = 0
     templates = mdef.create().create_template(
         g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
     )
@@ -431,8 +432,9 @@ def _height(z: float, zs: np.ndarray) -> str:
 
 def _template_metadata(fig, mb, entry: str) -> dict:
     mdef = mb.create_mdef(fig)
-    if "roll_option" in mdef.mps.data:
-        mdef.mps.data["roll_option"].defaul = 0
+    for name in mdef.mps.data:
+        if name.startswith("roll_option"):
+            mdef.mps.data[name].defaul = 0
     orientation = p.Orientation.UPRIGHT if entry == "upright" else p.Orientation.INVERTED
     itrans = g.Transformation(g.Euler(orientation, 0, p.Heading.RTOL), g.P0())
     templates = mdef.create().create_template(itrans)
@@ -596,8 +598,9 @@ def test_middle_entry_figures_cross_at_the_entry_height(text, mb):
     # finishes at its entry height, and the figure is as far above it as below it
     # (the long diagonal of an hourglass runs through the entry height)
     mdef = mb.create_mdef(parse_f3a_description(text))
-    if "roll_option" in mdef.mps.data:
-        mdef.mps.data["roll_option"].defaul = 0
+    for name in mdef.mps.data:
+        if name.startswith("roll_option"):
+            mdef.mps.data[name].defaul = 0
     templates = mdef.create().create_template(
         g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
     )
@@ -667,8 +670,9 @@ def _closure(text: str, mb, **params) -> float:
     mdef = mb.create_mdef(parse_f3a_description(text))
     for key, value in params.items():
         mdef.mps.data[key].defaul = value
-    if "roll_option" in mdef.mps.data:
-        mdef.mps.data["roll_option"].defaul = 0
+    for name in mdef.mps.data:
+        if name.startswith("roll_option"):
+            mdef.mps.data[name].defaul = 0
     templates = mdef.create().create_template(
         g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
     )
@@ -775,3 +779,33 @@ def test_figure_m_has_a_pushed_centre_half_loop_and_stall_turns():
 def test_figure_m_with_unequal_rolls_finishes_at_its_entry_height(mb):
     assert _closure("Figure M with 3/4pt rolls up, 1/4 rolls down", mb) == pytest.approx(0, abs=1e-6)
     assert _closure("Figure M with 3/4 rolls", mb) == pytest.approx(0, abs=1e-6)
+
+
+def test_figure_m_verticals_are_flown_either_way_independently(mb):
+    fig = parse_f3a_description("Figure M with 3/4 rolls")
+    assert {k for k in fig.ndmps if k.startswith("roll_option")} == {"roll_option", "roll_option_2"}
+    for name in ("roll_option", "roll_option_2"):
+        first, mirror = fig.ndmps[name]
+        assert len(first) == 2 and mirror == [-v for v in first]
+    refs = []
+    for pe in fig.elements:
+        for value in pe.args:
+            for item in value if isinstance(value, list) else [value]:
+                if isinstance(item, str) and item.startswith("roll_option"):
+                    refs.append(item)
+    assert sorted(refs) == ["roll_option[0]", "roll_option[1]", "roll_option_2[0]", "roll_option_2[1]"]
+    mb.create_mdef(fig)
+
+
+@pytest.mark.parametrize("choice", [(0, 0), (1, 0), (0, 1), (1, 1)])
+@pytest.mark.parametrize("text", ["Figure M with 3/4 rolls", "Figure M with 3/4pt rolls up, 1/4 rolls down"])
+def test_figure_m_either_direction_of_each_vertical_closes(text, choice, mb):
+    mdef = mb.create_mdef(parse_f3a_description(text))
+    for name, value in zip(("roll_option", "roll_option_2"), choice):
+        mdef.mps.data[name].defaul = value
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
+    )
+    pos = State.stack(templates, "element").pos
+    assert float(pos.z[-1] - pos.z[0]) == pytest.approx(0, abs=1e-6)
+    assert float(pos.y[-1] - pos.y[0]) == pytest.approx(0, abs=1e-6)

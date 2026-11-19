@@ -40,6 +40,7 @@ from .steps import (
     create_elements,
     figure_ndmps,
     mirror_parameters,
+    option_name,
     resolve,
 )
 
@@ -194,7 +195,8 @@ def _figure(desc: Description, resolved: Resolved) -> a.Figure:
         return a.Figure(
             info=info,
             elements=create_elements(resolved.items, linked=True),
-            ndmps={"roll_option": [mirror, [-v for v in mirror]]} | figure_ndmps(resolved.items),
+            ndmps={option_name(group): [values, [-v for v in values]] for group, values in mirror.items()}
+            | figure_ndmps(resolved.items),
         )
     return a.Figure(
         info=info,
