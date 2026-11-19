@@ -56,6 +56,7 @@ class Modifiers:
     start: str | None = None  # "top", "middle" or "bottom"
     first: str | None = None  # from the middle: which half goes first, "top" or "bottom"
     entry_form: bool = False  # written "(top entry)" rather than "from top"
+    forward: bool = True  # a centre figure (numbered group); lettered groups are turnarounds
 
 
 @dataclass(frozen=True)

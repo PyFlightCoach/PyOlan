@@ -38,6 +38,7 @@ _SUBSTITUTIONS: list[tuple[str, str]] = [
     (r"\bdown[\s-]+line\b", "downline"),
     (r"\bsnap[\s-]+roll", "snap roll"),
     (r"\bstall[\s-]*turn\b", "stall turn"),
+    (r"\b(\d+(?:/\d+)?\s*-?\s*pt\.)(?=[a-z])", r"\1 "),  # "3/4 pt.roll" (24.1)
     (r"\b(\d+(?:/\d+)?)\s*-?\s*(?:pt\.?|points?)(?=\s|$|,)", r"\1-point"),
     (r"\bcenter\b", "centre"),
     (r"\s*&\s*", " & "),

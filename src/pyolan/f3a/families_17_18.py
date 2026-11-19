@@ -56,6 +56,10 @@ _UP_DOWN_RE = re.compile(r"^(?P<roll>.+?) (?P<dir>up|down)$")
 
 @family("humpty bump")
 def humpty_bump(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
+    if not mods.forward:  # the turnaround humpty bumps of groups L and M
+        from .families_l_m import turnaround_humpty_bump
+
+        return turnaround_humpty_bump(name, mods, phrases)
     by_direction: dict[str, OlanRoll] = {}
     for phrase in phrases:
         if not (match := _UP_DOWN_RE.match(phrase)) or match.group("dir") in by_direction:

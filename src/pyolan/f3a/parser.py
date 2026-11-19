@@ -23,6 +23,7 @@ from schemas.maninfo import ManInfo
 
 from .errors import F3AParseError
 from .families import Modifiers, find_family
+from .families_27_30 import named_step_clauses
 from .normalise import Description, split_description
 from .rolls import parse_roll
 from .steps import (
@@ -162,7 +163,10 @@ def description_clauses(desc: Description) -> list[Clause]:
     text = desc.text
     if _is_step_style(text):
         return step_clauses(text)[1]
+    if (named := named_step_clauses(text)) is not None:  # groups 27-30: "<name>. from ..."
+        return named
     mods, rest = _shared_modifiers(text)
+    mods.forward = desc.group is None or desc.group.isdigit()
     fam, rest = find_family(re.sub(r"\s+", " ", rest).strip(" ,"))
     if not fam.entry_heights and (mods.start == "middle" or mods.first or mods.entry_form):
         raise F3AParseError(f"{fam.name}: a start at {mods.start!r} (first {mods.first!r}) is not supported")
@@ -226,6 +230,12 @@ def parse_f3a_description(
             raise F3AParseError(f"K {k} does not match the text's K {desc.k}")
         desc = replace(desc, k=k)
     clauses = description_clauses(desc)
+    # a family may return several clause lists, one for each choice the pilot is given
+    alternatives = clauses if clauses and isinstance(clauses[0], list) else [clauses]
     forward = desc.group is None or desc.group.isdigit()
-    figures = [_figure(desc, resolved) for resolved in resolve(clauses, forward=forward)]
+    figures = [
+        _figure(desc, resolved)
+        for choice in alternatives
+        for resolved in resolve(choice, forward=forward)
+    ]
     return figures[0] if len(figures) == 1 else a.Option(figures=figures)

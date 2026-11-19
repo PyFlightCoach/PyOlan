@@ -97,9 +97,9 @@ def spin(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
     clauses: list[Clause] = [Entry(entry), *spins, Line(frozenset({Fraction(3, 4)}), label="downline")]
     if integrated:
         quarter = OlanRoll(_QUARTER, require_roll(_QUARTER).roll_arr)
-        clauses.append(Loop(Fraction(1, 4), sense=1, knife_edge=True, roll=quarter, integrated=True))
+        clauses.append(Loop(Fraction(1, 4), sense=1 if mods.forward else -1, knife_edge=True, roll=quarter, integrated=True))
     else:
-        clauses.append(Loop(Fraction(1, 4), sense=1))
+        clauses.append(Loop(Fraction(1, 4), sense=1 if mods.forward else -1))
     if half_roll_exit:
         clauses.append(Roll(require_roll("half roll")))
     clauses.append(Exit(exit_))
