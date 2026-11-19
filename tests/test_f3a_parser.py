@@ -457,7 +457,8 @@ def _template_metadata(fig, mb, entry: str) -> dict:
 
 def _cases():
     for entry in FIXTURE:
-        if entry["group"] not in IMPLEMENTED_GROUPS:
+        # implemented_groups.txt lists whole groups ("19") or single entries ("E.12")
+        if entry["group"] not in IMPLEMENTED_GROUPS and entry["number"] not in IMPLEMENTED_GROUPS:
             continue
         marks = []
         if entry["number"] in OPEN_FIGURE_N:
@@ -1068,7 +1069,7 @@ def test_opposite_spin_directions_are_linked_and_do_not_recover_in_between():
     assert second.kwargs == {"nd_turns": 0.0}
     assert first.args == ["roll_option[0]"] and second.args == ["roll_option[1]"]
     option, mirror = fig.ndmps["roll_option"]
-    assert option == [pytest.approx(2 * np.pi), pytest.approx(-2 * np.pi)]
+    assert option == [pytest.approx(4 * np.pi), pytest.approx(-4 * np.pi)]
     assert mirror == [-v for v in option]
 
 

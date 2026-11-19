@@ -91,7 +91,7 @@ def spin(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
 
     # a spin whose direction is not tied to anything else is the builder's reversible one
     if opposite:
-        spins = [Spin(turns / 2, linked=True), Spin(-turns / 2, linked=True)]
+        spins = [Spin(turns, linked=True), Spin(-turns, linked=True)]
     else:
         spins = [Spin(turns, linked=integrated)]
     clauses: list[Clause] = [Entry(entry), *spins, Line(frozenset({Fraction(3, 4)}), label="downline")]
