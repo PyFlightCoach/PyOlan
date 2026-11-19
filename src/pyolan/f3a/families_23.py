@@ -12,6 +12,8 @@ Conventions decided per family (checked against the USG drawings):
   the named roll, "1 1/2 rolls reversed" is a 1 1/2 roll and its reverse (the
   drawing shows a roll and a half roll each way). The figure keeps its attitude.
 - four and eight point rolls (23.5-23.8): one point roll, centred.
+- slow roll (23.15, 23.16): one full roll, centred (decided 2026-11-19: flown as a
+  plain roll; the rulebook gives no rate and the drawing is a plain roll symbol).
 - one horizontal snap roll (23.21, 23.22): one snap roll, centred. The drawings show
   the snap symbol with the other direction in brackets: the direction is the
   pilot's choice.
@@ -96,6 +98,12 @@ def point_roll(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
     _no_phrases(name, phrases)
     points = _POINT_WORDS[name.split()[0]]
     return _roll_on_line(name, mods, [require_roll(f"{points}-point roll")])
+
+
+@family("slow roll")
+def slow_roll(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
+    _no_phrases(name, phrases)
+    return _roll_on_line(name, mods, [require_roll("roll")])
 
 
 @family("one horizontal snap roll")

@@ -2349,9 +2349,12 @@ def _lm_stated(entry):
     ids=lambda e: e["number"],
 )
 def test_lm_loops_are_pulled_or_pushed_as_stated(entry):
+    from pyolan.f3a.parser import ERRATA
+
     fig = parse_f3a_description(entry["description"], entry["number"], entry["k"])
     first, middle, last = _lm_loops(fig)
-    stated = _lm_stated(entry)
+    # an errata entry is pulled or pushed as its corrected words say
+    stated = _lm_stated({"description": ERRATA.get(entry["number"], (None, entry["description"]))[1]})
     # a positive loop angle is a pull
     assert (first.args[0] > 0) == stated[0]
     assert (last.args[0] > 0) == stated[2]
@@ -2424,14 +2427,42 @@ def test_lm_group_18_is_unchanged_by_the_turnaround_builder():
     assert [abs(e.args[0]) for e in _lm_loops(fig)] == pytest.approx([np.pi / 2, np.pi, np.pi / 2])
 
 
-def test_l7_stated_last_push_contradicts_the_drawing_exit():
+def test_l7_stated_last_push_contradicts_the_drawing_exit(monkeypatch):
     # L.7 "(pull, pull, push, or pull, push, push) 1/4 roll up, 3/4 roll down": a last push
     # leaves the aircraft inverted, but the drawing says upright -> upright (L.8, with the
-    # mirror entry, ends "pull" and upright). Not listed as implemented, see the report.
+    # mirror entry, ends "pull" and upright). With its number the ERRATA correction (last
+    # pull) is used; the words alone are parsed as written.
     entry = FIXTURE_BY_NUMBER["L.7"]
-    fig = parse_f3a_description(entry["description"], entry["number"], entry["k"])
     assert entry["exit_attitude"] == "upright"
-    assert fig.info.end.orientation == p.Orientation.INVERTED
+    with monkeypatch.context() as m:
+        m.setattr("pyolan.f3a.parser.ERRATA", {})
+        as_written = parse_f3a_description(entry["description"], entry["number"], entry["k"])
+    assert as_written.info.end.orientation == p.Orientation.INVERTED
+    fig = parse_f3a_description(entry["description"], entry["number"], entry["k"])
+    assert fig.info.end.orientation == p.Orientation.UPRIGHT
+
+
+def test_errata_apply_only_to_the_catalogued_words():
+    from pyolan.f3a.parser import ERRATA
+
+    for number, (catalogued, corrected) in ERRATA.items():
+        assert FIXTURE_BY_NUMBER[number]["description"] == catalogued
+        assert parse_f3a_description(catalogued, number).info.name == corrected
+        # a corrected catalogue passes through unchanged
+        assert parse_f3a_description(corrected, number).info.name == corrected
+    # another entry's words under an errata number are not replaced
+    p2 = FIXTURE_BY_NUMBER["P.2"]["description"]
+    assert parse_f3a_description("L.8 " + FIXTURE_BY_NUMBER["L.8"]["description"]).info.name != ERRATA["L.7"][1]
+    assert parse_f3a_description(p2, "P.2").info.name == p2
+
+
+def test_slow_roll_is_one_centred_roll():
+    for text, attitude in (("23.15 Slow roll (K3)", p.Orientation.UPRIGHT),
+                           ("23.16 Slow roll, inverted entry (K3)", p.Orientation.INVERTED)):
+        fig = parse_f3a_description(text)
+        assert [e.kind for e in fig.elements] == ["roll"]
+        assert fig.elements[0].args == pytest.approx([2 * np.pi])
+        assert fig.info.start.orientation == fig.info.end.orientation == attitude
 
 
 # ---------------------------------------------------------------- group K
@@ -2698,7 +2729,8 @@ def test_j_does_not_change_the_group_17_top_hat():
 # "from top inverted ... exit upright" where the drawing and metadata are low, inverted to
 # inverted (the drawing is P.11's with the other exit, i.e. a 1/4 roll). A corrected
 # description is what the import has to use for these two (tested here, not listed in
-# implemented_groups.txt because the catalogue text itself does not match).
+# implemented_groups.txt because the catalogue text itself does not match). With their
+# numbers, the parser's ERRATA table gives these corrections.
 PQ_CORRECTED = {
     "P.6": "Vertical 5/8 loop from top upright, snap-roll, roll, exit inverted",
     "P.12": "Vertical 5/8 loop from inverted, 3/4 snap-roll, 1/4 roll, exit inverted",

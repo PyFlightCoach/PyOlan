@@ -21,7 +21,8 @@ Conventions decided per family (checked against the USG drawings):
     (the drawings label both 1/4): it is the one that turns the figure over, the net
     roll of the snap and the quarter roll being a half roll. The snap and the quarter
     roll are one mirror option (the exit attitude decides their relative direction).
-  - The USG descriptions of P.6 and P.12 disagree with their drawings (see the tests).
+  - The USG descriptions of P.6 and P.12 (also the rulebook's) disagree with their drawings;
+    the parser's ERRATA table corrects them (see the tests).
 - almost 8 (Q): three half loops of one radius stacked in the vertical plane, so the
   figure is a vertical eight with one half loop missing (a turnaround). ``from
   bottom|top|middle <attitude>``, each half loop ``pulled`` or ``pushed`` (the words

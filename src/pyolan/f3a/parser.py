@@ -24,7 +24,7 @@ from schemas.maninfo import ManInfo
 from .errors import F3AParseError
 from .families import Modifiers, find_family
 from .families_27_30 import named_step_clauses
-from .normalise import Description, split_description
+from .normalise import Description, normalise, split_description
 from .rolls import parse_roll
 from .steps import (
     DOWN_LINE,
@@ -209,13 +209,46 @@ def _figure(desc: Description, resolved: Resolved) -> a.Figure:
     )
 
 
+# Catalogue entries whose words (the same in the 2026 rulebook and the USG list) contradict
+# their drawing and metadata: number -> (catalogued words, corrected words). Applied only
+# when the number is known and the words are the catalogued ones, so a later corrected
+# catalogue passes through unchanged. Decided 2026-11-19 (best guess, to be reviewed).
+ERRATA: dict[str, tuple[str, str]] = {
+    # the stated last push exits inverted; the drawing exits upright, as L.8 does with
+    # a last pull
+    "L.7": (
+        "Humpty bump (pull, pull, push, or pull, push, push) 1/4 roll up, 3/4 roll down",
+        "Humpty bump (pull, pull, pull, or pull, push, pull) 1/4 roll up, 3/4 roll down",
+    ),
+    # P.2's words; the drawing starts at the top
+    "P.6": (
+        "Vertical 5/8 loop from upright, snap-roll, roll, exit inverted",
+        "Vertical 5/8 loop from top upright, snap-roll, roll, exit inverted",
+    ),
+    # the drawing is low, inverted to inverted (P.11's with a 1/4 roll exit)
+    "P.12": (
+        "Vertical 5/8 loop from top inverted, 3/4 snap-roll, 1/4 half roll, exit upright",
+        "Vertical 5/8 loop from inverted, 3/4 snap-roll, 1/4 roll, exit inverted",
+    ),
+}
+
+
+def apply_errata(desc: Description) -> Description:
+    """The corrected description for a catalogue entry listed in ``ERRATA``."""
+    if desc.number in ERRATA:
+        catalogued, corrected = ERRATA[desc.number]
+        if desc.text == normalise(catalogued):
+            return replace(desc, raw=corrected, text=normalise(corrected))
+    return desc
+
+
 def parse_f3a_description(
     text: str, number: str | None = None, k: int | None = None
 ) -> a.Figure | a.Option:
     """Parse a catalogue line such as ``01.9 Knife-edge loop from top (K6)``.
 
     The number and K may be passed separately; if the text has them too they
-    must agree.
+    must agree. Entries listed in ``ERRATA`` are parsed from their corrected words.
 
     Roll and yaw directions are the pilot's choice. Roll directions are left
     to the builder's reversible rolls, or linked in a mirror roll_option where
@@ -224,7 +257,7 @@ def parse_f3a_description(
     travel direction (forwards for centre figures, backwards for turnarounds),
     as the drawings show.
     """
-    desc = split_description(text, number)
+    desc = apply_errata(split_description(text, number))
     if k is not None:
         if desc.k is not None and desc.k != k:
             raise F3AParseError(f"K {k} does not match the text's K {desc.k}")
