@@ -42,10 +42,10 @@ Conventions decided per family (checked against the USG drawings):
   The up line is lengthened by the drop of the spin so that the figure finishes at the
   height it started.
 
-Entries not implemented (the words and the drawings disagree, see the report):
-J.34-J.37 ("1/2 roll up, snap roll down, exit upright"): a full snap and a half roll
-leave the figure inverted whatever the direction, so the stated exit cannot be flown;
-the drawings change attitude at the snap, as a half snap would.
+J.34-J.37 ("1/2 roll up, snap roll down, exit upright"): over a half loop top a full
+snap and a half roll leave the figure inverted whatever the direction, so these are
+built with a flat top line (two 1/4 corners), which gives the stated upright exit. The
+drawings change attitude at the snap instead, as a half snap would (open question).
 """
 
 from __future__ import annotations
