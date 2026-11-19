@@ -498,7 +498,7 @@ def _cases():
         yield pytest.param(entry, id=entry["number"], marks=marks)
 
 
-@pytest.mark.parametrize("entry", _cases())
+@pytest.mark.parametrize("entry", list(_cases()))
 def test_matches_usg_drawing(entry, mb):
     parsed = parse_f3a_description(entry["description"], entry["number"], entry["k"])
     figures = parsed.figures if isinstance(parsed, a.Option) else [parsed]
