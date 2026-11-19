@@ -42,6 +42,7 @@ PLANE_AXIS = -Y  # rotating about it by a positive angle turns +X towards +Z
 DOWN = -Z  # rotating about it by a positive angle turns right
 ROLL_ANGLE = np.pi / 2  # the part of a loop a roll in it spans (as OlanFig)
 KE = np.pi / 2
+SPIN_DROP = 1.0  # heights only: how far a spin drops, in line lengths
 
 
 # ---------------------------------------------------------------- clauses
@@ -87,6 +88,18 @@ class StallTurn:
 
 
 @dataclass
+class Spin:
+    """A spin from a level line: the nose drops to the vertical downline over its
+    turns. A spin straight after another one has no nose drop (an opposite spin
+    reverses without recovering). Turns are signed: positive yaws to the right."""
+
+    turns: Fraction
+    # the direction is linked to the mirror option (with the quarter roll or the
+    # other spin of the figure); otherwise the builder's reversible spin is used
+    linked: bool = False
+
+
+@dataclass
 class Turn:
     """A level turn; rolls in it are towards the inside or the outside."""
 
@@ -100,7 +113,7 @@ class Exit:
     attitude: p.Orientation | None = None
 
 
-Clause = Entry | Line | Roll | Loop | StallTurn | Turn | Exit
+Clause = Entry | Line | Roll | Loop | StallTurn | Spin | Turn | Exit
 
 UP = frozenset({Fraction(1, 4)})
 DOWN_LINE = frozenset({Fraction(3, 4)})
@@ -145,12 +158,18 @@ class RStallTurn:
 
 
 @dataclass
+class RSpin:
+    angle: float  # signed radians of yaw, positive to the right
+    linked: bool = False
+
+
+@dataclass
 class RTurn:
     angle: float
     roll: float
 
 
-Item = RLine | RLoop | RStallTurn | RTurn
+Item = RLine | RLoop | RStallTurn | RSpin | RTurn
 
 
 @dataclass
@@ -308,6 +327,8 @@ def _next_angles(clauses: list[Clause], i: int) -> frozenset[Fraction] | None:
                 continue
             case StallTurn():
                 return UP
+            case Spin():
+                return DOWN_LINE
             case Exit():
                 return LEVEL
             case _:
@@ -445,6 +466,22 @@ def _fly(
                 items.append(RStallTurn())
                 flight.frame = _rotate(flight.frame, flight.bz, np.pi)
                 flight.theta = Fraction(3, 4)
+            case Spin(turns=turns, linked=linked):
+                if not isinstance(items[-1], RSpin):
+                    if (
+                        flight.theta not in LEVEL
+                        or not isinstance(items[-1], RLine)
+                        or items[-1].rolls
+                    ):
+                        raise F3AParseError("a spin needs a level entry line")
+                    # the nose drops from level to the vertical downline
+                    drop = Fraction(-1, 4) if flight.theta == 0 else Fraction(1, 4)
+                    flight.frame = _rotate(flight.frame, PLANE_AXIS, _turns(drop))
+                    flight.theta = Fraction(3, 4)
+                    flight.z -= SPIN_DROP
+                    flight.zs.append(flight.z)
+                flight.frame = _rotate(flight.frame, DOWN, _turns(turns))
+                items.append(RSpin(_turns(turns), linked))
             case Turn(amount=amount, roll=roll, inside=inside):
                 if flight.theta not in LEVEL:
                     raise F3AParseError("a turn must be flown level")
@@ -590,6 +627,8 @@ def mirror_parameters(items: list[Item]) -> dict[int, list[float]]:
                     values.setdefault(0, []).extend(
                         np.atleast_1d(item.roll.angles()).astype(float).tolist()
                     )
+            case RSpin(linked=True):
+                values.setdefault(0, []).append(float(item.angle))
             case RTurn():
                 values.setdefault(0, []).extend([float(item.angle), float(item.roll)])
     return values
@@ -659,6 +698,14 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                 pes.append(a.loop(angle, **kwargs))
             case RStallTurn():
                 pes.append(a.stallturn())
+            case RSpin():
+                # the drop belongs to the first spin and the recovery to the last
+                extra = {}
+                if isinstance(items[i - 1], RSpin):
+                    extra["nd_turns"] = 0.0
+                if i < last and isinstance(items[i + 1], RSpin):
+                    extra["recovery_turns"] = 0.0
+                pes.append(a.spin(ref() if linked and item.linked else float(item.angle), **extra))
             case RTurn():
                 if linked:
                     pes.append(a.loop(ref(), rolls=ref(), ke=KE))

@@ -809,3 +809,331 @@ def test_figure_m_either_direction_of_each_vertical_closes(text, choice, mb):
     pos = State.stack(templates, "element").pos
     assert float(pos.z[-1] - pos.z[0]) == pytest.approx(0, abs=1e-6)
     assert float(pos.y[-1] - pos.y[0]) == pytest.approx(0, abs=1e-6)
+
+
+# ---------------------------------------------------------------- group 21
+
+
+def test_double_immelmann_is_a_roll_and_two_half_loops():
+    fig = parse_f3a_description("21.1 Double Immelmann with half rolls (K3)")
+    # the roll that starts the figure has a line after it, the second is on the line
+    # between the half loops
+    assert [e.kind for e in fig.elements] == ["roll", "line", "loop", "roll", "loop"]
+    assert fig.elements[3].kwargs["padded"]
+    assert _loop_turns("21.1 Double Immelmann with half rolls") == [-0.5, 0.5]
+
+
+@pytest.mark.parametrize(
+    "text, turns",
+    [
+        # a half roll makes the loop after it a pushed one (negative), a full roll
+        # leaves it pulled; from top is the mirror image about the entry height
+        ("Double Immelmann with half rolls", [-0.5, 0.5]),
+        ("Double Immelmann with half roll first, full roll second", [-0.5, -0.5]),
+        ("Double Immelmann with full rolls", [0.5, 0.5]),
+        ("Double Immelmann with full rolls, inverted entry", [-0.5, -0.5]),
+        ("Double Immelmann from top, half rolls", [0.5, -0.5]),
+        ("Double Immelmann from top with full rolls", [-0.5, -0.5]),
+    ],
+)
+def test_double_immelmann_pull_and_push(text, turns):
+    assert _loop_turns(text) == turns
+
+
+def test_double_immelmann_roll_first_and_second():
+    fig = parse_f3a_description("21.3 Double Immelmann with half roll first, full roll second (K4)")
+    first, second = fig.elements[0], fig.elements[3]
+    assert (first.args[0], second.args[0]) == pytest.approx((np.pi, 2 * np.pi))
+    fig = parse_f3a_description("21.5 Double Immelmann with full rolls (K3)")
+    assert (fig.elements[0].args[0], fig.elements[3].args[0]) == pytest.approx((2 * np.pi, 2 * np.pi))
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Double Immelmann",
+        "Double Immelmann with half roll",
+        "Double Immelmann with half roll first",
+        "Double Immelmann with half rolls, full rolls",
+        "Double Immelmann with half roll second, full roll first",
+        "Double Immelmann with half rolls, banana",
+        "Double Immelmann from middle, half rolls",
+    ],
+)
+def test_double_immelmann_rejects_unclear_rolls(text):
+    with pytest.raises(F3AParseError):
+        parse_f3a_description(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Double Immelmann with half rolls",
+        "Double Immelmann with half roll first, full roll second, inverted entry",
+        "Double Immelmann with full rolls",
+        "Double Immelmann from top, half rolls",
+        "Double Immelmann from top, half roll first, full roll second",
+        "Double Immelmann from top with full rolls, inverted entry",
+    ],
+)
+def test_double_immelmann_finishes_at_its_entry_height(text, mb):
+    mdef = mb.create_mdef(parse_f3a_description(text))
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
+    )
+    pos = State.stack(templates, "element").pos
+    assert float(pos.z[-1] - pos.z[0]) == pytest.approx(0, abs=1e-6)
+
+
+# ---------------------------------------------------------------- group 20
+
+
+def _template_z(text: str, mb) -> np.ndarray:
+    mdef = mb.create_mdef(parse_f3a_description(text))
+    for name in mdef.mps.data:
+        if name.startswith("roll_option"):
+            mdef.mps.data[name].defaul = 0
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
+    )
+    return np.asarray(State.stack(templates, "element").pos.z)
+
+
+def test_stall_turn_has_a_centred_roll_on_each_line():
+    fig = parse_f3a_description("Stall turn, 3/4 roll up, 1 1/4 snap roll down (K5)")
+    assert [e.kind for e in fig.elements] == ["loop", "roll", "stallturn", "roll", "loop"]
+    assert [e.kwargs.get("rolltypes") for e in fig.elements if e.kind == "roll"] == ["roll", "snap"]
+    assert all(e.kwargs["padded"] for e in fig.elements if e.kind == "roll")
+    # the roll on the order of the words does not matter
+    swapped = parse_f3a_description("Stall turn, 1 1/4 snap roll down, 3/4 roll up (K5)")
+    assert [e.kind for e in swapped.elements] == [e.kind for e in fig.elements]
+
+
+def test_stall_turn_without_commas_and_with_spaced_point_rolls():
+    # the catalogue has "Stall turn 3/4 roll up" and "3/4 pt roll"
+    fig = parse_f3a_description("20.3 Stall turn 3/4 roll up, 3/4 pt roll down, inverted exit (K3)")
+    assert fig.info.short_name == "20.3"
+    assert fig.info.end.orientation == p.Orientation.INVERTED
+
+
+@pytest.mark.parametrize(
+    "text, words",
+    [
+        ("Stall turn, 3/4 roll up", "roll up and a roll down"),
+        ("Stall turn, 3/4 roll up, half roll up", "unexpected"),
+        ("Stall turn, 3/4 roll up, half roll down, banana", "banana"),
+        ("Stall turn, 3/4 roll", "unexpected"),
+        ("Stall turn, 3/4 roll up, half roll down, inverted exit, exit inverted", "more than once|twice"),
+        ("Stall turn from top, 3/4 roll up, half roll down", "no start height"),
+    ],
+)
+def test_stall_turn_is_strict(text, words):
+    with pytest.raises(F3AParseError, match=words):
+        parse_f3a_description(text)
+
+
+# whether the up and the down roll go the same way or opposite ways is decided by
+# the exit attitude (the stall turn is a yaw about the belly axis), so the two are
+# linked in the one mirror option; checked by brute force over steps._fly
+@pytest.mark.parametrize(
+    "number, same_way",
+    [
+        ("20.1", False), ("20.2", True), ("20.3", True),
+        ("20.4", True), ("20.5", False), ("20.6", False),
+        ("20.7", True), ("20.8", False), ("20.9", False),
+    ],
+)
+def test_stall_turn_rolls_are_linked_by_the_exit_attitude(number, same_way):
+    entry = FIXTURE_BY_NUMBER[number]
+    fig = parse_f3a_description(entry["description"], number, entry["k"])
+    assert isinstance(fig, a.Figure)
+    assert set(k for k in fig.ndmps if k.startswith("roll_option")) == {"roll_option"}
+    first, mirror = fig.ndmps["roll_option"]
+    assert mirror == [-v for v in first]
+    # every roll piece of both lines is in the option: up first, then down
+    assert np.sign(first[0]) * np.sign(first[-1]) == (1 if same_way else -1)
+
+
+@pytest.mark.parametrize("option", [0, 1])
+@pytest.mark.parametrize(
+    "text, tolerance",
+    [
+        ("Stall turn, 3/4 roll up, 3/4pt roll down", 1e-6),
+        ("Stall turn, 3/4pt roll up, 3/4 roll down, inverted entry", 1e-6),
+        # builder inconsistency, as the humpty bump: a snap's pads are sized for 15 m
+        # but it flies 17.6 m, so the exit is 2.6 m low
+        ("Stall turn, 3/4pt roll up, 1 1/4 snap roll down, inverted exit", 3.5),
+    ],
+)
+def test_stall_turn_ends_as_far_below_the_entry_as_it_rises_above(text, tolerance, option, mb):
+    # the drawings enter at the middle of the vertical and leave at its bottom
+    mdef = mb.create_mdef(parse_f3a_description(text))
+    mdef.mps.data["roll_option"].defaul = option
+    entry = p.Orientation.INVERTED if "inverted entry" in text else p.Orientation.UPRIGHT
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(entry, 0, p.Heading.RTOL), g.P0())
+    )
+    z = np.asarray(State.stack(templates, "element").pos.z)
+    assert float(z.max() - z[0]) > 0
+    assert float(z.max() - z[0] - (z[0] - z[-1])) == pytest.approx(0, abs=tolerance)
+    assert float(z[0] - z[-1]) > 0
+    # centre figure: the exit continues the entry's way, at the same position
+    pos = State.stack(templates, "element").pos
+    assert float(pos.y[-1] - pos.y[0]) == pytest.approx(0, abs=1e-6)
+    assert float(pos.x[-1] - pos.x[0]) < 0
+
+
+def test_stall_turn_line_lengths_do_not_depend_on_the_rolls(mb):
+    # the up line (loop excluded) is the same for every roll and the down line is
+    # always twice the climb less the loop radius, so only the roll's pads differ
+    heights = []
+    for text in (
+        "Stall turn, 3/4 roll up, 3/4pt roll down",
+        "Stall turn, 3/4pt roll up, 1 1/4 snap roll down",
+    ):
+        z = _template_z(text, mb)
+        heights.append(round(float(z.max() - z[-1]), 1))
+    assert heights[0] == pytest.approx(heights[1], abs=3.0)
+
+
+# ---------------------------------------------------------------- group 19: spins
+
+
+def _fig19(number):
+    entry = FIXTURE_BY_NUMBER[number]
+    return parse_f3a_description(entry["description"], number, entry["k"])
+
+
+@pytest.mark.parametrize(
+    "number, kinds",
+    [
+        ("19.1", ["spin", "line", "loop"]),
+        ("19.3", ["spin", "spin", "line", "loop"]),
+        ("19.5", ["spin", "line", "loop"]),
+        ("19.7", ["spin", "line", "loop", "line", "roll"]),
+        ("19.9", ["spin", "line", "loop"]),
+    ],
+)
+def test_spin_is_a_spin_a_downline_and_a_loop_out(number, kinds):
+    fig = _fig19(number)
+    assert [e.kind for e in fig.elements] == kinds
+    # the spin drops from the entry line and the figure leaves the way it came
+    assert fig.info.position == p.Position.CENTRE
+    assert (fig.info.start.height, fig.info.end.height) == (p.Height.TOP, p.Height.BTM)
+
+
+def test_spin_direction_is_the_builders_unless_it_is_tied_to_something():
+    # a whole spin has no link, the pilot picks the direction
+    assert not _fig19("19.1").ndmps
+    assert _fig19("19.1").elements[0].args == [pytest.approx(5 * np.pi)]
+    assert not [k for k in _fig19("19.5").ndmps if k.startswith("roll_option")]
+
+
+@pytest.mark.parametrize(
+    "text, exit_attitude",
+    [
+        ("2 1/2 turn spin", p.Orientation.INVERTED),  # a half turn leaves the canopy facing back
+        ("2 1/2 turn spin, inverted entry", p.Orientation.UPRIGHT),
+        ("Three turn spin", p.Orientation.UPRIGHT),
+        ("Three turn spin, inverted entry", p.Orientation.INVERTED),
+        ("2 turn opposite spin", p.Orientation.UPRIGHT),
+    ],
+)
+def test_spin_exit_attitude_follows_from_the_turns(text, exit_attitude):
+    assert parse_f3a_description(text).info.end.orientation == exit_attitude
+
+
+def test_spin_stated_exit_attitude_must_be_the_flown_one():
+    assert parse_f3a_description("2 1/2 turn spin, inverted exit")
+    with pytest.raises(F3AParseError, match="exits inverted"):
+        parse_f3a_description("2 1/2 turn spin, upright exit")
+    with pytest.raises(F3AParseError, match="exits upright"):
+        parse_f3a_description("Three turn spin, inverted exit")
+
+
+def test_half_roll_exit_is_on_the_exit_line_with_the_line_before_a_final_roll():
+    fig = _fig19("19.7")
+    assert fig.elements[-1].kind == "roll"
+    assert fig.elements[-1].kwargs["padded"] is False
+    assert fig.elements[-2].kind == "line" and fig.elements[-2].kwargs == {"length": "roll_line_length"}
+    assert "roll_line_length" in fig.ndmps
+    # the half roll turns the loop's exit attitude round
+    assert fig.info.end.orientation == p.Orientation.UPRIGHT
+
+
+def test_opposite_spin_directions_are_linked_and_do_not_recover_in_between():
+    fig = _fig19("19.3")
+    first, second = fig.elements[0], fig.elements[1]
+    assert first.kwargs == {"recovery_turns": 0.0}
+    assert second.kwargs == {"nd_turns": 0.0}
+    assert first.args == ["roll_option[0]"] and second.args == ["roll_option[1]"]
+    option, mirror = fig.ndmps["roll_option"]
+    assert option == [pytest.approx(2 * np.pi), pytest.approx(-2 * np.pi)]
+    assert mirror == [-v for v in option]
+
+
+@pytest.mark.parametrize(
+    "number, entry, exit_, roll_with_spin",
+    [
+        ("19.9", p.Orientation.UPRIGHT, p.Orientation.UPRIGHT, True),
+        ("19.10", p.Orientation.UPRIGHT, p.Orientation.INVERTED, False),
+        ("19.11", p.Orientation.INVERTED, p.Orientation.UPRIGHT, True),
+        ("19.12", p.Orientation.INVERTED, p.Orientation.INVERTED, False),
+    ],
+)
+def test_spin_with_quarter_loop_and_roll_integrated_is_one_mirror_option(
+    number, entry, exit_, roll_with_spin
+):
+    fig = _fig19(number)
+    loop = fig.elements[2]
+    assert fig.elements[0].args == ["roll_option[0]"]
+    # the loop is in knife-edge, with the 1/4 roll spread over all of it
+    assert loop.kwargs["ke"] == pytest.approx(np.pi / 2)
+    assert loop.args == ["roll_option[1]"] and loop.kwargs["rolls"] == "roll_option[2]"
+    assert "rollangle" not in loop.kwargs and "rollposition" not in loop.kwargs
+    spin_turns, loop_angle, roll = fig.ndmps["roll_option"][0]
+    assert spin_turns == pytest.approx(4.5 * np.pi)
+    assert abs(loop_angle) == abs(roll) == pytest.approx(np.pi / 2)
+    # the roll side against the loop side sets the exit attitude
+    assert (np.sign(loop_angle) == np.sign(roll)) == (exit_ == p.Orientation.UPRIGHT)
+    assert (fig.info.start.orientation, fig.info.end.orientation) == (entry, exit_)
+    assert fig.ndmps["roll_option"][1] == [-v for v in fig.ndmps["roll_option"][0]]
+
+
+@pytest.mark.parametrize("option", [0, 1])
+@pytest.mark.parametrize("number", [f"19.{n}" for n in range(1, 13)])
+def test_spin_figures_exit_in_the_stated_attitude_in_every_direction(number, option, mb):
+    fig = _fig19(number)
+    mdef = mb.create_mdef(fig)
+    for name, mp in mdef.mps.data.items():
+        if name.startswith("roll_option") or name.endswith("_turns"):
+            mp.defaul = option
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(fig.info.start.orientation, 0, p.Heading.RTOL), g.P0())
+    )
+    states = State.stack(templates, "element")
+    belly = states.att.transform_point(g.PZ()).z[-1]
+    assert (belly > 0) == (fig.info.end.orientation == p.Orientation.INVERTED)
+    # a centre figure: it leaves flying the way it came and without sideways drift
+    assert states.att.transform_point(g.PX()).x[-1] * states.att.transform_point(g.PX()).x[0] > 0
+    assert float(states.pos.y[-1] - states.pos.y[0]) == pytest.approx(0, abs=1e-6)
+    # a spin always loses height
+    assert float(states.pos.z[-1] - states.pos.z[0]) < 0
+
+
+@pytest.mark.parametrize(
+    "text, words",
+    [
+        ("2 1/4 turn spin", "1/4 loop"),
+        ("2 1/4 turn spin, 1/4 loop with 1/4 roll integrated", "exit attitude"),
+        ("2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry upright. Exit sideways", "unexpected"),
+        ("2 1/2 turn spin, half roll exit, half roll exit", "unexpected"),
+        ("Three turn spin, half roll exit", "unexpected"),
+        ("Three turn spin, banana", "banana"),
+        ("Three turn spin, inverted entry. Entry upright", "entry attitude"),
+        ("Three turn spin, inverted exit, exit upright", "given twice"),
+    ],
+)
+def test_spin_is_strict(text, words):
+    with pytest.raises(F3AParseError, match=words):
+        parse_f3a_description(text)
