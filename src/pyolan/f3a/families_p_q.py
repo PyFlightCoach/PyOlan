@@ -28,6 +28,8 @@ Conventions decided per family (checked against the USG drawings):
   bottom|top|middle <attitude>``, each half loop ``pulled`` or ``pushed`` (the words
   and the attitude decide which way it goes) with ``roll integrated`` (a full roll) or
   ``1/2 roll integrated`` spread over that half loop, and ``exit <height> <attitude>``.
+  The rulebook's Q.4 states the first loop's sense with the entry ("from top upright
+  pushed, half loop, ..."): the sense is then taken for that plain "half loop".
   The start and exit heights are checked against the figure's geometry (the figure is
   4 radii high). Roll directions are the pilot's choice.
 """
@@ -99,6 +101,7 @@ def vertical_five_eighth_loop(name: str, mods: Modifiers, phrases: list[str]) ->
 
 
 _HALF_LOOP_RE = re.compile(r"^(?:half (?P<a>pulled|pushed) loop|(?P<b>pulled|pushed) half loop)$")
+_ENTRY_RE = re.compile(r"^(?P<att>upright|inverted)(?: (?P<pp>pulled|pushed))?$")
 _INTEGRATED_RE = re.compile(r"^(?P<roll>.+?) integrated$")
 _EXIT_RE = re.compile(r"^exit (?P<height>bottom|middle|top) (?P<att>upright|inverted)$")
 
@@ -109,9 +112,13 @@ def almost_eight(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]
         raise F3AParseError(f"{name}: expected 'from bottom|middle|top <attitude>'")
     if len(phrases) < 4:
         raise F3AParseError(f"{name}: unexpected {phrases!r}")
-    attitude = _ATTITUDE.get(phrases[0])
+    # the rulebook's Q.4 states the first loop's sense with the entry: "from top upright
+    # pushed, half loop, ...", the USG wording has "half pushed loop" there
+    entry = _ENTRY_RE.match(phrases[0])
+    attitude = _ATTITUDE.get(entry.group("att")) if entry else None
     if attitude is None:
         raise F3AParseError(f"{name}: expected the entry attitude, got {phrases[0]!r}")
+    first_pull = None if entry.group("pp") is None else entry.group("pp") == "pulled"
     *steps, last = phrases[1:]
     if not (exit_match := _EXIT_RE.match(last)):
         raise F3AParseError(f"{name}: expected 'exit <height> <attitude>', got {last!r}")
@@ -120,6 +127,9 @@ def almost_eight(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]
     for phrase in steps:
         if match := _HALF_LOOP_RE.match(phrase):
             clauses.append(Loop(Fraction(1, 2), pull=(match.group("a") or match.group("b")) == "pulled"))
+            loops += 1
+        elif phrase == "half loop" and not loops and first_pull is not None:
+            clauses.append(Loop(Fraction(1, 2), pull=first_pull))
             loops += 1
         elif (match := _INTEGRATED_RE.match(phrase)) and loops:
             loop = clauses[-1]

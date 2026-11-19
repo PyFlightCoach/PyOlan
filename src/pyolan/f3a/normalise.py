@@ -41,6 +41,8 @@ _SUBSTITUTIONS: list[tuple[str, str]] = [
     (r"\b(\d+(?:/\d+)?\s*-?\s*pt\.)(?=[a-z])", r"\1 "),  # "3/4 pt.roll" (24.1)
     (r"\b(\d+(?:/\d+)?)\s*-?\s*(?:pt\.?|points?)(?=\s|$|,)", r"\1-point"),
     (r"\bcenter\b", "centre"),
+    (r"(?<=[a-z])-\s+(?=[a-z])", "-"),  # PDF line wrap: "half- rolls"
+    (r"\bpuled\b", "pulled"),  # typo in the rulebook's 30.4
     (r"\s*&\s*", " & "),
     (r"\s*,\s*", ", "),
     (r"\(\s+", "("),

@@ -264,10 +264,20 @@ def half_clover_leaf(steps: _Steps) -> list[Clause]:
 def diamond_in_a_loop(steps: _Steps) -> list[Clause]:
     start = steps.take(rf"from (?P<start>top|bottom) {_ATT}", "'from top|bottom upright|inverted'")
     sense = -1 if start.group("start") == "top" else 1
-    steps.take(
-        r"loop with two opposite integrated half-rolls",
+    loop = steps.take(
+        r"(?:(?P<pp>pulled|pushed) )?loop with two opposite integrated half-rolls",
         "a loop with two opposite integrated half-rolls",
     )
+    # the rulebook states the sense (the USG words do not): a loop from the bottom goes
+    # up and from the top down, so it is pulled when upright from the bottom or
+    # inverted from the top
+    stated = _PULL_PUSH[loop.group("pp")]
+    pulled = (sense == 1) == (start.group("att") == "upright")
+    if stated is not None and stated != pulled:
+        raise F3AParseError(
+            f"diamond in a loop: {start.group(0)} gives a "
+            f"{'pulled' if pulled else 'pushed'} loop, not a {loop.group('pp')} one"
+        )
     steps.take(
         r"square loop on corner with half-roll in each leg",
         "a square loop on corner with half-roll in each leg",

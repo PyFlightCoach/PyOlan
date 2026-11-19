@@ -2,5 +2,6 @@
 
 from .errors import F3AParseError
 from .parser import parse_f3a_description
+from .review import is_reviewed
 
-__all__ = ["F3AParseError", "parse_f3a_description"]
+__all__ = ["F3AParseError", "is_reviewed", "parse_f3a_description"]
