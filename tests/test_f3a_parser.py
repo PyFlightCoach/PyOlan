@@ -59,14 +59,14 @@ FIXTURE_ATTITUDE_TYPO["F.63"] = ("inverted", "upright")
 # what the fixture records for the entries above (asserted, so a corrected fixture
 # shows up here)
 FIXTURE_ATTITUDE_RECORDED = {"E.63": ("upright", "upright"), "F.63": ("inverted", "high")}
-# The 45 degree line of a half Cuban eight is one loop radius long, but a roll on it
-# (with its pads) is longer than that at the builder's default radius of 55 m (a
-# 2/2pt roll is 180 m), so the line grows and the figure ends below (above, from top)
-# where it starts instead of one box higher. The layout has to raise the radius until
-# the roll fits (decided as for the Cuban eight); these entries are checked at 150 m,
-# where the roll fits and the heights are as drawn.
+# The 45 degree line of a half Cuban eight is the builder's line_length (130 m; decided
+# 2026-11-20, A4 review: not tied to the loop radius), so at the builder's default radius of
+# 55 m the figure ends below where it starts, whereas the USG metadata gives the exit one box
+# height above the entry (bottom to middle, which the layout derives as the awkward pair: only
+# with very large loops). A roll and its pads that are longer than the line lengthen it too.
+# These entries are checked at 150 m, where the heights are as drawn.
 HALF_CUBAN_LAYOUT_RADIUS = {
-    f"F.{n}" for n in (*range(3, 9), *range(15, 20), *range(23, 29), *range(35, 41), *range(49, 65))
+    f"F.{n}" for n in (*range(3, 13), *range(15, 20), 22, *range(23, 33), *range(35, 41), *range(41, 65))
 }
 
 
@@ -1925,7 +1925,8 @@ def test_f_half_cuban_eights_have_a_5_8_and_a_1_8_loop_and_a_roll_on_the_45_degr
     assert [e.kind for e in fig.elements] == ["loop", "roll", "loop"]
     roll = fig.elements[1]
     assert roll.kwargs["padded"] is True
-    assert roll.kwargs["line_length"] == "loop_radius"
+    # the 45 degree line is the builder's shared line_length (decided 2026-11-20): no tie
+    assert "line_length" not in roll.kwargs
 
 
 @pytest.mark.parametrize("number", ["F.3", "F.9", "F.23", "F.41", "F.49", "F.53"])
@@ -1967,7 +1968,7 @@ def test_f_integrated_roll_spreads_over_the_first_half_loop(number):
     whole = "1/2 roll" not in FIXTURE_BY_NUMBER[number]["description"]
     assert abs(first.kwargs["rolls"]) == pytest.approx(2 * np.pi if whole else np.pi)
     assert "rolls" not in fig.elements[1].kwargs
-    assert fig.elements[2].kwargs["length"] == "loop_radius"
+    assert "length" not in fig.elements[2].kwargs  # the builder's line_length
 
 
 def _f_template_path(number, mb, radius=150.0):

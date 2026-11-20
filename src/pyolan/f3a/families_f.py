@@ -5,10 +5,14 @@ Conventions decided per family (checked against the USG drawings):
 - half Cuban eight: the first half of the Cuban eight (see families_10.py): level
   entry, a 5/8 loop up and over, a 45 degree line down, and a 1/8 loop the other way
   back to level. The figure turns round: it exits level, flying back the way it came,
-  and ends lower than the loop top. Unlike the whole Cuban eight it does not close:
-  the exit is one box height above the entry (decided by the USG metadata, low to
-  middle), so the 45 degree line is not the closing length. The line is the builder's
-  default line with its roll, so the layout sets the height. ``from top`` is the
+  and ends lower than the loop top. Unlike the whole Cuban eight it does not close
+  (no closure expression: decided 2026-11-20, A4 review, any height that works is
+  fine). The 45 degree line is the builder's default ``line_length`` (the shared
+  comparison, with its roll and pads), not tied to the loop radius, so the layout sets
+  the height: tight loops and a long line fly middle to bottom naturally, and bottom to
+  middle only with very large loops and a short line (awkward). The line was tied to
+  one loop radius before (the drawings show it about that long), which made middle to
+  bottom unreachable once the levels were evenly spaced in metres. ``from top`` is the
   mirror image about the entry height (5/8 loop down, 45 degree line up).
   - ``<roll>`` / ``<roll> up`` (F.3-F.19): one roll centred on the 45 degree line;
     "up" is the direction of that line and is only given for ``from top`` (checked).
@@ -72,13 +76,6 @@ _INTEGRATED_RE = re.compile(
 )
 _KE_LOOP = "5/8 knife-edge loop"
 
-# The 45 degree line is one loop radius long (the drawings show it about that long):
-# the figure then ends 0.71 radius above its start (forward) or below it (reverse).
-# A roll and its pads that are longer than that lengthen the line, so the layout has
-# to raise the radius (the line cannot be shorter than its roll).
-LINE_LENGTH = "loop_radius"
-
-
 def _check_plain_start(name: str, mods: Modifiers) -> None:
     if mods.start not in (None, "top") or mods.first or mods.entry_form:
         raise F3AParseError(f"{name}: a start at {mods.start!r} is not supported")
@@ -93,7 +90,7 @@ def _line_direction(reverse: bool, sense: int) -> str:
 def _line(sense: int, reverse: bool) -> Line:
     """The 45 degree line, after the first loop (1/8 for reverse, 5/8 otherwise)."""
     amount = _EIGHTH if reverse else _FIVE_EIGHTHS
-    return Line(frozenset({(amount * sense) % 1}), label="45 degree line", length=LINE_LENGTH)
+    return Line(frozenset({(amount * sense) % 1}), label="45 degree line")
 
 
 def _plain(name: str, mods: Modifiers, phrases: list[str], reverse: bool) -> list[Clause]:
