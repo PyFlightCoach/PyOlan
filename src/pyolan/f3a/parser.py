@@ -9,6 +9,12 @@ Two styles are read:
 
 Both produce clauses (steps.py) that are flown to resolve the loop and roll
 directions, then turned into elements.
+
+Figure N (26.1-26.8) has no closure expression: the figure cannot close with its
+verticals tied to one line_length. Each padded roll on a vertical line gets a numeric
+line_length (steps.FREE_VERTICAL), which the layout treats as a variable of its own, so
+it can choose the verticals (decided 2026-11-20, A4 review). The 45 degree line keeps
+the figure's line_length.
 """
 
 from __future__ import annotations
@@ -150,7 +156,7 @@ def step_clauses(text: str) -> tuple[str | None, list[Clause]]:
         elif match := _EXIT_RE.match(phrase):
             clauses.append(Exit(_ATTITUDE[match.group("att")]))
         elif (roll := parse_roll(phrase)) is not None:
-            clauses.append(Roll(roll))
+            clauses.append(Roll(roll, free_vertical=True))
         else:
             raise F3AParseError(f"unknown step {phrase!r}")
     return name, clauses

@@ -31,9 +31,12 @@ IMPLEMENTED_GROUPS = tuple(
     (Path(__file__).parent / "data" / "f3a" / "implemented_groups.txt").read_text().split()
 )
 
-# The template's lines all take the builder's line_length, so a figure N with
-# a 45 degree line does not close: it exits at mid height. Decided 2026-11-18:
-# line lengths are left to scoring and the layout, not tied by the parser.
+# The template's 45 degree line takes the builder's line_length and the verticals a
+# fixed 130 m (a start value for the layout), so a figure N with a 45 degree line does
+# not close in the template: it exits at mid height. Decided 2026-11-18: line lengths are
+# left to scoring and the layout, not tied by the parser; 2026-11-20 (A4 review): the
+# layout may choose each vertical's length, which the parser makes possible (see the
+# figure N test below).
 OPEN_FIGURE_N = {"26.5", "26.6", "26.7", "26.8"}
 # A cobra roll from top is a V: its entry height is "middle" in the drawings but
 # can be middle or high depending on the manoeuvre before it (decided
@@ -225,6 +228,30 @@ def test_open_loop_direction_gives_an_option_drawn_first():
     # the 1/8 knife-edge loop after the stall turn yaws the other way
     assert drawn.ndmps["roll_option"][0][1] == -other.ndmps["roll_option"][0][1]
     assert drawn.ndmps["roll_option"][0][0] == other.ndmps["roll_option"][0][0]
+
+
+@pytest.mark.parametrize("number", ["26.1", "26.4", "26.5", "26.8"])
+def test_figure_n_verticals_have_lengths_of_their_own(number):
+    # decided 2026-11-20 (A4 review: "free the lengths so that some pair works"): each padded
+    # roll on a vertical line has a numeric line_length, which the layout makes a variable of
+    # its own (pe.<index>.line_length) that is not compared with the other lines. The 45 degree
+    # line keeps the figure's line_length (and its snap roll, in 26.5-26.8, none of its own).
+    parsed = parse_f3a_description(FIXTURE_BY_NUMBER[number]["description"], number)
+    figures = parsed.figures if isinstance(parsed, a.Option) else [parsed]
+    for fig in figures:
+        rolls = [e for e in fig.elements if e.kind == "roll"]
+        free = [e for e in rolls if "line_length" in e.kwargs]
+        assert all(e.kwargs["line_length"] == 130.0 for e in free)
+        if number in ("26.1", "26.4"):
+            # up, (45 degree line), up with a half roll, down: three rolled verticals
+            assert len(free) == len(rolls) == 3
+            assert [e.kind for e in fig.elements].count("line") == 1  # the 45 degree line
+        else:
+            # full roll up, snap on the 45 degree line, 1 1/4 snap up, 1/4 roll down
+            assert len(rolls) == 4 and len(free) == 3
+            (diagonal,) = [e for e in rolls if "line_length" not in e.kwargs]
+            assert diagonal.kwargs["rolltypes"] == "snap"
+        assert "line_length" not in fig.ndmps
 
 
 def test_stated_loop_direction_gives_one_figure():

@@ -78,6 +78,9 @@ class Roll:
     # the roll is an element of its own with a line on each side (a knife-edge
     # flight is a quarter roll, a line and a quarter roll), not a roll on the line
     alone: bool = False
+    # the roll's line, if it is vertical, has a length of its own for the layout to
+    # choose (see FREE_VERTICAL), not compared with the figure's other lines
+    free_vertical: bool = False
 
 
 @dataclass
@@ -146,6 +149,7 @@ class RLine:
     length: str | None = None  # a builder expression for the line length
     group: int = 0  # which mirror option the roll is linked to
     closed: bool = False  # a roll of its own (Roll.alone): the next line is another one
+    free: bool = False  # a vertical line whose length is the layout's to choose (Roll.free_vertical)
 
     @property
     def roll(self) -> OlanRoll | None:
@@ -427,12 +431,13 @@ def _fly(
                         f"line at path angle {flight.theta} is "
                         f"{'' if flight.knife_edge() else 'not '}in knife-edge"
                     )
-            case Roll(roll=roll, group=group, alone=alone):
+            case Roll(roll=roll, group=group, alone=alone, free_vertical=free_vertical):
                 if alone and (len(items) > 1 or items[-1].rolls):
                     items.append(RLine())
                     flight.line()
                 line = current_line()
                 line.closed = alone
+                line.free = line.free or (free_vertical and flight.theta in VERTICAL)
                 sign = signs.get(i, 1)
                 roll = signed(roll, sign)
                 line.rolls.append(roll)
@@ -669,6 +674,11 @@ def mirror_parameters(items: list[Item]) -> dict[int, list[float]]:
     return values
 
 
+# A padded roll on a vertical line with a number as its line_length: the layout makes that
+# a variable of its own (pe.<index>.line_length) instead of comparing it with the figure's
+# other lines. The number is the f3a builder's line_length, the start value.
+FREE_VERTICAL = 130.0
+
 ROLL_LINE = "roll_line_length"
 ROLL_LINE_DEFAULT = 20.0  # m; a line next to a roll that starts or ends a figure
 
@@ -726,6 +736,8 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                     else:
                         rolls = roll.pfc_roll()
                     extra = {"line_length": item.length} if item.length and padded else {}
+                    if item.free and padded and not extra:
+                        extra = {"line_length": FREE_VERTICAL}
                     pes.append(a.roll(rolls, rolltypes=roll.rolltypes(), padded=padded, **extra))
                     if i == 0 and last > 0 and not isinstance(items[1], RLine):
                         # and so does one that starts it
