@@ -242,6 +242,34 @@ def apply_errata(desc: Description) -> Description:
     return desc
 
 
+_HEIGHT = {"bottom": p.Height.BTM, "middle": p.Height.MID, "top": p.Height.TOP}
+_BOTH_RE = re.compile(r"\b(?:top|middle|bottom) entry and exit\b")
+_EXIT_HEIGHT_RE = re.compile(r"\bexit (top|middle|bottom)\b")
+
+
+def stated_heights(
+    text: str, number: str | None = None
+) -> tuple[set[p.Height] | None, set[p.Height] | None]:
+    """The entry and exit heights a catalogue description states in words.
+
+    Returns ``(entry, exit)``; each is a non-empty set, or None where the words leave
+    the height open (including figures whose family would default to the bottom).
+    Stated words are hard restrictions: "from top", "from middle (top first)",
+    "(middle entry, top first)" and "from top upright" state the entry; "middle entry
+    and exit" and "exit middle inverted" state the exit. Nothing else is inferred.
+    """
+    desc = apply_errata(split_description(text, number))
+    mods, _ = _shared_modifiers(desc.text)
+    entry = {_HEIGHT[mods.start]} if mods.start is not None else None
+    if match := _EXIT_HEIGHT_RE.search(desc.text):
+        exit_ = {_HEIGHT[match.group(1)]}
+    elif _BOTH_RE.search(desc.text):
+        exit_ = set(entry)
+    else:
+        exit_ = None
+    return entry, exit_
+
+
 def parse_f3a_description(
     text: str, number: str | None = None, k: int | None = None
 ) -> a.Figure | a.Option:
