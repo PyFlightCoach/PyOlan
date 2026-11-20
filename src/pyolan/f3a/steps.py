@@ -124,6 +124,9 @@ class Turn:
     amount: Fraction
     roll: OlanRoll | None = None
     inside: bool | None = None
+    # turn left (anticlockwise seen from above) instead of right; a roll to the inside
+    # of the turn then rolls left
+    left: bool = False
 
 
 @dataclass
@@ -522,20 +525,22 @@ def _fly(
                     flight.zs.append(flight.z)
                 flight.frame = _rotate(flight.frame, DOWN, _turns(turns))
                 items.append(RSpin(_turns(turns), linked))
-            case Turn(amount=amount, roll=roll, inside=inside):
+            case Turn(amount=amount, roll=roll, inside=inside, left=left):
                 if flight.theta not in LEVEL:
                     raise F3AParseError("a turn must be flown level")
                 yaw = _aligned(flight.bz, DOWN)
                 if not yaw:
                     raise F3AParseError("a level turn needs level wings")
-                # right turn; a roll to the inside of a right turn rolls right
-                angle = _turns(amount) * yaw
+                # world turns and rolls are positive to the right: a roll to the inside
+                # of a right turn rolls right (inverted too: the roll is about the nose)
+                way = -1 if left else 1
+                angle = _turns(amount) * yaw * way
                 roll_angle = 0.0
                 if roll is not None:
                     if inside is None:
                         raise F3AParseError("say whether the rolls are inside or outside")
-                    roll_angle = _turns(roll.total()) * (1 if inside else -1)
-                flight.frame = _rotate(flight.frame, DOWN, _turns(amount))
+                    roll_angle = _turns(roll.total()) * (1 if inside else -1) * way
+                flight.frame = _rotate(flight.frame, DOWN, _turns(amount) * way)
                 flight.frame = _rotate(flight.frame, flight.bx, roll_angle)
                 items.append(RTurn(angle, roll_angle))
                 if amount % 1:

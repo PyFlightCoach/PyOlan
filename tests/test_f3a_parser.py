@@ -8,6 +8,7 @@ entry and exit height, and whether the figure reverses the direction of flight
 """
 
 import json
+import re
 from pathlib import Path
 
 import geometry as g
@@ -203,6 +204,36 @@ def test_rolling_circle_inside_rolls_with_the_turn():
     # inverted, the yaw that turns right is negative but the roll is still right
     (turn, roll), _ = inverted.ndmps["roll_option"]
     assert np.sign(turn) == -np.sign(roll)
+
+
+@pytest.mark.parametrize("number", [f"22.{n}" for n in range(1, 13)])
+def test_rolling_circle_options_turn_away_from_the_pilot_first_and_roll_with_the_words(number, mb):
+    # decided 2026-11-20 (A4 review): the drawing does not fix the way the circle turns, so both
+    # are options, the circle away from the pilot first (usually silly toward). "Inside" rolls the
+    # way the turn goes (left turn, left roll), "outside" the other way, for inverted entries too
+    # (the roll is about the nose). Entering left to right the pilot is at -y: away is +y, a left
+    # turn, the anticlockwise one seen from above; a left roll is a negative body roll rate.
+    entry = FIXTURE_BY_NUMBER[number]
+    fig = parse_f3a_description(entry["description"], number, entry["k"])
+    assert isinstance(fig, a.Figure)
+    first, mirror = fig.ndmps["roll_option"]
+    assert mirror == [-v for v in first]
+    inside = " inside" in entry["description"]
+    rolls = abs(first[1]) / (2 * np.pi)
+    assert rolls == int(re.search(r"with (\w+) rolls?", entry["description"] + " ").group(1).replace("one", "1"))
+    results = []
+    for option in (0, 1):
+        mdef = mb.create_mdef(fig)
+        mdef.mps.data["roll_option"].defaul = option
+        templates = mdef.create().create_template(
+            g.Transformation(g.Euler(fig.info.start.orientation, 0, p.Heading.LTOR), g.P0())
+        )
+        tp = State.stack(templates, "element")
+        angle = np.unwrap(np.arctan2(tp.pos.y - tp.pos.y.mean(), tp.pos.x - tp.pos.x.mean()))
+        results.append((np.sign(tp.pos.y.mean()), np.sign(angle[-1] - angle[0]), np.sign(np.nanmean(tp.p))))
+    (away, left_turn, roll), (toward, right_turn, mirrored_roll) = results
+    assert (away, left_turn) == (1, 1) and (toward, right_turn) == (-1, -1)
+    assert roll == (-1 if inside else 1) and mirrored_roll == -roll  # left roll inside a left turn
 
 
 def test_square_loop_on_corner_half_rolls_push_the_following_corners():

@@ -14,7 +14,12 @@ Conventions decided per family (check against the drawings at review):
   <roll>s`` puts one in each leg. The diamond keeps its shape after half rolls
   (the following corners are pushed).
 - rolling circle (22): one level 360 degree turn, the rolls spread over it,
-  towards the inside or the outside of the turn.
+  towards the inside or the outside of the turn ("inside" rolls the way the turn
+  goes: left turn, left roll; "outside" the other way). The drawing does not say
+  which way the circle turns, so both are allowed: a mirror option, the first the
+  circle away from the pilot (a left turn for a figure entering with the pilot on its
+  right, the way the figure is built), the second toward the pilot, which is usually
+  silly (decided 2026-11-20, A4 review). Both the turn and the roll flip together.
 - two loops (02) and avalanche (03): consecutive loops in one sense. A roll
   "at top" (from bottom) or "at bottom" (from top) is in the loop's far point
   and takes 90 degrees centred on it, as in the loop.
@@ -219,7 +224,7 @@ def rolling_circle(name: str, mods: Modifiers, phrases: list[str]) -> list[Claus
     roll = require_roll(match.group("roll"))
     return [
         Entry(mods.entry),
-        Turn(Fraction(1), roll=roll, inside=match.group("io") == "inside"),
+        Turn(Fraction(1), roll=roll, inside=match.group("io") == "inside", left=True),
         Exit(mods.exit),
     ]
 
