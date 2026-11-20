@@ -66,13 +66,11 @@ HALF_CUBAN_LAYOUT_RADIUS = {
 }
 
 
-# Group K (45 degree lines either side of a half loop): the USG text says
-# "Height : low->low", but the drawings (K.9: exit one half loop above the entry,
-# with equal 45 degree legs) and the figure's geometry say otherwise: the half loop
-# leaves the exit 1.41 loop radii above (loop up) or below (loop down) the entry,
-# the pilot's choice, so the two options cannot both match one height word. The
-# template also measures heights against its own range, with a roll line that grows
-# with its roll. Heights are not compared for these; the K tests below check them.
+# Group K (45 degree lines either side of a half loop): the figure now finishes at its
+# entry height (decided 2026-11-20, see the K tests below), but the template measures
+# heights against its own range, with roll lines that grow with their rolls and
+# knife-edge options whose loop leaves the figure's range either side, so the USG
+# "low->low" is not compared against the template's height words for these.
 K_HEIGHTS_OPEN = {f"K.{n}" for n in range(1, 33)}
 
 
@@ -2468,20 +2466,21 @@ def test_slow_roll_is_one_centred_roll():
 # ---------------------------------------------------------------- group K
 
 
-def _k_exit_minus_entry_in_radii(fig, radius=20.0, line=1000.0):
-    """The template's exit height minus its entry height, in loop radii, with lines
-    long enough that no roll lengthens its line (so the 45 degree legs are equal)."""
+def _k_exit_minus_entry(fig, radius=20.0, line=1000.0, option=0):
+    """The template's exit height minus its entry height in metres, with lines long
+    enough that no roll lengthens its line."""
     mdef = mb_for_k().create_mdef(fig)
     mdef.mps.data["loop_radius"].defaul = radius
     mdef.mps.data["line_length"].defaul = line
     for name in mdef.mps.data:
         if name.startswith("roll_option"):
-            mdef.mps.data[name].defaul = 0
+            mdef.mps.data[name].defaul = option
+    entry = fig.info.start.orientation
     templates = mdef.create().create_template(
-        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
+        g.Transformation(g.Euler(entry, 0, p.Heading.RTOL), g.P0())
     )
     tp = State.stack(templates, "element")
-    return float(tp.pos.z[-1] - tp.pos.z[0]) / radius
+    return float(tp.pos.z[-1] - tp.pos.z[0])
 
 
 def mb_for_k():
@@ -2490,19 +2489,70 @@ def mb_for_k():
     return load_builder("f3a")
 
 
+def _down_line_length(fig):
+    """The line_length expression of the padded roll on the 45 degree down line."""
+    return [e.kwargs.get("line_length") for e in fig.elements if e.kind == "roll"]
+
+
 def test_k_half_loop_direction_is_an_option_one_figure_per_direction():
     # drawn: K.1-K.8 loop down (outside for an upright pilot), K.9-K.32 up; the
-    # other direction is the second figure. Equal legs, so the exit is a half
-    # loop (1.41 radii) below or above the entry.
+    # other direction is the second figure
     plain = parse_f3a_description("K.1 45 degree up, 2/4pt roll, half loop (inside or outside), full roll down (K3)")
     assert isinstance(plain, a.Option) and len(plain.figures) == 2
     assert [e.kind for e in plain.figures[0].elements] == ["loop", "roll", "loop", "roll", "loop"]
-    assert [_k_exit_minus_entry_in_radii(f) for f in plain.figures] == pytest.approx([-np.sqrt(2), np.sqrt(2)])
+    assert [np.sign(f.elements[2].args[0]) for f in plain.figures] == [1, -1]
     ke = parse_f3a_description(
         "K.9 45 degree up-line from upright, 1/4 roll, knife-edge half loop (up or down), "
         "three consecutive 1/4 rolls down, exit upright (K4)"
     )
-    assert [_k_exit_minus_entry_in_radii(f) for f in ke.figures] == pytest.approx([np.sqrt(2), -np.sqrt(2)])
+    assert [e.kind for e in ke.figures[0].elements] == ["loop", "roll", "loop", "roll", "loop"]
+
+
+K_PUSHED = "(line_length-(2*loop_radius))"
+K_PULLED = "(line_length+(2*loop_radius))"
+
+
+def test_k_down_line_closes_the_figure_with_a_length_of_its_own():
+    # decided 2026-11-20 (A4 review): the figure finishes at its entry height, the
+    # lines need not match. The half loop shifts the down line by 2 radii, so the down
+    # line is 2 radii longer after the loop that goes up and 2 shorter after the one
+    # that goes down. Only the padded roll on the down line carries the expression.
+    plain = parse_f3a_description("K.1 45 degree up, 2/4pt roll, half loop (inside or outside), full roll down (K3)")
+    down, up = plain.figures  # K.1 draws the loop down first
+    assert _down_line_length(down) == [None, K_PUSHED]
+    assert _down_line_length(up) == [None, K_PULLED]
+    ke = parse_f3a_description(
+        "K.9 45 degree up-line from upright, 1/4 roll, knife-edge half loop (up or down), "
+        "three consecutive 1/4 rolls down, exit upright (K4)"
+    )
+    # K.9 draws the loop up first (a knife-edge loop's size is a roll_option value)
+    assert [_down_line_length(f) for f in ke.figures] == [[None, K_PULLED], [None, K_PUSHED]]
+    # the lengths agree in the units used for the heights, so entry and exit are one level
+    for fig in (*plain.figures, *ke.figures):
+        assert fig.info.start.height == fig.info.end.height == p.Height.BTM
+
+
+@pytest.mark.parametrize("number", ["K.1", "K.3", "K.5", "K.9", "K.10", "K.12", "K.17", "K.24"])
+def test_k_figures_finish_at_their_entry_height(number):
+    entry = FIXTURE_BY_NUMBER[number]
+    parsed = parse_f3a_description(entry["description"], number, entry["k"])
+    for fig in parsed.figures:
+        for option in (0, 1):
+            for radius in (20.0, 55.0, 90.0):
+                assert _k_exit_minus_entry(fig, radius, 1000.0, option) == pytest.approx(0, abs=1e-6)
+
+
+@pytest.mark.parametrize("number", ["K.7", "K.8", "K.26", "K.31"])
+def test_k_snap_on_the_down_line_leaves_a_size_independent_residual(number):
+    # a snap's path is not exactly its length in the builder's padding, so the closure is
+    # off by a couple of metres that do not change with the radius or the line length;
+    # the layout takes them up with the snap rate
+    entry = FIXTURE_BY_NUMBER[number]
+    parsed = parse_f3a_description(entry["description"], number, entry["k"])
+    for fig in parsed.figures:
+        residuals = [_k_exit_minus_entry(fig, r, line) for r, line in ((20.0, 1000.0), (55.0, 400.0), (90.0, 1000.0))]
+        assert residuals == pytest.approx([residuals[0]] * 3, abs=1e-6)
+        assert abs(residuals[0]) < 2.5
 
 
 def test_k_figures_have_a_roll_on_each_45_degree_line_and_no_extra_lines():

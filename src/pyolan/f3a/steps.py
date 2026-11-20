@@ -60,10 +60,12 @@ class Line:
     angles: frozenset[Fraction] | None = None
     knife_edge: bool | None = None
     label: str = ""
-    length: str | None = None  # a builder expression such as "2*loop_radius"
+    length: str | dict[int, str] | None = None  # a builder expression such as "2*loop_radius"
     # that length in line units (a loop radius is 0.5), for the heights the figure
     # starts and ends at; a line without it is one unit long
-    units: float | None = None
+    units: float | dict[int, float] | None = None
+    # a dict for length or units is keyed by the sense (+1 or -1) of the loop flown just
+    # before the line, for a length that depends on which way that loop went
 
 
 @dataclass
@@ -410,10 +412,16 @@ def _fly(
                         raise F3AParseError(
                             f"line at path angle {flight.theta}, expected {sorted(angles)}"
                         )
+                if isinstance(length, dict) or isinstance(units, dict):
+                    loop = next((it for it in reversed(items) if isinstance(it, RLoop)), None)
+                    if loop is None:
+                        raise F3AParseError("a line length that depends on a loop needs a loop before it")
+                    sense = 1 if loop.geometric > 0 else -1
+                    length = length[sense] if isinstance(length, dict) else length
+                    units = units[sense] if isinstance(units, dict) else units
+                line = current_line(1.0 if units is None else units)
                 if length is not None:
-                    current_line(units or 1.0).length = length
-                else:
-                    current_line()
+                    line.length = length
                 if knife_edge is not None and knife_edge != flight.knife_edge():
                     raise F3AParseError(
                         f"line at path angle {flight.theta} is "
