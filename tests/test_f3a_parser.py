@@ -1939,6 +1939,46 @@ def test_f_integrated_roll_spreads_over_the_first_half_loop(number):
     assert fig.elements[2].kwargs["length"] == "loop_radius"
 
 
+def _f_template_path(number, mb, radius=150.0):
+    fig = parse_f3a_description(FIXTURE_BY_NUMBER[number]["description"], number)
+    mdef = mb.create_mdef(fig)
+    mdef.mps.data["loop_radius"].defaul = radius
+    for name in mdef.mps.data:
+        if name.startswith("roll_option"):
+            mdef.mps.data[name].defaul = 0
+    templates = mdef.create().create_template(
+        g.Transformation(g.Euler(fig.info.start.orientation, 0, p.Heading.RTOL), g.P0())
+    )
+    return fig, State.stack(templates, "element")
+
+
+@pytest.mark.parametrize(
+    "down, up",
+    [("F.45", "F.42"), ("F.46", "F.41"), ("F.47", "F.44"), ("F.48", "F.43")],
+)
+def test_f_half_cuban_down_is_the_top_to_bottom_mirror_of_a_half_cuban(down, up, mb):
+    # decided 2026-11-20 (A4 review): the figure from the entry goes down round a 5/8 loop, a
+    # 45 degree line up and a 1/8 loop to level, the mirror (top to bottom) of the half Cuban
+    # eight up, so an upright pilot entering down is the mirror of an inverted one entering up.
+    # The roll is over the first 180 degrees only, finishing at the half-loop point.
+    fig_down, path_down = _f_template_path(down, mb)
+    fig_up, path_up = _f_template_path(up, mb)
+    assert [e.kind for e in fig_down.elements] == ["loop", "loop", "line", "loop"]
+    # 5/8 loop down: the 45 degree line then goes UP (loop 1/8 more, 1/8 back to level)
+    assert [round(abs(e.args[0]) / (2 * np.pi), 4) for e in fig_down.elements if e.kind == "loop"] == [0.5, 0.125, 0.125]
+    assert fig_down.elements[0].kwargs["rollposition"] == 0.5 and "rolls" not in fig_down.elements[1].kwargs
+    # the mirror: the same positions in plan, the heights reversed
+    np.testing.assert_allclose(path_down.pos.x, path_up.pos.x, atol=1e-6)
+    np.testing.assert_allclose(path_down.pos.z, -path_up.pos.z, atol=1e-6)
+    # the attitudes are the words'
+    assert fig_down.info.start.orientation == (
+        p.Orientation.INVERTED if "from inverted" in FIXTURE_BY_NUMBER[down]["description"] else p.Orientation.UPRIGHT
+    )
+    assert fig_down.info.end.orientation == (
+        p.Orientation.INVERTED if "exit inverted" in FIXTURE_BY_NUMBER[down]["description"] else p.Orientation.UPRIGHT
+    )
+
+
 @pytest.mark.parametrize("number", [f"F.{n}" for n in (49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64)])
 def test_f_knife_edge_versions_link_the_rolls_and_the_loop_in_one_mirror_option(number):
     fig = parse_f3a_description(FIXTURE_BY_NUMBER[number]["description"], number)

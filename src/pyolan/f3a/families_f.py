@@ -20,6 +20,14 @@ Conventions decided per family (checked against the USG drawings):
     spread over the first half of the 5/8 loop, so the loop is built as a 1/2 loop
     carrying the roll and a 1/8 loop. The line has no roll. "up" starts at the
     bottom, "down" at the top (checked against nothing else: there is no ``from top``).
+    "down" (F.45-F.48) is the top-to-bottom mirror of "up", as the drawings show and the
+    A4 review confirmed (2026-11-20): from the entry down round a 5/8 loop, a 45 degree
+    line UP and a 1/8 loop to level; the roll is over the first 180 degrees of the loop
+    and finishes at the half-loop point, the last 45 degrees of loop has none. An upright
+    pilot entering down is the mirror of an inverted one entering up (F.45 of F.42, F.46
+    of F.41, F.47 of F.44, F.48 of F.43; pinned in the tests). The pairs the figure can fly
+    are the mirror of the half Cuban's too (top to top, middle to middle, middle to top
+    natural, top to middle awkward).
   - ``from <attitude> with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll,
     exit <attitude>`` (F.49-F.52, F.57-F.60 ``from top <attitude>``): the three quarter
     rolls on the entry line (so, as every roll that starts a figure, a line follows
