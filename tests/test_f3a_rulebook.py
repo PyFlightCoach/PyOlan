@@ -122,7 +122,8 @@ def test_almost_eight_first_loop_stated_with_entry():
 def test_reviewed_groups_and_numbers():
     groups = {entry["number"].split(".")[0] for entry in RULEBOOK}
     assert REVIEWED_GROUPS <= groups
-    assert REVIEWED_GROUPS == {f"{n:02d}" for n in range(1, 23)} | {"26"}
+    # every group but J (the 2026-11-21 catalogue review; J waits on its cross-box layout)
+    assert REVIEWED_GROUPS == groups - {"J"}
     assert {entry["number"] for entry in RULEBOOK} >= REVIEWED_NUMBERS == {"23.15", "23.16"}
 
 
@@ -132,11 +133,15 @@ def test_is_reviewed_counts():
     by_group = {}
     for entry in RULEBOOK:
         by_group.setdefault(entry["number"].split(".")[0], []).append(entry["number"])
-    expected = sum(len(by_group[group]) for group in REVIEWED_GROUPS) + 2
-    assert len(reviewed) == expected == 309  # 307 in groups 01-22 and 26, and two of group 23
+    expected = sum(len(by_group[group]) for group in REVIEWED_GROUPS)
+    assert len(reviewed) == expected == 681 - 44  # all but the 44 entries of group J
 
 
-@pytest.mark.parametrize("number", ["01.1", "1.1", "09.6", "22.12", "26.8", "23.15", "23.16"])
+@pytest.mark.parametrize(
+    "number",
+    ["01.1", "1.1", "09.6", "22.12", "26.8", "23.15", "23.16", "23.1", "24.1", "25.6", "28.4",
+     "30.4", "A.1", "K.1", "L.7", "P.6", "P.12", "Q.9", "E.63", "F.63"],
+)
 def test_reviewed(number):
     assert is_reviewed(number)
 
@@ -144,8 +149,7 @@ def test_reviewed(number):
 @pytest.mark.parametrize(
     "number",
     [
-        "23.1", "23.14", "23.17", "24.1", "25.6", "27.1", "28.4", "29.8", "30.4",
-        "A.1", "K.1", "L.7", "P.6", "P.12", "Q.9", "J.44", "E.63", "F.63",
+        "J.1", "J.34", "J.44",
     ],
 )
 def test_unreviewed(number):
@@ -154,7 +158,7 @@ def test_unreviewed(number):
 
 def test_is_reviewed_number_forms():
     assert is_reviewed(" 1.9 ") == is_reviewed("01.9")
-    assert is_reviewed("k.1") == is_reviewed("K.1") is False
+    assert is_reviewed("j.1") == is_reviewed("J.1") is False
     with pytest.raises(F3AParseError):
         is_reviewed("not a number")
     assert normalise_number("1.9") == "01.9"
