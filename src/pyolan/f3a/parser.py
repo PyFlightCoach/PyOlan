@@ -252,10 +252,6 @@ def apply_errata(desc: Description) -> Description:
 _HEIGHT = {"bottom": p.Height.BTM, "middle": p.Height.MID, "top": p.Height.TOP}
 _BOTH_RE = re.compile(r"\b(?:top|middle|bottom) entry and exit\b")
 _EXIT_HEIGHT_RE = re.compile(r"\bexit (top|middle|bottom)\b")
-# Entries whose stated heights do not restrict them: the owner's A4 review (figure boundary
-# heights, 2026-11-20) said to go by what is feasible, not the words or the USG list. The
-# cobra rolls "from top" (08.5-08.10) may also be flown middle to middle; 14.21 says middle.
-UNRESTRICTED_HEIGHTS = frozenset({f"08.{i}" for i in range(5, 11)} | {"14.21"})
 
 
 def stated_heights(
@@ -265,14 +261,15 @@ def stated_heights(
 
     Returns ``(entry, exit)``; each is a non-empty set, or None where the words leave
     the height open (including figures whose family would default to the bottom).
-    Stated words are hard restrictions: "from top", "from middle (top first)",
-    "(middle entry, top first)" and "from top upright" state the entry; "middle entry
-    and exit" and "exit middle inverted" state the exit. Nothing else is inferred.
-    Entries in ``UNRESTRICTED_HEIGHTS`` are open whatever their words say.
+    "from top", "from middle (top first)", "(middle entry, top first)" and "from top
+    upright" state the entry; "middle entry and exit" and "exit middle inverted" state
+    the exit. Nothing else is inferred.
+
+    Stated heights are a hint, not a restriction (owner, catalogue review 2026-11-21):
+    every feasible pair is derived, and the parsed figure's own start and end heights,
+    which follow the words, are the default.
     """
     desc = apply_errata(split_description(text, number))
-    if desc.number in UNRESTRICTED_HEIGHTS:
-        return None, None
     mods, _ = _shared_modifiers(desc.text)
     entry = {_HEIGHT[mods.start]} if mods.start is not None else None
     if match := _EXIT_HEIGHT_RE.search(desc.text):

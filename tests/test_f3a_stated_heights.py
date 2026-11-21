@@ -12,7 +12,6 @@ import pytest
 import schemas.positioning as p
 
 from pyolan.f3a import stated_heights
-from pyolan.f3a.parser import UNRESTRICTED_HEIGHTS
 
 DATA = Path(__file__).parent / "data" / "f3a"
 RULEBOOK = json.loads((DATA / "rulebook_2026.json").read_text())
@@ -68,11 +67,11 @@ def test_categories():
         for entry, exit_ in STATED.values()
     )
     assert counts == {
-        (None, None): 383,
-        (("TOP",), None): 179,
+        (None, None): 376,
+        (("TOP",), None): 185,
         (("BTM",), None): 68,
         (("MID",), None): 42,
-        (("MID",), ("MID",)): 1,
+        (("MID",), ("MID",)): 2,
         (("BTM",), ("MID",)): 2,
         (("TOP",), ("MID",)): 2,
         (("MID",), ("BTM",)): 2,
@@ -96,13 +95,12 @@ def test_agrees_with_usg_where_usg_states_one():
 
 
 # Reported, not hidden. The words say "from top" but the USG metadata starts at middle for
-# the half reverse Cuban eights F.35-F.40, F.61-F.64. The cobra rolls 08.5-08.10 and 14.21
-# disagreed too; the A4 review made them unrestricted (UNRESTRICTED_HEIGHTS).
-KNOWN_DISAGREEMENTS: set[tuple[str, str]] = {(f"F.{i}", "entry") for i in (*range(35, 41), *range(61, 65))}
-
-
-def test_unrestricted_entries_are_open_whatever_the_words():
-    """A4 review 2026-11-20: go by what is feasible, not the words (the cobra flies TT or MM)."""
-    assert UNRESTRICTED_HEIGHTS == {f"08.{i}" for i in range(5, 11)} | {"14.21"}
-    for number in UNRESTRICTED_HEIGHTS:
-        assert STATED[number] == (None, None)
+# the half reverse Cuban eights F.35-F.40, F.61-F.64, and at the top for the cobra rolls
+# 08.5-08.10 (which the drawings start at middle). 14.21 says middle where the USG text
+# layer says low (a typo, see test_f3a_parser). Stated heights are a hint, so these only
+# set the default pair.
+KNOWN_DISAGREEMENTS: set[tuple[str, str]] = (
+    {(f"F.{i}", "entry") for i in (*range(35, 41), *range(61, 65))}
+    | {(f"08.{i}", "entry") for i in range(5, 11)}
+    | {("14.21", "entry"), ("14.21", "exit")}
+)
