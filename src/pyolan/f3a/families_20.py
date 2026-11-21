@@ -8,13 +8,14 @@ Conventions decided per family (checked against the USG drawings):
   figure). The description gives one roll for each line as ``<roll> up`` and
   ``<roll> down``, in either order; both lines must be rolled and are rolled at
   their centre.
-- the figure does not finish at its entry height, by definition: the drawings enter
-  at the middle of the vertical and leave at its bottom (USG height "middle" to
-  "low"). The template rises as far above the entry as it ends below it, so the
-  entry is exactly at mid height: the upline is ``UP_LINE`` (one length long enough
-  for any of the rolls and their pads, as in Figure M) and the downline ``DOWN_LINE``,
-  twice the climb (loop radius and upline) less the loop radius that it still has to
-  fly after the downline.
+- the figure need not finish at its entry height: the drawings enter at the middle of
+  the vertical and leave at its bottom (USG height "middle" to "low"), and bottom to
+  middle is flown too. Each vertical has a length of its own (``Roll.free_vertical``,
+  a numeric ``line_length`` the layout chooses, as Figure N), so the layout sets the
+  heights (decided 2026-11-21, figure boundary heights A5 review: free them so MB and
+  BM work). The lines were ``(1.5*line_length)`` up and ``((3*line_length)+loop_radius)``
+  down before, which put the entry at exactly mid height and made MB miss the box top
+  by about 4 m once the levels were evenly spaced in metres.
 - exit attitude: the drawings leave upright unless the text says ``inverted exit``
   (also after an ``inverted entry``). The rolls on the two lines are linked in one
   mirror ``roll_option`` (the figure as drawn or its mirror): whether the two quarter
@@ -35,13 +36,6 @@ from .rolls import is_quarter, require_roll
 from .steps import DOWN_LINE, UP, Clause, Entry, Exit, Line, Roll, StallTurn
 
 from .families import Modifiers, family  # isort: skip
-
-# A 3/4pt roll and its pads are 170 m at the default parameters, line_length is 130 m
-UP_LINE = "(1.5*line_length)"
-# the figure ends as far below the entry as its top is above it: the up line and
-# the loop before it climb UP_LINE + loop_radius, the down line and the loop after
-# it drop twice that
-DOWN_LINE_LENGTH = "((3*line_length)+loop_radius)"
 
 _UPDOWN_RE = re.compile(r"^(?P<roll>.+?) (?P<dir>up|down)$")
 
@@ -103,10 +97,10 @@ def stall_turn(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
         exit_attitude = _default_exit(mods, found)
     return [
         Entry(mods.entry),
-        Line(UP, length=UP_LINE),
-        Roll(found["up"]),
+        Line(UP),
+        Roll(found["up"], free_vertical=True),
         StallTurn(),
-        Line(DOWN_LINE, length=DOWN_LINE_LENGTH),
-        Roll(found["down"]),
+        Line(DOWN_LINE),
+        Roll(found["down"], free_vertical=True),
         Exit(exit_attitude),
     ]

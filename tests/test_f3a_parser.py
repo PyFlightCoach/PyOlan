@@ -76,6 +76,10 @@ HALF_CUBAN_LAYOUT_RADIUS = {
 # knife-edge options whose loop leaves the figure's range either side, so the USG
 # "low->low" is not compared against the template's height words for these.
 K_HEIGHTS_OPEN = {f"K.{n}" for n in range(1, 33)}
+# Stall turns (20, H.3-H.16): each vertical has a length of its own for the layout to choose
+# (decided 2026-11-21), so the template's heights at builder defaults no longer encode the
+# USG "middle->low"; the derived heights do.
+K_HEIGHTS_OPEN |= {f"20.{n}" for n in range(1, 10)} | {f"H.{n}" for n in range(3, 17)}
 
 
 # ---------------------------------------------------------------- normalising
@@ -1055,44 +1059,30 @@ def test_stall_turn_rolls_are_linked_by_the_exit_attitude(number, same_way):
 
 @pytest.mark.parametrize("option", [0, 1])
 @pytest.mark.parametrize(
-    "text, tolerance",
+    "text",
     [
-        ("Stall turn, 3/4 roll up, 3/4pt roll down", 1e-6),
-        ("Stall turn, 3/4pt roll up, 3/4 roll down, inverted entry", 1e-6),
-        # builder inconsistency, as the humpty bump: a snap's pads are sized for 15 m
-        # but it flies 17.6 m, so the exit is 2.6 m low
-        ("Stall turn, 3/4pt roll up, 1 1/4 snap roll down, inverted exit", 3.5),
+        "Stall turn, 3/4 roll up, 3/4pt roll down",
+        "Stall turn, 3/4pt roll up, 3/4 roll down, inverted entry",
+        "Stall turn, 3/4pt roll up, 1 1/4 snap roll down, inverted exit",
     ],
 )
-def test_stall_turn_ends_as_far_below_the_entry_as_it_rises_above(text, tolerance, option, mb):
-    # the drawings enter at the middle of the vertical and leave at its bottom
-    mdef = mb.create_mdef(parse_f3a_description(text))
+def test_stall_turn_verticals_have_lengths_of_their_own(text, option, mb):
+    """Each vertical's padded roll has a numeric line_length, a layout variable of its own,
+    so the layout can fly the stall turn middle to bottom or bottom to middle (2026-11-21)."""
+    fig = parse_f3a_description(text)
+    rolls = [e for e in fig.elements if e.kind == "roll"]
+    assert len(rolls) == 2
+    assert all(e.kwargs["padded"] and isinstance(e.kwargs["line_length"], float) for e in rolls)
+    mdef = mb.create_mdef(fig)
     mdef.mps.data["roll_option"].defaul = option
     entry = p.Orientation.INVERTED if "inverted entry" in text else p.Orientation.UPRIGHT
     templates = mdef.create().create_template(
         g.Transformation(g.Euler(entry, 0, p.Heading.RTOL), g.P0())
     )
-    z = np.asarray(State.stack(templates, "element").pos.z)
-    assert float(z.max() - z[0]) > 0
-    assert float(z.max() - z[0] - (z[0] - z[-1])) == pytest.approx(0, abs=tolerance)
-    assert float(z[0] - z[-1]) > 0
     # centre figure: the exit continues the entry's way, at the same position
     pos = State.stack(templates, "element").pos
     assert float(pos.y[-1] - pos.y[0]) == pytest.approx(0, abs=1e-6)
     assert float(pos.x[-1] - pos.x[0]) < 0
-
-
-def test_stall_turn_line_lengths_do_not_depend_on_the_rolls(mb):
-    # the up line (loop excluded) is the same for every roll and the down line is
-    # always twice the climb less the loop radius, so only the roll's pads differ
-    heights = []
-    for text in (
-        "Stall turn, 3/4 roll up, 3/4pt roll down",
-        "Stall turn, 3/4pt roll up, 1 1/4 snap roll down",
-    ):
-        z = _template_z(text, mb)
-        heights.append(round(float(z.max() - z[-1]), 1))
-    assert heights[0] == pytest.approx(heights[1], abs=3.0)
 
 
 # ---------------------------------------------------------------- group 19: spins
@@ -1841,12 +1831,9 @@ def test_gh_stall_turn_has_a_centred_roll_on_each_line_and_turns_round(number, m
     assert [e.kind for e in fig.elements] == ["loop", "roll", "stallturn", "roll", "loop"]
     assert all(e.kwargs["padded"] for e in fig.elements if e.kind == "roll")
     assert fig.info.position == p.Position.END
-    # the group 20 convention: the entry is at the middle of the vertical and the
-    # figure ends as far below it as it rises above it (a snap's pads are sized
-    # for 15 m but it flies 17.6 m, so the exit is up to 2.6 m low)
+    # the group 20 convention: each vertical has a length of its own for the layout
+    assert all(isinstance(e.kwargs["line_length"], float) for e in fig.elements if e.kind == "roll")
     states = _gh_states(fig, mb)
-    z = np.asarray(states.pos.z)
-    assert float(z.max() - z[0] - (z[0] - z[-1])) == pytest.approx(0, abs=3.5)
     assert float(states.pos.y[-1] - states.pos.y[0]) == pytest.approx(0, abs=1e-6)
     nose = states.att.transform_point(g.PX())
     assert nose.x[0] * nose.x[-1] < 0

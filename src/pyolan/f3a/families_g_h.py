@@ -11,9 +11,8 @@ group) to fly the figure back the way it came.
   ("two turn spin" exits inverted), 2 1/2 turns leave upright.
 - G.5-G.8 ("2 1/4 turn spin, 1/4 loop with 1/4 roll integrated"): as 19.9-19.12, the
   loop in knife-edge with the quarter roll integrated, flown back.
-- H.3-H.16: the group 20 stall turn (entry in the middle of the vertical, exit low,
-  up line ``(1.5*line_length)`` and down line ``((3*line_length)+loop_radius)``, a
-  roll centred on each line), with the exit loop flown back. The exit attitude is not
+- H.3-H.16: the group 20 stall turn (verticals of their own length, chosen by the
+  layout, a roll centred on each line), with the exit loop flown back. The exit attitude is not
   in the words: it follows the rolls (see ``families_20._default_exit``). The
   catalogue's H.14 has no comma between its two rolls.
 """
