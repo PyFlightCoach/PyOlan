@@ -81,6 +81,10 @@ class Roll:
     # the roll's line, if it is vertical, has a length of its own for the layout to
     # choose (see FREE_VERTICAL), not compared with the figure's other lines
     free_vertical: bool = False
+    # the roll is flown straight out of the loop before it (an Immelmann), and the rest
+    # of its line follows it: not centred on the line, and no line before a roll that
+    # ends the figure
+    after_loop: bool = False
 
 
 @dataclass
@@ -153,6 +157,7 @@ class RLine:
     group: int = 0  # which mirror option the roll is linked to
     closed: bool = False  # a roll of its own (Roll.alone): the next line is another one
     free: bool = False  # a vertical line whose length is the layout's to choose (Roll.free_vertical)
+    after_loop: bool = False  # the roll starts the line, straight out of the loop (Roll.after_loop)
 
     @property
     def roll(self) -> OlanRoll | None:
@@ -434,11 +439,14 @@ def _fly(
                         f"line at path angle {flight.theta} is "
                         f"{'' if flight.knife_edge() else 'not '}in knife-edge"
                     )
-            case Roll(roll=roll, group=group, alone=alone, free_vertical=free_vertical):
+            case Roll(roll=roll, group=group, alone=alone, free_vertical=free_vertical, after_loop=after_loop):
                 if alone and (len(items) > 1 or items[-1].rolls):
                     items.append(RLine())
                     flight.line()
+                if after_loop and not isinstance(items[-1], RLoop):
+                    raise F3AParseError("a roll straight out of a loop needs the loop just before it")
                 line = current_line()
+                line.after_loop = line.after_loop or after_loop
                 line.closed = alone
                 line.free = line.free or (free_vertical and flight.theta in VERTICAL)
                 sign = signs.get(i, 1)
@@ -703,7 +711,7 @@ def figure_ndmps(items: list[Item]) -> dict[str, a.NewComparison]:
     )
     end_roll = (
         last > 0 and isinstance(items[last], RLine) and items[last].rolls
-        and not isinstance(items[last - 1], RLine)
+        and not isinstance(items[last - 1], RLine) and not items[last].after_loop
     )
     # loops with a radius of their own (Loop.radius) are compared with each other
     ndmps = {
@@ -731,7 +739,13 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                 # a figure that is only a line is padded: its rolls are centred on it
                 padded = 0 < i < last or last == 0
                 roll = item.roll
-                if roll is not None:
+                if roll is not None and item.after_loop:
+                    # straight out of the loop, then the rest of the line (if not the end)
+                    rolls = [ref(item.group) for _ in roll.roll_arr] if linked and item.linked else roll.pfc_roll()
+                    pes.append(a.roll(rolls, rolltypes=roll.rolltypes(), padded=False))
+                    if i < last:
+                        pes.append(a.line(length=item.length) if item.length else a.line())
+                elif roll is not None:
                     if i == last and i > 0 and not isinstance(items[i - 1], RLine):
                         # F3A: a roll that ends the figure follows a line, and the
                         # figure finishes at the end of the roll

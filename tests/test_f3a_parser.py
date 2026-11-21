@@ -927,25 +927,27 @@ def test_figure_m_either_direction_of_each_vertical_closes(text, choice, mb):
 # ---------------------------------------------------------------- group 21
 
 
-def test_double_immelmann_is_a_roll_and_two_half_loops():
+def test_double_immelmann_rolls_come_straight_out_of_the_half_loops():
+    # owner, catalogue review 2026-11-21: "start at dot, pull half loop, immediately half
+    # roll, draw line, push half loop, immediate half roll"
     fig = parse_f3a_description("21.1 Double Immelmann with half rolls (K3)")
-    # the roll that starts the figure has a line after it, the second is on the line
-    # between the half loops
-    assert [e.kind for e in fig.elements] == ["roll", "line", "loop", "roll", "loop"]
-    assert fig.elements[3].kwargs["padded"]
-    assert _loop_turns("21.1 Double Immelmann with half rolls") == [-0.5, 0.5]
+    assert [e.kind for e in fig.elements] == ["loop", "roll", "line", "loop", "roll"]
+    assert not fig.elements[1].kwargs["padded"] and not fig.elements[4].kwargs["padded"]
+    assert fig.ndmps == {}  # no roll_line_length: no line before the last roll
+    assert _loop_turns("21.1 Double Immelmann with half rolls") == [0.5, -0.5]
 
 
 @pytest.mark.parametrize(
     "text, turns",
     [
-        # a half roll makes the loop after it a pushed one (negative), a full roll
-        # leaves it pulled; from top is the mirror image about the entry height
-        ("Double Immelmann with half rolls", [-0.5, 0.5]),
-        ("Double Immelmann with half roll first, full roll second", [-0.5, -0.5]),
+        # the first half loop follows the entry attitude; after it a half roll makes the
+        # second a pushed one (negative), a full roll leaves it pulled. The second roll ends
+        # the figure. From top is the mirror image about the entry height.
+        ("Double Immelmann with half rolls", [0.5, -0.5]),
+        ("Double Immelmann with half roll first, full roll second", [0.5, -0.5]),
         ("Double Immelmann with full rolls", [0.5, 0.5]),
         ("Double Immelmann with full rolls, inverted entry", [-0.5, -0.5]),
-        ("Double Immelmann from top, half rolls", [0.5, -0.5]),
+        ("Double Immelmann from top, half rolls", [-0.5, 0.5]),
         ("Double Immelmann from top with full rolls", [-0.5, -0.5]),
     ],
 )
@@ -955,10 +957,10 @@ def test_double_immelmann_pull_and_push(text, turns):
 
 def test_double_immelmann_roll_first_and_second():
     fig = parse_f3a_description("21.3 Double Immelmann with half roll first, full roll second (K4)")
-    first, second = fig.elements[0], fig.elements[3]
+    first, second = fig.elements[1], fig.elements[4]
     assert (first.args[0], second.args[0]) == pytest.approx((np.pi, 2 * np.pi))
     fig = parse_f3a_description("21.5 Double Immelmann with full rolls (K3)")
-    assert (fig.elements[0].args[0], fig.elements[3].args[0]) == pytest.approx((2 * np.pi, 2 * np.pi))
+    assert (fig.elements[1].args[0], fig.elements[4].args[0]) == pytest.approx((2 * np.pi, 2 * np.pi))
 
 
 @pytest.mark.parametrize(

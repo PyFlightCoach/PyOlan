@@ -2,19 +2,17 @@
 
 Conventions decided per family (checked against the USG drawings):
 
-- double Immelmann (21): a racetrack in the vertical plane, flown the way the
-  drawings show it: entry line, a roll, a 1/2 loop up (the right-hand end), a
-  line flown back the other way with a second roll, a 1/2 loop down (the
-  left-hand end) and the exit line, in the entry direction at the entry height.
-  Both half loops are in one sense (counter-clockwise from the bottom), of the
-  same radius, so the figure finishes at its entry height. "from top" is the
-  mirror image about the entry height (down first, then up).
-- the first roll is the one at the start of the figure (so, as for every roll that
-  starts a figure, a line follows it) and the second is centred on the line between
-  the half loops. The drawings put both arrows at the end of their line, next to
-  the loop that follows. Whether each loop is pulled or pushed follows from the
-  rolls: a half roll makes the loop after it a push loop, a full roll leaves it
-  a pull loop.
+- double Immelmann (21): a racetrack in the vertical plane: from the entry line a
+  half loop up (the right-hand end), the first roll straight out of it, a line flown
+  back the other way, a half loop down (the left-hand end) and the second roll
+  straight out of that, onto the exit line in the entry direction at the entry
+  height (owner, catalogue review 2026-11-21: "start at dot, pull half loop,
+  immediately half roll, draw line, push half loop, immediate half roll"; the rolls
+  are not centred on lines). Both half loops are in one sense (counter-clockwise from
+  the bottom), of the same radius, so the figure finishes at its entry height. "from
+  top" is the mirror image about the entry height (down first, then up). Whether
+  each loop is pulled or pushed follows from the attitude: after a pulled half loop
+  a half roll makes the second loop a push, a full roll leaves it a pull.
 - the rolls: "<rolls>" (plural) is the same roll in both places, "<roll> first,
   <roll> second" gives one to each. A half roll then a full roll exits inverted,
   as the drawings' attitudes say (their entry and exit line styles in 21.3 and
@@ -58,9 +56,9 @@ def double_immelmann(name: str, mods: Modifiers, phrases: list[str]) -> list[Cla
     half = Fraction(1, 2)
     return [
         Entry(mods.entry),
-        Roll(rolls[0]),
         Loop(half, sense=sense),
-        Roll(rolls[1]),
+        Roll(rolls[0], after_loop=True),
         Loop(half, sense=sense),
+        Roll(rolls[1], after_loop=True),
         Exit(mods.exit),
     ]
