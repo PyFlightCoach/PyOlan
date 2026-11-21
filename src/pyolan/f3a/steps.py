@@ -134,11 +134,22 @@ class Turn:
 
 
 @dataclass
+class CrossBox:
+    """From a vertical line with the wings vertical in the figure plane: a 1/4 loop
+    out of the plane, a line across the box and a 1/4 loop on into the opposite
+    vertical line (up to down, or down to up). Both loops are pulled or both pushed;
+    which way across the box (in or out) follows from the roll direction before it,
+    which is the pilot's choice. The heights see the top (or bottom) of a top hat."""
+
+    pull: bool
+
+
+@dataclass
 class Exit:
     attitude: p.Orientation | None = None
 
 
-Clause = Entry | Line | Roll | Loop | StallTurn | Spin | Turn | Exit
+Clause = Entry | Line | Roll | Loop | StallTurn | Spin | Turn | CrossBox | Exit
 
 UP = frozenset({Fraction(1, 4)})
 DOWN_LINE = frozenset({Fraction(3, 4)})
@@ -511,6 +522,25 @@ def _fly(
                     group=group,
                     radius=radius,
                 )
+            case CrossBox(pull=pull):
+                if flight.theta not in VERTICAL or not isinstance(items[-1], RLine):
+                    raise F3AParseError("a cross-box line starts from a vertical line")
+                if not flight.knife_edge():
+                    raise F3AParseError("a cross-box line needs the wings vertical in the figure plane")
+                rise = 1 if flight.theta == Fraction(1, 4) else -1
+                angle = (1 if pull else -1) * KE
+                start = flight.theta
+                # pitch about the wing, which is along the box: out of the plane and back
+                flight.frame = _rotate(flight.frame, flight.by, angle)
+                flight.z += 0.5 * rise
+                flight.zs.append(flight.z)
+                items.append(RLoop(angle, False, start, Fraction(rise, 4)))
+                items.append(RLine())
+                flight.frame = _rotate(flight.frame, flight.by, angle)
+                flight.z -= 0.5 * rise
+                flight.zs.append(flight.z)
+                flight.theta = (start + Fraction(1, 2)) % 1
+                items.append(RLoop(angle, False, Fraction(0), Fraction(rise, 4)))
             case StallTurn():
                 if flight.theta != Fraction(1, 4) or not isinstance(items[-1], RLine):
                     raise F3AParseError("a stall turn needs a vertical upline")

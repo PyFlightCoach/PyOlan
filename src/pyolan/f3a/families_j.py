@@ -5,47 +5,41 @@ the way they came. This module wraps the registered ``top hat`` family so that
 ``Modifiers.forward`` False (a lettered group) is built here and the group 17 centre
 top hat is untouched.
 
-Conventions decided per family (checked against the USG drawings):
+Conventions decided per family (checked against the USG drawings; the cross-box line
+decided by the owner in the catalogue review of 2026-11-21: "if it's cross box then you
+can choose in or out, otherwise it needs to be as per the drawing"):
 
-- two shapes, both of the same four 1/4 loops, two vertical lines (one shared
-  ``line_length``, so the figure finishes at its entry height) and a horizontal line
-  between them, with the exit loop flown back. The drawings use one shape or the
-  other for different entries, and nothing in the words says which:
-  - forward top line (J.1-J.10, the plain "Top hat, <roll> up, <roll> down" from
-    the bottom): entry, 1/4 loop up, the upline, 1/4 loop, the top line flown on
-    in the direction of travel, 1/4 loop, the downline and a 1/4 loop out the other
-    way (corners 1/4, -1/4, -1/4, -1/4: the group 17 top hat with its exit turned
-    round). The drawings show this top line oblique for the 1/4 and 3/4 rolls (the
-    wings are vertical on it).
-  - back top line (every other entry that is implemented: "from top" J.11-J.16,
-    "from upright|inverted" J.17-J.20 and J.26-J.29, "from top upright|inverted"
-    J.22-J.25 and J.30-J.33, the spin entries J.38-J.45): the top line (bottom line
-    from top) is flown back, towards where the figure started, so three corners turn
-    one way and the exit loop the other (corners 1/4, 1/4, 1/4, -1/4). From top is the
-    mirror image about the entry height.
+- cross-box top hats (every entry whose rolls on the verticals are odd quarters: J.1-J.33
+  and the 2 1/4 turn spin entries J.38-J.41). The drawings draw the top line (bottom line
+  from top) obliquely, in perspective: it is flown across the box. Entry, 1/4 loop up into
+  the upline (from top: down into the downline) with its roll, which leaves the wings
+  vertical, a 1/4 loop out of the figure plane, the line across the box, a 1/4 loop into
+  the downline (from top: the upline) with the second roll, which puts the wings level
+  again, and a 1/4 loop out the way the figure came. The drawings dash the cross-box line
+  (inverted), so its loops are pulled over the top and pushed under the bottom
+  (``steps.CrossBox``). Whether the line goes in or out follows from the first roll's
+  direction, the pilot's choice; the second roll's direction is linked to it in one
+  mirror option by the stated exit attitude. The verticals share one length (so the
+  figure finishes at its entry height).
+- in-plane top hats, as drawn:
+  - J.34-J.37 ("1/2 roll up, snap roll down, exit upright"): the wings stay level, so
+    the top line (bottom line from top) is flown on in the direction of travel (corners
+    1/4, -1/4, -1/4 and the exit loop). Over a half loop top a full snap and a half roll
+    leave the figure inverted whatever the direction, so the top line is flat (two 1/4
+    corners), which gives the stated upright exit (owner: right, 2026-11-21).
+  - the whole-turn spin entries J.42-J.45: the bottom line is flown back, towards where
+    the figure started.
 - ``<roll> up`` / ``<roll> down``: a roll centred on the vertical line flown that way
-  (from the bottom the up line is first, from the top the down line is first). The
-  rolls are the pilot's choice of direction, so only their quarter-roll signs that
-  decide the knife-edge side are linked, in one mirror option together with the
-  knife-edge loops: the stated exit attitude fixes the relative direction of the
-  second roll. When no exit is stated (J.1-J.16) the exit is upright, as the
-  catalogue metadata says (so J.2, with an inverted entry, rolls the other way round
-  from J.1).
+  (from the bottom the up line is first, from the top the down line is first). When no
+  exit is stated (J.1-J.16) the exit is upright, as the catalogue metadata says.
 - ``three consecutive 1/4 rolls`` and ``four consecutive 1/4 rolls`` are one roll
   with a stop every quarter.
 - ``<n> turn spin entry`` (J.38-J.45, from top): the spin takes the place of the
-  entry corner and its nose drop, followed by the vertical downline, the two bottom
-  corners and the up line with the roll. A spin of whole turns leaves the canopy facing the
-  entry direction, so the corners that follow (and the exit) leave the figure inverted
-  without a roll (as in group 19); 2 1/4 turns leave the wings vertical, so the
-  corners are knife-edge and the spin direction is one mirror option with them.
-  The up line is lengthened by the drop of the spin so that the figure finishes at the
-  height it started.
-
-J.34-J.37 ("1/2 roll up, snap roll down, exit upright"): over a half loop top a full
-snap and a half roll leave the figure inverted whatever the direction, so these are
-built with a flat top line (two 1/4 corners), which gives the stated upright exit. The
-drawings change attitude at the snap instead, as a half snap would (open question).
+  entry corner and its nose drop, followed by the vertical downline, the bottom
+  (cross-box after 2 1/4 turns, which leave the wings vertical; in the plane after
+  whole turns, which leave the figure inverted without a roll, as in group 19) and the
+  up line with the roll. The up line is lengthened by the drop of the spin so that the
+  figure finishes at the height it started.
 """
 
 from __future__ import annotations
@@ -59,7 +53,8 @@ import schemas.positioning as p
 from ..rolls import OlanRoll
 from .errors import F3AParseError
 from .rolls import parse_amount, require_roll
-from .steps import DOWN_LINE, UP, Clause, Entry, Exit, Line, Loop, Roll, Spin
+from .rolls import is_quarter
+from .steps import DOWN_LINE, UP, Clause, CrossBox, Entry, Exit, Line, Loop, Roll, Spin
 
 from .families import FAMILIES, Modifiers  # isort: skip
 
@@ -105,17 +100,6 @@ def _read(name: str, mods: Modifiers, phrases: list[str]) -> _Description:
     return _Description(entry, exit_, rolls, spin, entry_stated)
 
 
-def _forward_top(mods: Modifiers, desc: _Description) -> bool:
-    """Which of the two drawn shapes (see the module docstring)."""
-    if mods.start is None and not desc.entry_stated:
-        return True  # J.1-J.10
-    # J.34-J.37: a half roll on one line and a snap roll on the other, flat top line
-    kinds = sorted(
-        (r.roll_arr[0].kind, abs(r.total())) for r in desc.rolls.values() if len(r.roll_arr) == 1
-    )
-    return len(desc.rolls) == 2 and kinds == [("roll", 0.5), ("snap", 1.0)]
-
-
 def _vertical_length(rolls: dict[str, OlanRoll]) -> str | None:
     """A builder length for both vertical lines, when a roll needs more than ``line_length``.
 
@@ -141,16 +125,29 @@ def top_hat_turnaround(name: str, mods: Modifiers, phrases: list[str]) -> list[C
     if set(desc.rolls) != {"up", "down"}:
         raise F3AParseError(f"{name}: expected a roll up and a roll down, got {phrases!r}")
 
+    length = _vertical_length(desc.rolls)
+    if is_quarter(desc.rolls[first]):
+        # the first roll leaves the wings vertical: the top (bottom) line is cross-box
+        return [
+            Entry(desc.entry),
+            Loop(Fraction(1, 4), sense=sense),
+            Line(UP if not top else DOWN_LINE, label="leg 1", length=length),
+            Roll(desc.rolls[first]),
+            CrossBox(pull=not top),
+            Line(DOWN_LINE if not top else UP, label="leg 3", length=length),
+            Roll(desc.rolls[second]),
+            Exit(exit_),
+        ]
+
     def theta(n: int, signs: list[int]) -> frozenset[Fraction]:
         return frozenset({sum((Fraction(s, 4) for s in signs[:n]), Fraction(0)) % 1})
 
-    forward_top = _forward_top(mods, desc)
-    signs = [sense, -sense, -sense] if forward_top else [sense, sense, sense]
+    # wings level throughout (J.34-J.37): the top line flown on, as drawn
+    signs = [sense, -sense, -sense]
     clauses: list[Clause] = [Entry(desc.entry)]
     for leg in range(1, 4):
         clauses.append(Loop(Fraction(1, 4), sense=signs[leg - 1]))
-        length = _vertical_length(desc.rolls) if leg != 2 else None
-        clauses.append(Line(theta(leg, signs), label=f"leg {leg}", length=length))
+        clauses.append(Line(theta(leg, signs), label=f"leg {leg}", length=length if leg != 2 else None))
         if leg == 1:
             clauses.append(Roll(desc.rolls[first]))
         elif leg == 3:
@@ -165,13 +162,19 @@ def _spin_entry(name: str, mods: Modifiers, desc: _Description, exit_: p.Orienta
     # a spin of whole turns leaves the wings level, the quarter turn leaves them vertical
     linked = desc.spin % 1 != 0
     length = _vertical_length(desc.rolls)
+    if linked:
+        bottom: list[Clause] = [CrossBox(pull=False)]
+    else:
+        bottom = [
+            Loop(Fraction(1, 4), sense=-1),
+            Line(frozenset({Fraction(1, 2)}), label="bottom line"),
+            Loop(Fraction(1, 4), sense=-1),
+        ]
     return [
         Entry(desc.entry),
         Spin(desc.spin, linked=linked),
         Line(DOWN_LINE, label="downline", length=length),
-        Loop(Fraction(1, 4), sense=-1),
-        Line(frozenset({Fraction(1, 2)}), label="bottom line"),
-        Loop(Fraction(1, 4), sense=-1),
+        *bottom,
         Line(UP, label="upline", length=length),
         Roll(desc.rolls["up"]),
         Exit(exit_),
