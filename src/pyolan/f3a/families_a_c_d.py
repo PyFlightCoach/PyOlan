@@ -20,19 +20,20 @@ Conventions decided per family (checked against the USG drawings):
     be mirrored (as in the stall turn). The snap's direction is the pilot's choice.
     ``from top upright|inverted`` gives the attitude after "from top".
 - Immelmann turn (D): entry, a half loop up (its attitude follows from the roll
-  after it), then the roll that ends the figure, on a line after the loop (the
-  usual rule for a roll that ends a figure). A plain Immelmann has a half roll; a
-  ``full roll`` replaces it. The roll direction is the pilot's choice.
+  after it), then the roll that ends the figure, flown straight out of the loop with
+  no line between them (owner, catalogue review 2026-11-21: "as per split S, no line
+  between the roll and the loop"; the exception to the shared rule that puts a line
+  before a roll that ends a figure). A plain Immelmann has a half roll; a ``full
+  roll`` replaces it. The roll direction is the pilot's choice.
   ``from upright|inverted with 1/4 roll, knife-edge half loop up|down, 3/4 roll,
-  exit ...``: a 1/4 roll that starts the figure (so, as for every roll that starts
-  a figure, a line follows it), a half loop in knife-edge flight and a 3/4 roll
-  that ends it. The two rolls and the loop are one mirror option, the exit
-  attitude deciding the relative direction of the rolls. "up" starts at the
-  bottom, "down" at the top. The drawings put the rolls next to the loop; ours
-  follow the shared rule for a roll at the start or end of a figure.
-- split S (C): a full roll that starts the figure, and then a half loop down from
-  the top. The drawings put the arrow at the end of the entry line, next to the
-  loop (as for the double Immelmann, the shared rule puts the line after the roll).
+  exit ...``: a 1/4 roll that starts the figure, flown straight into a half loop in
+  knife-edge flight, and a 3/4 roll straight out of it that ends the figure (no line
+  on either side of the loop, as above). The two rolls and the loop are one mirror
+  option, the exit attitude deciding the relative direction of the rolls. "up"
+  starts at the bottom, "down" at the top.
+- split S (C): a full roll that starts the figure, flown straight into a half loop
+  down from the top with no line between them (owner, catalogue review 2026-11-21),
+  as the drawings show with the roll next to the loop.
 """
 
 from __future__ import annotations
@@ -143,7 +144,7 @@ def immelmann_turn(name: str, mods: Modifiers, phrases: list[str]) -> list[Claus
     if len(phrases) <= 1:
         # the half loop and the roll that ends the figure (a half roll unless stated)
         roll = require_roll(phrases[0] if phrases else "half roll")
-        return [Entry(mods.entry), Loop(Fraction(1, 2), sense=1), Roll(roll), Exit(mods.exit)]
+        return [Entry(mods.entry), Loop(Fraction(1, 2), sense=1), Roll(roll, after_loop=True), Exit(mods.exit)]
     if len(phrases) not in (4, 5):
         raise F3AParseError(f"{name}: unexpected {phrases!r}")
     start, first, loop, last, *rest = phrases
@@ -159,9 +160,9 @@ def immelmann_turn(name: str, mods: Modifiers, phrases: list[str]) -> list[Claus
     sense = 1 if ke.group("dir") == "up" else -1
     return [
         Entry(att),
-        Roll(rolls[0]),
+        Roll(rolls[0], before_loop=True),
         Loop(Fraction(1, 2), sense=sense, knife_edge=True),
-        Roll(rolls[1]),
+        Roll(rolls[1], after_loop=True),
         Exit(exit_attitude),
     ]
 
@@ -174,7 +175,7 @@ def split_s(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
         raise F3AParseError(f"{name}: expected one roll, got {phrases!r}")
     return [
         Entry(mods.entry),
-        Roll(require_roll(phrases[0])),
+        Roll(require_roll(phrases[0]), before_loop=True),
         Loop(Fraction(1, 2), sense=-1),
         Exit(mods.exit),
     ]

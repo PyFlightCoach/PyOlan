@@ -85,6 +85,9 @@ class Roll:
     # of its line follows it: not centred on the line, and no line before a roll that
     # ends the figure
     after_loop: bool = False
+    # the roll is flown straight into the loop after it (a split S): the line before it
+    # comes first, and no line follows a roll that starts the figure
+    before_loop: bool = False
 
 
 @dataclass
@@ -97,8 +100,12 @@ class Loop:
     integrated: bool = False  # the roll spans the whole loop, not 90 degrees of it
     # which mirror option a knife-edge loop's yaw direction belongs to (see Roll.group)
     group: int = 0
-    # a radius of its own: (figure parameter name, default in m), compared like loop_radius
-    radius: tuple[str, float] | None = None
+    # a radius of its own: (figure parameter name, default in m), compared like loop_radius,
+    # or a builder expression (a str), which sizes the loop but is compared with nothing
+    radius: tuple[str, float] | str | None = None
+    # the roll's direction is linked to the mirror option even if it is not a quarter
+    # roll (pieces of one rolling sequence spread over several loops)
+    linked: bool = False
     # which sense of an open loop comes first in the Option when the travel
     # direction does not decide (both reach the same heading), as drawn
     first: int | None = None
@@ -158,6 +165,7 @@ class RLine:
     closed: bool = False  # a roll of its own (Roll.alone): the next line is another one
     free: bool = False  # a vertical line whose length is the layout's to choose (Roll.free_vertical)
     after_loop: bool = False  # the roll starts the line, straight out of the loop (Roll.after_loop)
+    before_loop: bool = False  # the roll ends the line, straight into the loop (Roll.before_loop)
 
     @property
     def roll(self) -> OlanRoll | None:
@@ -179,7 +187,7 @@ class RLoop:
     integrated: bool = False
     linked: bool = False  # the roll direction is linked to the mirror option
     group: int = 0  # which mirror option the yaw direction and linked roll belong to
-    radius: tuple[str, float] | None = None  # see Loop.radius
+    radius: tuple[str, float] | str | None = None  # see Loop.radius
 
 
 @dataclass
@@ -401,7 +409,7 @@ def _fly(
         integrated: bool = False,
         linked: bool = False,
         group: int = 0,
-        radius: tuple[str, float] | None = None,
+        radius: tuple[str, float] | str | None = None,
     ):
         start = flight.theta
         angle, ke = flight.plane_loop(geometric)
@@ -439,14 +447,22 @@ def _fly(
                         f"line at path angle {flight.theta} is "
                         f"{'' if flight.knife_edge() else 'not '}in knife-edge"
                     )
-            case Roll(roll=roll, group=group, alone=alone, free_vertical=free_vertical, after_loop=after_loop):
+            case Roll(
+                roll=roll, group=group, alone=alone, free_vertical=free_vertical,
+                after_loop=after_loop, before_loop=before_loop,
+            ):
                 if alone and (len(items) > 1 or items[-1].rolls):
                     items.append(RLine())
                     flight.line()
                 if after_loop and not isinstance(items[-1], RLoop):
                     raise F3AParseError("a roll straight out of a loop needs the loop just before it")
+                if before_loop and not (i + 1 < len(clauses) and isinstance(clauses[i + 1], Loop)):
+                    raise F3AParseError("a roll straight into a loop needs the loop just after it")
                 line = current_line()
+                if (line.after_loop or after_loop) and before_loop:
+                    raise F3AParseError("a roll cannot be both straight out of a loop and into the next")
                 line.after_loop = line.after_loop or after_loop
+                line.before_loop = before_loop
                 line.closed = alone
                 line.free = line.free or (free_vertical and flight.theta in VERTICAL)
                 sign = signs.get(i, 1)
@@ -459,6 +475,7 @@ def _fly(
             case Loop(
                 amount=amount, sense=sense, pull=pull, knife_edge=ke, roll=roll,
                 integrated=integrated, group=group, radius=radius, first=first,
+                linked=linked,
             ):
                 if sense is None and pull is not None:
                     pitch = _aligned(flight.by, PLANE_AXIS)
@@ -507,7 +524,7 @@ def _fly(
                     signed(roll, signs.get(i, 1)) if roll else None,
                     ke,
                     integrated,
-                    linked=integrated and i in signs,
+                    linked=roll is not None and (linked or (integrated and i in signs)),
                     group=group,
                     radius=radius,
                 )
@@ -707,7 +724,7 @@ def figure_ndmps(items: list[Item]) -> dict[str, a.NewComparison]:
     # a roll beside a line of the figure (a knife-edge flight) needs no extra line
     first_roll = (
         last > 0 and isinstance(items[0], RLine) and items[0].rolls
-        and not isinstance(items[1], RLine)
+        and not isinstance(items[1], RLine) and not items[0].before_loop
     )
     end_roll = (
         last > 0 and isinstance(items[last], RLine) and items[last].rolls
@@ -717,7 +734,7 @@ def figure_ndmps(items: list[Item]) -> dict[str, a.NewComparison]:
     ndmps = {
         item.radius[0]: a.NewComparison(value=item.radius[1], like="loop_radius")
         for item in items
-        if isinstance(item, RLoop) and item.radius
+        if isinstance(item, RLoop) and isinstance(item.radius, tuple)
     }
     if first_roll or end_roll:
         ndmps[ROLL_LINE] = a.NewComparison(value=ROLL_LINE_DEFAULT, like="line_length")
@@ -745,6 +762,12 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                     pes.append(a.roll(rolls, rolltypes=roll.rolltypes(), padded=False))
                     if i < last:
                         pes.append(a.line(length=item.length) if item.length else a.line())
+                elif roll is not None and item.before_loop:
+                    # the line (if not the start), then the roll straight into the loop
+                    if i > 0:
+                        pes.append(a.line(length=item.length) if item.length else a.line())
+                    rolls = [ref(item.group) for _ in roll.roll_arr] if linked and item.linked else roll.pfc_roll()
+                    pes.append(a.roll(rolls, rolltypes=roll.rolltypes(), padded=False))
                 elif roll is not None:
                     if i == last and i > 0 and not isinstance(items[i - 1], RLine):
                         # F3A: a roll that ends the figure follows a line, and the
@@ -775,8 +798,10 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                     kwargs.pop("rollposition", None)
                 if item.ke:
                     kwargs["ke"] = KE
-                if item.radius:
+                if isinstance(item.radius, tuple):
                     kwargs["radius"] = item.radius[0]
+                elif item.radius:
+                    kwargs["radius"] = item.radius
                 pes.append(a.loop(angle, **kwargs))
             case RStallTurn():
                 pes.append(a.stallturn())

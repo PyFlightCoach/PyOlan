@@ -24,11 +24,13 @@ Conventions decided per family (checked against the USG drawings):
   at the point where the first is flown downwards), the last quarter of the first
   circle, and the exit line. The second circle is flown clockwise and the first
   counter-clockwise or the reverse, as the entry attitude needs, so the loops are
-  +3/4, -1, +1/4 as the entry is pulled. The rolls are whole rolls, spread over
-  the loop piece they are in (``integrated``), "one roll integrated in each loop" is
-  a full roll in the 3/4 loop and a full roll in the full loop, "two rolls" and
-  "four rolls" two or four of them. The last 1/4 of the first circle has no roll
-  (the roll of a circle that another circle interrupts cannot span both pieces).
+  +3/4, -1, +1/4 as the entry is pulled. The figure rolls throughout at a steady
+  rate (owner, catalogue review 2026-11-21): "<n> rolls integrated in each loop" is n
+  rolls per circle, so the 3/4 loop carries 3n/4 of a roll, the full loop n and the
+  last 1/4 loop n/4 ("one roll": 3/4, 1 and 1/4; "four rolls": 3, 4 and 1), each spread
+  over its loop (``integrated``). The words do not ask for the roll direction to change
+  where the circles join, so all three pieces roll the same way: one mirror option
+  (``Loop.linked``), the direction being the pilot's choice.
 """
 
 from __future__ import annotations
@@ -36,7 +38,7 @@ from __future__ import annotations
 import re
 from fractions import Fraction
 
-from ..rolls import OlanRoll
+from ..rolls import OlanRoll, ORoll
 from .errors import F3AParseError
 from .rolls import require_roll
 from .steps import DOWN_LINE, UP, VERTICAL, Clause, Entry, Exit, Line, Loop, Roll  # noqa: F401
@@ -137,10 +139,16 @@ def horizontal_eight(name: str, mods: Modifiers, phrases: list[str]) -> list[Cla
     roll: OlanRoll = require_roll(match.group("roll"))
     if any(r.kind != "roll" or r.turns % 1 for r in roll.roll_arr) or len(roll.roll_arr) != 1:
         raise F3AParseError(f"{name}: expected whole rolls, got {match.group('roll')!r}")
+    per_circle = roll.roll_arr[0].turns
+
+    def piece(amount: Fraction) -> OlanRoll:
+        turns = per_circle * abs(amount)
+        return OlanRoll(f"{turns:g} roll", [ORoll("roll", turns)])
+
     return [
         Entry(mods.entry),
-        Loop(Fraction(3, 4), sense=1, roll=roll, integrated=True),
-        Loop(Fraction(-1), sense=1, roll=roll, integrated=True),
-        Loop(Q, sense=1),
+        Loop(Fraction(3, 4), sense=1, roll=piece(Fraction(3, 4)), integrated=True, linked=True),
+        Loop(Fraction(-1), sense=1, roll=piece(Fraction(1)), integrated=True, linked=True),
+        Loop(Q, sense=1, roll=piece(Q), integrated=True, linked=True),
         Exit(mods.exit),
     ]

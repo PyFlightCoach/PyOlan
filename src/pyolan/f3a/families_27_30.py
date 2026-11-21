@@ -19,17 +19,19 @@ Conventions decided per figure (checked against the USG drawings):
   reversible roll flips the pair). The four 1/4 rolls of 27.3/27.4 are one roll on the
   entry line. The diagonal is ``(4.8284*loop_radius)`` long, which makes the second
   half loop end at the entry height (the figure starts and ends in the middle).
-- Figure H (28): 1/4 loop up, a vertical upline with its 3/4 snap, a stall turn, a short
+- Figure H (28): 1/4 loop up, a vertical upline with its 3/4 snap, a stall turn, a
   downline, a 1/4 knife-edge loop, the horizontal knife-edge line with its roll, a
-  1/4 knife-edge loop up, a short upline, a stall turn, a downline with its 3/4 snap
+  1/4 knife-edge loop up, an upline, a stall turn, a downline with its 3/4 snap
   and a 1/4 loop out. The words end "3/4 snap-roll, 1/4 roll", but that 1/4 roll would leave
   the figure in knife-edge flight with no upright or inverted exit, and the drawings show a
   1/4 loop and no roll there (the first half has "1/4 loop, 3/4 snap-roll", so the figure is
   symmetrical): it is read as the 1/4 loop out (see the report on the catalogue text). The
   USG drawings label the snaps "1 1/4" for the upright entries (28.1, 28.2) and "3/4" for the
-  inverted ones; the words say 3/4 in all four and are followed. The two short lines (a quarter of
-  ``line_length``, as drawn) are in the drawings but not in the words; they are equal, so the
-  figure ends at its entry height whatever their length. "line with roll" is read as a full roll, as a
+  inverted ones; the words say 3/4 in all four and are followed. The two lines between
+  the stall turns and the knife-edge loops are in the drawings but not in the words. The
+  drawings show them short, but all four vertical lines have the same length (owner,
+  catalogue review 2026-11-21), so the knife-edge line with its roll is at the entry and
+  exit height, and the figure ends at its entry height. "line with roll" is read as a full roll, as a
   lone "roll" is everywhere else, and the drawing has no amount on it. The three quarter
   rolls (two snaps, the 1/4 roll) are one mirror option, since the exit attitude depends
   on their relative directions. The loops and the roll all turn the same way, as drawn.
@@ -44,7 +46,11 @@ Conventions decided per figure (checked against the USG drawings):
   then a square loop on corner (the shape of 06, corners 1/8, 1/4, 1/4, 1/4, 1/8) with a
   half roll in each leg. "Radii for loop and square loop can be different" gives the
   corners of the diamond a radius parameter of their own, ``diamond_radius``, compared
-  like the loop radius. The USG text does not say whether the loop is pulled or pushed
+  like the loop radius. The loop's diameter is the diamond's height (owner, catalogue
+  review 2026-11-21), ``2*diamond_radius + sqrt(2)*line_length``, so its radius is the
+  expression ``LOOP_RADIUS``: the template draws it that size, and an expression has no
+  collector, so the loop is not downgraded for not matching the diamond (a comparison
+  parameter cannot express it). The USG text does not say whether the loop is pulled or pushed
   (the rulebook does: pulled or pushed according to the entry attitude, the loop going
   up from the bottom and down from the top).
 """
@@ -84,15 +90,14 @@ DIAGONAL = f"({DIAGONAL_FACTOR:.4f}*loop_radius)"
 DIAGONAL_UNITS = DIAGONAL_FACTOR * 0.5
 DIAGONAL_DOWN = frozenset({Fraction(5, 8)})
 
-# the short lines either side of the knife-edge flight of Figure H (about a quarter of the
-# verticals in the drawings)
-SHORT_LINE = "(0.25*line_length)"
-SHORT_UNITS = 0.25
 
 # the line joining the two lobes of the half clover leaf: two loop radii (one line unit)
 LOBE_LINE = "(2*loop_radius)"
 
 DIAMOND_RADIUS = ("diamond_radius", 25.0)  # name, default in m
+# half the diamond's height: two corner radii of rise in its 1/8 and 1/4 corners and
+# two 45 degree legs of line_length (see the module docstring)
+LOOP_RADIUS = "(diamond_radius+(0.7071*line_length))"
 
 
 # ---------------------------------------------------------------- reading the steps
@@ -220,12 +225,12 @@ def figure_h(steps: _Steps) -> list[Clause]:
         Line(UP),
         Roll(snap),
         StallTurn(),
-        Line(DOWN_LINE, length=SHORT_LINE, units=SHORT_UNITS),
+        Line(DOWN_LINE),
         Loop(Q, sense=1, knife_edge=True),
         Line(LEVEL, knife_edge=True),
         Roll(full_roll),
         Loop(Q, sense=1, knife_edge=True),
-        Line(UP, length=SHORT_LINE, units=SHORT_UNITS),
+        Line(UP),
         StallTurn(),
         Roll(snap),
         Loop(Q, sense=1),
@@ -287,7 +292,7 @@ def diamond_in_a_loop(steps: _Steps) -> list[Clause]:
     clauses: list[Clause] = [
         Entry(_ATTITUDE[start.group("att")]),
         # one loop, with a half roll spread over each of its halves
-        Loop(Fraction(1), sense=sense, roll=pair, integrated=True),
+        Loop(Fraction(1), sense=sense, roll=pair, integrated=True, radius=LOOP_RADIUS),
     ]
     theta = Fraction(0)
     corners = [E, Q, Q, Q, E]

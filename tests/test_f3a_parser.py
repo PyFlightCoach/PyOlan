@@ -1322,21 +1322,24 @@ def test_acd_half_square_loop_from_top_has_no_roll_in_the_other_direction():
             parse_f3a_description(text)
 
 
-def test_acd_immelmann_turn_ends_with_a_roll_after_a_line():
+def test_acd_immelmann_turn_rolls_straight_out_of_the_loop():
+    # owner, catalogue review 2026-11-21: no line between the loop and the roll
     for number, turns in (("D.1", np.pi), ("D.3", 2 * np.pi)):
         fig = _acd_fig(number)
-        assert [e.kind for e in fig.elements] == ["loop", "line", "roll"]
+        assert [e.kind for e in fig.elements] == ["loop", "roll"]
         assert fig.elements[0].args == [pytest.approx(np.pi)]
-        assert fig.elements[1].kwargs["length"] == "roll_line_length"
-        assert fig.elements[2].args == [turns]
-        assert fig.elements[2].kwargs["padded"] is False
-        assert "roll_line_length" in fig.ndmps
+        assert fig.elements[1].args == [turns]
+        assert fig.elements[1].kwargs["padded"] is False
+        assert "roll_line_length" not in fig.ndmps
 
 
 def test_acd_knife_edge_immelmann_has_a_roll_at_each_end_and_one_mirror_option():
     fig = _acd_fig("D.7")
-    assert [e.kind for e in fig.elements] == ["roll", "line", "loop", "line", "roll"]
-    assert fig.elements[2].kwargs["ke"] == pytest.approx(np.pi / 2)
+    # the rolls go straight into and out of the knife-edge loop, with no lines
+    assert [e.kind for e in fig.elements] == ["roll", "loop", "roll"]
+    assert not any(e.kwargs.get("padded") for e in fig.elements if e.kind == "roll")
+    assert "roll_line_length" not in fig.ndmps
+    assert fig.elements[1].kwargs["ke"] == pytest.approx(np.pi / 2)
     assert set(k for k in fig.ndmps if k.startswith("roll_option")) == {"roll_option"}
     first, loop, last = fig.ndmps["roll_option"][0]
     assert (abs(first), abs(loop), abs(last)) == pytest.approx((np.pi / 2, np.pi, 1.5 * np.pi))
@@ -1346,9 +1349,12 @@ def test_acd_knife_edge_immelmann_has_a_roll_at_each_end_and_one_mirror_option()
 
 
 def test_acd_split_s_starts_with_the_roll_and_goes_down():
+    # owner, catalogue review 2026-11-21: no line between the roll and the loop
     fig = _acd_fig("C.3")
-    assert [e.kind for e in fig.elements] == ["roll", "line", "loop"]
-    assert fig.elements[0].args == [2 * np.pi] and fig.elements[2].args == [-np.pi]
+    assert [e.kind for e in fig.elements] == ["roll", "loop"]
+    assert fig.elements[0].args == [2 * np.pi] and fig.elements[1].args == [-np.pi]
+    assert fig.elements[0].kwargs["padded"] is False
+    assert "roll_line_length" not in fig.ndmps
     assert fig.info.start.height == p.Height.TOP
 
 
@@ -1724,14 +1730,23 @@ def test_g25_horizontal_eight_is_a_three_quarter_loop_a_full_loop_and_a_quarter(
     fig = parse_f3a_description(FIXTURE_BY_NUMBER[number]["description"], number)
     loops = fig.elements
     assert [e.kind for e in loops] == ["loop", "loop", "loop"]
-    sign = -1 if inverted else 1
-    assert [round(e.args[0] / (2 * np.pi), 3) for e in loops] == [0.75 * sign, -1.0 * sign, 0.25 * sign]
-    # the roll (whole rolls) is integrated through the loop piece, in the first two loops only
-    for loop, piece in zip(loops[:2], (0.75, 1.0)):
-        assert loop.kwargs["rollangle"] == pytest.approx(piece * 2 * np.pi)
-        assert loop.kwargs["rollposition"] == pytest.approx(0.5)
-        assert abs(loop.kwargs["rolls"]) == pytest.approx(2 * np.pi * rolls)
-    assert "rolls" not in loops[2].kwargs
+    # rolling throughout at a steady rate (owner, catalogue review 2026-11-21): <rolls> per
+    # circle, so 3/4, 1 and 1/4 of it in the three pieces, all one way (one mirror option)
+    values = fig.ndmps["roll_option"]
+    assert set(k for k in fig.ndmps if k.startswith("roll_option")) == {"roll_option"}
+    first, mirror = values
+    assert mirror == [-v for v in first]
+
+    def value(ref):
+        return first[int(ref.split("[")[1].rstrip("]"))]
+
+    turns = [value(e.kwargs["rolls"]) / (2 * np.pi) for e in loops]
+    assert turns == pytest.approx([0.75 * rolls, rolls, 0.25 * rolls])
+    # a 3/4 circle, a full circle and the last 1/4 (the element angles are in the body frame,
+    # so their signs follow the attitude the rolls leave; a loop that starts in knife-edge
+    # has its yaw in the mirror option too)
+    sizes = [abs(value(e.args[0]) if isinstance(e.args[0], str) else e.args[0]) / (2 * np.pi) for e in loops]
+    assert sizes == pytest.approx([0.75, 1.0, 0.25])
     assert fig.info.start.orientation == fig.info.end.orientation
     assert (fig.info.start.orientation == p.Orientation.INVERTED) == inverted
 
@@ -2251,10 +2266,11 @@ def test_g28_figure_h_is_two_stall_turn_verticals_joined_by_a_knife_edge_line(nu
     rolls = [e for e in fig.elements if e.kind == "roll"]
     assert [e.kwargs["rolltypes"] for e in rolls] == ["snap", "roll", "snap"]
     assert all(e.kwargs["padded"] for e in rolls)
-    # the lines either side of the knife-edge flight (drawn, not in the words) are equal and
-    # short, so the figure ends at its entry height whatever they are
-    short = [e for e in fig.elements if e.kind == "line"]
-    assert [e.kwargs["length"] for e in short] == ["(0.25*line_length)"] * 2
+    # the lines either side of the knife-edge flight (drawn, not in the words) are as long as
+    # the verticals with the snaps (owner, catalogue review 2026-11-21: all the verticals have
+    # the same length), so the knife-edge line is at the entry and exit height
+    lines = [e for e in fig.elements if e.kind == "line"]
+    assert ["length" in e.kwargs for e in lines] == [False, False]
     # no roll ends the figure: the words' "1/4 roll" is the loop out (see the module text)
     assert fig.elements[-1].kind == "loop"
     assert fig.info.position == p.Position.CENTRE
@@ -2273,6 +2289,17 @@ def test_g28_figure_h_exits_in_the_drawn_attitude_and_closes_in_both_directions(
     first, mirror = fig.ndmps["roll_option"]
     assert len(first) == 4 and mirror == [-v for v in first]
     assert set(k for k in fig.ndmps if k.startswith("roll_option")) == {"roll_option"}
+
+
+@pytest.mark.parametrize("number", ["28.1", "28.3"])
+def test_g28_figure_h_knife_edge_line_is_at_the_entry_height(number, mb):
+    fig, templates, states = _g2730_template(number, mb)
+    # element 5 is the knife-edge line's roll (loop, roll, stall turn, line, loop, roll, ...)
+    assert fig.elements[5].kind == "roll" and fig.elements[5].kwargs["rolltypes"] == "roll"
+    name = next(n for n in templates if n == "e_5" or n.startswith("e_5_"))
+    # to the builder's estimate of a snap's length on a padded line (the snap verticals come
+    # out 1.9 m longer than line_length at the defaults)
+    assert float(templates[name].pos.z[0] - states.pos.z[0]) == pytest.approx(0, abs=2.5)
 
 
 def test_g28_figure_h_exit_attitude_follows_from_the_snaps_directions():
@@ -2364,7 +2391,8 @@ def test_g30_diamond_in_a_loop_is_a_loop_with_opposite_half_rolls_then_a_square_
     assert abs(circle.args[0]) == pytest.approx(2 * np.pi)
     assert circle.kwargs["rolls"] == pytest.approx([np.pi, -np.pi])
     assert circle.kwargs["rollangle"] == pytest.approx(2 * np.pi)
-    assert "radius" not in circle.kwargs
+    # sized to the diamond's height by an expression, so it is compared with nothing
+    assert circle.kwargs["radius"] == "(diamond_radius+(0.7071*line_length))"
     # the rulebook says pulled from upright at the bottom and from inverted at the top, pushed
     # in the other two: the loop goes up from the bottom and down from the top
     pulled = (entry["entry_attitude"] == "upright") == ("bottom" in entry["description"])
@@ -2387,17 +2415,21 @@ def test_g30_diamond_in_a_loop_radius_is_its_own_parameter_and_the_figure_closes
     assert float(states.pos.z[-1] - states.pos.z[0]) == pytest.approx(0, abs=1e-6)
     assert float(states.pos.y[-1] - states.pos.y[0]) == pytest.approx(0, abs=1e-6)
     assert _g2730_exit_attitude(states) == entry["exit_attitude"]
-    # the radii are separate parameters: changing the diamond's leaves the loop's alone
-    small = _g2730_template(number, mb, diamond_radius=15.0)
-    large = _g2730_template(number, mb, diamond_radius=35.0)
+    # the loop's diameter is the diamond's height (owner, catalogue review 2026-11-21)
+    templates = _g2730_template(number, mb)[1]
+    circle = State.stack({k: v for k, v in templates.items() if k.startswith("e_0")}, "element")
+    diamond = State.stack({k: v for k, v in templates.items() if not k.startswith("e_0")}, "element")
 
-    def circle_end(templates):
-        last = [name for name in templates if name.startswith("e_0")][-1]
-        return float(templates[last].pos.x[-1]), float(templates[last].pos.z[-1])
+    def height(st):
+        return float(np.max(st.pos.z) - np.min(st.pos.z))
 
-    assert circle_end(small[1]) == pytest.approx(circle_end(large[1]))
-    # the diamond is bigger with bigger corners
-    assert float(np.max(np.abs(small[2].pos.z))) != pytest.approx(float(np.max(np.abs(large[2].pos.z))), abs=1)
+    assert height(circle) == pytest.approx(height(diamond), rel=1e-3)
+    # the loop radius is an expression with no collector: no parameter compares the loop with
+    # the diamond, and the diamond's corners have their own
+    mdef = mb.create_mdef(fig)
+    assert not any(
+        c.first_element.startswith("e_0") for c in mdef.mps.data["diamond_radius"].collectors
+    )
 
 
 def test_g30_diamond_in_a_loop_is_strict():
