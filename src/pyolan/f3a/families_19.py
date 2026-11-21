@@ -13,11 +13,11 @@ Conventions decided per family (check against the drawings at review):
   exit" say so). The figure finishes lower than it started, by definition.
 - "half roll exit": a half roll on the exit line, after the 1/4 loop, with the
   line the rules put between a roll that ends a figure and its neighbour.
-- "2 turn opposite spin": decided 2026-11-19 as one turn one way followed by one
-  turn the other, without recovering in between (the builder's spin has no drop
-  after another spin and no recovery before one). Both directions are in one
-  mirror option so they stay opposite. This is a reading of the words: the drawing
-  shows two mirrored spin symbols, each of which may stand for two turns.
+- "2 turn opposite spin": two turns one way followed by two turns the other (owner,
+  catalogue review 2026-11-21: each of the drawing's two mirrored spin symbols is two
+  turns), without recovering in between (the builder's spin has no drop after another
+  spin and no recovery before one). Both directions are in one mirror option so they
+  stay opposite.
 - "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated": the spin leaves the
   canopy facing sideways, so the 1/4 loop is flown in knife-edge, and the 1/4 roll
   integrated in it brings the wings level over the whole loop (the roll's direction
@@ -41,7 +41,7 @@ from .steps import Clause, Entry, Exit, Line, Loop, Roll, Spin
 from .families import Modifiers, family  # isort: skip
 
 # the turns of each spin family: (turns, opposite). An opposite spin is flown as
-# half the turns one way and half the other.
+# the turns one way and then the same turns the other.
 _SPINS: dict[str, tuple[Fraction, bool]] = {
     "2 1/2 turn spin": (Fraction(5, 2), False),
     "three turn spin": (Fraction(3), False),

@@ -219,13 +219,9 @@ def _figure(desc: Description, resolved: Resolved) -> a.Figure:
 # their drawing and metadata: number -> (catalogued words, corrected words). Applied only
 # when the number is known and the words are the catalogued ones, so a later corrected
 # catalogue passes through unchanged. Decided 2026-11-19 (best guess, to be reviewed).
+# L.7 is not corrected: its last push exits inverted where the drawing and the USG list exit
+# upright, and the owner decided (catalogue review, 2026-11-21) to follow the words.
 ERRATA: dict[str, tuple[str, str]] = {
-    # the stated last push exits inverted; the drawing exits upright, as L.8 does with
-    # a last pull
-    "L.7": (
-        "Humpty bump (pull, pull, push, or pull, push, push) 1/4 roll up, 3/4 roll down",
-        "Humpty bump (pull, pull, pull, or pull, push, pull) 1/4 roll up, 3/4 roll down",
-    ),
     # P.2's words; the drawing starts at the top
     "P.6": (
         "Vertical 5/8 loop from upright, snap-roll, roll, exit inverted",
@@ -235,6 +231,11 @@ ERRATA: dict[str, tuple[str, str]] = {
     "P.12": (
         "Vertical 5/8 loop from top inverted, 3/4 snap-roll, 1/4 half roll, exit upright",
         "Vertical 5/8 loop from inverted, 3/4 snap-roll, 1/4 roll, exit inverted",
+    ),
+    # 14.21's words; the drawing and the USG list fly it inverted to inverted
+    "14.22": (
+        "Vertical Knife-edge eight, middle entry and exit, top first",
+        "Vertical Knife-edge eight, middle entry and exit, top first, inverted entry",
     ),
 }
 

@@ -59,6 +59,10 @@ FIXTURE_ATTITUDE_TYPO["F.63"] = ("inverted", "upright")
 # what the fixture records for the entries above (asserted, so a corrected fixture
 # shows up here)
 FIXTURE_ATTITUDE_RECORDED = {"E.63": ("upright", "upright"), "F.63": ("inverted", "high")}
+# L.7 "(pull, pull, push, or pull, push, push)": the last push exits inverted where the
+# drawing and the USG list exit upright; the owner decided to follow the words (catalogue
+# review, 2026-11-21).
+WORDS_OVER_DRAWING = {"L.7": ("upright", "inverted")}
 # The 45 degree line of a half Cuban eight is the builder's line_length (130 m; decided
 # 2026-11-20, A4 review: not tied to the loop radius), so at the builder's default radius of
 # 55 m the figure ends below where it starts, whereas the USG metadata gives the exit one box
@@ -572,6 +576,9 @@ def test_matches_usg_drawing(entry, mb):
         assert (entry["entry_attitude"], entry["exit_attitude"]) == FIXTURE_ATTITUDE_RECORDED[entry["number"]]
         entry_attitude, expected["exit_attitude"] = FIXTURE_ATTITUDE_TYPO[entry["number"]]
         expected["entry_attitude"] = entry_attitude
+    if entry["number"] in WORDS_OVER_DRAWING:
+        assert (entry["entry_attitude"], entry["exit_attitude"]) == ("upright", "upright")
+        entry_attitude, expected["exit_attitude"] = WORDS_OVER_DRAWING[entry["number"]]
     if entry["number"] in FIXTURE_HEIGHT_TYPO:
         assert entry["entry_height"] == entry["exit_height"] == "low"
         expected["entry_height"] = expected["exit_height"] = FIXTURE_HEIGHT_TYPO[entry["number"]]
@@ -2511,19 +2518,27 @@ def test_lm_group_18_is_unchanged_by_the_turnaround_builder():
     assert [abs(e.args[0]) for e in _lm_loops(fig)] == pytest.approx([np.pi / 2, np.pi, np.pi / 2])
 
 
-def test_l7_stated_last_push_contradicts_the_drawing_exit(monkeypatch):
+def test_l7_follows_its_words_and_exits_inverted():
     # L.7 "(pull, pull, push, or pull, push, push) 1/4 roll up, 3/4 roll down": a last push
-    # leaves the aircraft inverted, but the drawing says upright -> upright (L.8, with the
-    # mirror entry, ends "pull" and upright). With its number the ERRATA correction (last
-    # pull) is used; the words alone are parsed as written.
+    # leaves the aircraft inverted, though the drawing exits upright (as L.8 does, with a
+    # last pull). The owner decided to follow the words, so L.7 is not in ERRATA.
+    from pyolan.f3a.parser import ERRATA
+
     entry = FIXTURE_BY_NUMBER["L.7"]
-    assert entry["exit_attitude"] == "upright"
-    with monkeypatch.context() as m:
-        m.setattr("pyolan.f3a.parser.ERRATA", {})
-        as_written = parse_f3a_description(entry["description"], entry["number"], entry["k"])
-    assert as_written.info.end.orientation == p.Orientation.INVERTED
+    assert "L.7" not in ERRATA
     fig = parse_f3a_description(entry["description"], entry["number"], entry["k"])
-    assert fig.info.end.orientation == p.Orientation.UPRIGHT
+    assert fig.info.end.orientation == p.Orientation.INVERTED
+
+
+def test_1422_is_corrected_to_fly_inverted():
+    # 14.22 has 14.21's words, but its drawing and the USG list fly it inverted to inverted
+    entry = FIXTURE_BY_NUMBER["14.22"]
+    assert entry["description"] == FIXTURE_BY_NUMBER["14.21"]["description"]
+    assert (entry["entry_attitude"], entry["exit_attitude"]) == ("inverted", "inverted")
+    fig = parse_f3a_description(entry["description"], entry["number"], entry["k"])
+    assert fig.info.start.orientation == fig.info.end.orientation == p.Orientation.INVERTED
+    upright = parse_f3a_description(entry["description"], "14.21", entry["k"])
+    assert upright.info.start.orientation == upright.info.end.orientation == p.Orientation.UPRIGHT
 
 
 def test_errata_apply_only_to_the_catalogued_words():
@@ -2536,7 +2551,7 @@ def test_errata_apply_only_to_the_catalogued_words():
         assert parse_f3a_description(corrected, number).info.name == corrected
     # another entry's words under an errata number are not replaced
     p2 = FIXTURE_BY_NUMBER["P.2"]["description"]
-    assert parse_f3a_description("L.8 " + FIXTURE_BY_NUMBER["L.8"]["description"]).info.name != ERRATA["L.7"][1]
+    assert parse_f3a_description(FIXTURE_BY_NUMBER["14.21"]["description"], "14.21").info.name != ERRATA["14.22"][1]
     assert parse_f3a_description(p2, "P.2").info.name == p2
 
 

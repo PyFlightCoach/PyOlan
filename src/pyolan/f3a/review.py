@@ -7,8 +7,8 @@ the rulebook's Q.8 and Q.9 are the USG list's Q.7 and Q.8.
 
 Reviewed (decided 2026-11-19): groups 01-22 and 26 (batches 1-5) and the slow roll
 entries 23.15 and 23.16. The rest of group 23 and the batch 6 groups (23, 24, 25,
-27-30, A-Q), including the ``ERRATA`` entries (L.7, P.6, P.12), are unreviewed until the
-batch 6 review. Add numbers or groups here when a review is accepted.
+27-30, A-Q), including the ``ERRATA`` entries P.6 and P.12, are unreviewed until the
+batch 6 review. 14.22 (reviewed group 14) was corrected in the catalogue review of 2026-11-21. Add numbers or groups here when a review is accepted.
 """
 
 from __future__ import annotations
