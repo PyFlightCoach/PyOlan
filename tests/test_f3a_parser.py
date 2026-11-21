@@ -84,6 +84,9 @@ K_HEIGHTS_OPEN = {f"K.{n}" for n in range(1, 33)}
 # (decided 2026-11-21), so the template's heights at builder defaults no longer encode the
 # USG "middle->low"; the derived heights do.
 K_HEIGHTS_OPEN |= {f"20.{n}" for n in range(1, 10)} | {f"H.{n}" for n in range(3, 17)}
+# P (vertical 5/8 loop): the vertical has a length of its own too (catalogue review
+# 2026-11-21: an end figure, so the layout chooses its exit height).
+K_HEIGHTS_OPEN |= {f"P.{n}" for n in range(1, 13)}
 
 
 # ---------------------------------------------------------------- normalising
@@ -2918,23 +2921,16 @@ def _pq_template_z(fig, mb, attitude=p.Orientation.UPRIGHT, radius=None):
     return State.stack(templates, "element").pos.z
 
 
-@pytest.mark.parametrize(
-    "text",
-    [
-        "Vertical 5/8 loop from upright, snap-roll, half roll, exit upright (K4)",
-        "Vertical 5/8 loop from inverted, snap-roll, roll, exit upright (K4)",
-        "Vertical 5/8 loop from top upright, snap-roll, half roll, exit upright (K4)",
-        "Vertical 5/8 loop from top inverted, snap-roll, roll, exit upright (K4)",
-        "Vertical 5/8 loop from upright, 3/4 snap-roll, 1/4 roll, exit upright (K4)",
-        "Vertical 5/8 loop from inverted, 3/4 snap-roll, 1/4 half roll, exit upright (K4)",
-    ],
-)
-@pytest.mark.parametrize("radius", [None, 45])
-def test_pq_vertical_5_8_loop_finishes_at_its_entry_height(text, radius, mb):
-    # the snap flies about 2.6 m further than its pads are sized for (known builder
-    # limitation), so the exit is up to that far from the entry
-    z = _pq_template_z(parse_f3a_description(text), mb, radius=radius)
-    assert z[-1] - z[0] == pytest.approx(0, abs=3.0)
+@pytest.mark.parametrize("number", [f"P.{n}" for n in range(1, 13)])
+def test_pq_vertical_5_8_loop_vertical_is_the_layouts_to_choose(number):
+    # catalogue review 2026-11-21: P is an end figure, so its exit height is free. The snap's
+    # vertical line has a numeric line_length, a layout variable of its own; the 45 degree
+    # line keeps the figure's line_length.
+    fig = parse_f3a_description(FIXTURE_BY_NUMBER[number]["description"], number)
+    rolls = [e for e in fig.elements if e.kind == "roll"]
+    assert rolls[0].kwargs["rolltypes"] == "snap" and rolls[0].kwargs["line_length"] == 130.0
+    assert "line_length" not in rolls[1].kwargs
+    assert "line_length" not in fig.ndmps
 
 
 def test_pq_vertical_5_8_loop_shape():

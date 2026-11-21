@@ -7,10 +7,11 @@ Conventions decided per family (checked against the USG drawings):
   loop that turns on in the same sense (so the path leaves it at 45 degrees, back
   towards the entry side), a 45 degree line with the second roll, and a 3/8 loop the
   other way onto the exit line, flying back the way the figure came. The loops all
-  have the figure's one radius; the 45 degree line is a ``line_length`` and the vertical
-  ``(0.7071*line_length)+(1.4142*loop_radius)``, which makes the figure finish at the
-  height it started at (the drawings show the exit line a little above the entry:
-  an open question, see the report). The rolls are centred on their lines.
+  have the figure's one radius; the 45 degree line is a ``line_length``. The vertical
+  has a length of its own (``Roll.free_vertical``, as the stall turns), so the layout
+  chooses the exit height: P is an end figure, and end figures may finish at another
+  height than they started (owner, catalogue review 2026-11-21; the drawings show the
+  exit line a little above the entry). The rolls are centred on their lines.
   - ``snap-roll``, ``half roll`` | ``roll``: a full snap leaves the wings level, so
     the 5/8 loop is a plane loop pulled or pushed by the attitude; a half roll on the
     45 degree line makes the last loop pulled when the loops before were (exit in the
@@ -53,14 +54,6 @@ _HEIGHT = {"bottom": p.Height.BTM, "middle": p.Height.MID, "top": p.Height.TOP}
 
 QUARTER = Fraction(1, 4)
 
-# The figure finishes at the height it started at when the vertical line is
-# 0.7071*D + 1.4142*r (D the 45 degree line, r the loop radius: the 1/4 and 3/8 corners
-# and the 5/8 loop add 1.4142 r). The 45 degree line is one line_length, which holds
-# a half or a full roll and its pads at the default radius. The vertical's length is
-# also given in the line units steps.py uses for heights (a loop radius is 0.5).
-VERTICAL = "((0.7071*line_length)+(1.4142*loop_radius))"
-VERTICAL_UNITS = 0.7071 + 1.4142 * 0.5
-
 _QUARTER_HALF_RE = re.compile(r"^1/4 half roll$")
 
 
@@ -90,8 +83,8 @@ def vertical_five_eighth_loop(name: str, mods: Modifiers, phrases: list[str]) ->
     return [
         Entry(attitude),
         Loop(QUARTER, sense=sense),
-        Line(vertical, label="vertical line", length=VERTICAL, units=VERTICAL_UNITS),
-        Roll(snap_roll),
+        Line(vertical, label="vertical line"),
+        Roll(snap_roll, free_vertical=True),
         Loop(Fraction(5, 8), sense=sense, knife_edge=knife_edge),
         Line(diagonal, label="45 degree line"),
         Roll(second_roll),
