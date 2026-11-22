@@ -122,7 +122,7 @@ def test_almost_eight_first_loop_stated_with_entry():
 def test_reviewed_groups_and_numbers():
     groups = {entry["number"].split(".")[0] for entry in RULEBOOK}
     assert REVIEWED_GROUPS <= groups
-    # every group but J (the 2026-11-21 catalogue review; J waits on its cross-box layout)
+    # every group (catalogue review 2026-11-21; J on 2026-11-22)
     assert REVIEWED_GROUPS == groups
     assert {entry["number"] for entry in RULEBOOK} >= REVIEWED_NUMBERS == {"23.15", "23.16"}
 
@@ -134,7 +134,7 @@ def test_is_reviewed_counts():
     for entry in RULEBOOK:
         by_group.setdefault(entry["number"].split(".")[0], []).append(entry["number"])
     expected = sum(len(by_group[group]) for group in REVIEWED_GROUPS)
-    assert len(reviewed) == expected == 681 - 44  # all but the 44 entries of group J
+    assert len(reviewed) == expected == 681
 
 
 @pytest.mark.parametrize(
@@ -146,19 +146,19 @@ def test_reviewed(number):
     assert is_reviewed(number)
 
 
-@pytest.mark.parametrize(
-    "number",
-    [
-        "J.1", "J.34", "J.44",
-    ],
-)
-def test_unreviewed(number):
+@pytest.mark.parametrize("number", ["J.1", "J.34", "J.44"])
+def test_unreviewed(number, monkeypatch):
+    # every group is reviewed: without the group list only REVIEWED_NUMBERS count
+    import pyolan.f3a.review as review
+
+    monkeypatch.setattr(review, "REVIEWED_GROUPS", frozenset())
     assert not is_reviewed(number)
+    assert is_reviewed("23.15")
 
 
 def test_is_reviewed_number_forms():
     assert is_reviewed(" 1.9 ") == is_reviewed("01.9")
-    assert is_reviewed("j.1") == is_reviewed("J.1") is False
+    assert is_reviewed("j.1") == is_reviewed("J.1") is True
     with pytest.raises(F3AParseError):
         is_reviewed("not a number")
     assert normalise_number("1.9") == "01.9"
