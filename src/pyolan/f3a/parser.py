@@ -31,6 +31,7 @@ from .centre import centre_marks
 from .errors import F3AParseError
 from .families import Modifiers, find_family
 from .families_27_30 import named_step_clauses
+from .names import catalogue_names
 from .normalise import Description, normalise, split_description
 from .rolls import parse_roll
 from .steps import (
@@ -180,12 +181,6 @@ def description_clauses(desc: Description) -> list[Clause]:
     return fam.build(fam.name, mods, _phrases(rest))
 
 
-def _display_name(raw: str) -> str:
-    text = re.sub(r"^\s*(\d{1,2}|[A-Za-z])\.\d{1,2}\b\s*[-.]?\s*", "", raw)
-    text = re.sub(r"\(\s*[kK]\s*\d+\s*\)", " ", text)
-    return re.sub(r"\s+", " ", text).strip(" ,")
-
-
 def _position(desc: Description, resolved: Resolved) -> p.Position:
     if desc.group is not None:
         return p.Position.CENTRE if desc.group.isdigit() else p.Position.END
@@ -193,9 +188,10 @@ def _position(desc: Description, resolved: Resolved) -> p.Position:
 
 
 def _figure(desc: Description, resolved: Resolved) -> a.Figure:
+    name, short_name = catalogue_names(desc)
     info = ManInfo.build(
-        _display_name(desc.raw),
-        desc.number or "f3a",
+        name,
+        short_name,
         desc.k if desc.k is not None else 0,
         _position(desc, resolved),
         p.BoxLocation(height=resolved.entry_height, orientation=resolved.entry),

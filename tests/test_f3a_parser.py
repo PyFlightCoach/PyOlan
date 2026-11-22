@@ -565,7 +565,7 @@ def test_cuban_eight_finishes_at_its_entry_height(text, radius, mb):
 def test_text_only_gives_position_from_the_shape():
     fig = parse_f3a_description("Square loop on corner (K3)")
     assert fig.info.position == p.Position.CENTRE
-    assert fig.info.short_name == "f3a"
+    assert (fig.info.name, fig.info.short_name) == ("Square Loop on Corner", "sqLC")
     assert fig.info.k == 3
 
 
@@ -649,7 +649,7 @@ def test_matches_usg_drawing(entry, mb):
     position = p.Position.CENTRE if entry["kind"] == "centre" else p.Position.END
     for fig in figures:
         assert fig.info.k == entry["k"]
-        assert fig.info.short_name == entry["number"]
+        assert fig.info.short_name.isidentifier() and len(fig.info.name) <= 30
         assert fig.info.position == position
         radius = 150.0 if entry["number"] in HALF_CUBAN_LAYOUT_RADIUS else None
         got = _template_metadata(fig, mb, entry_attitude, radius)
@@ -1085,7 +1085,7 @@ def test_stall_turn_has_a_centred_roll_on_each_line():
 def test_stall_turn_without_commas_and_with_spaced_point_rolls():
     # the catalogue has "Stall turn 3/4 roll up" and "3/4 pt roll"
     fig = parse_f3a_description("20.3 Stall turn 3/4 roll up, 3/4 pt roll down, inverted exit (K3)")
-    assert fig.info.short_name == "20.3"
+    assert (fig.info.name, fig.info.short_name) == ("Stall Turn, 3/4 up, 3/4pt down", "stall")
     assert fig.info.end.orientation == p.Orientation.INVERTED
 
 
@@ -2637,17 +2637,20 @@ def test_1422_is_corrected_to_fly_inverted():
 
 
 def test_errata_apply_only_to_the_catalogued_words():
-    from pyolan.f3a.parser import ERRATA
+    from pyolan.f3a.parser import ERRATA, apply_errata
+
+    def words(text: str, number: str) -> str:
+        return apply_errata(split_description(text, number)).raw
 
     for number, (catalogued, corrected) in ERRATA.items():
         assert FIXTURE_BY_NUMBER[number]["description"] == catalogued
-        assert parse_f3a_description(catalogued, number).info.name == corrected
+        assert words(catalogued, number) == corrected
         # a corrected catalogue passes through unchanged
-        assert parse_f3a_description(corrected, number).info.name == corrected
+        assert words(corrected, number) == corrected
     # another entry's words under an errata number are not replaced
     p2 = FIXTURE_BY_NUMBER["P.2"]["description"]
-    assert parse_f3a_description(FIXTURE_BY_NUMBER["14.21"]["description"], "14.21").info.name != ERRATA["14.22"][1]
-    assert parse_f3a_description(p2, "P.2").info.name == p2
+    assert words(FIXTURE_BY_NUMBER["14.21"]["description"], "14.21") != ERRATA["14.22"][1]
+    assert words(p2, "P.2") == p2
 
 
 def test_slow_roll_is_one_centred_roll():

@@ -1,0 +1,4088 @@
+[
+ {
+  "number": "01.1",
+  "name": "Rolling Loop, 1 roll",
+  "short_name": "rLoop",
+  "description": "Rolling loop with one roll (from bottom) (K5)"
+ },
+ {
+  "number": "01.2",
+  "name": "Rolling Loop, 1 roll",
+  "short_name": "rLoop",
+  "description": "Rolling loop with one roll (from bottom) inverted entry (K5)"
+ },
+ {
+  "number": "01.3",
+  "name": "Loop, 8pt roll",
+  "short_name": "loop",
+  "description": "Loop with 8-point roll (from bottom) (K5)"
+ },
+ {
+  "number": "01.4",
+  "name": "Loop, 8pt roll",
+  "short_name": "loop",
+  "description": "Loop with 8-point roll (from bottom) inverted entry (K5)"
+ },
+ {
+  "number": "01.5",
+  "name": "Loop, 4pt roll",
+  "short_name": "loop",
+  "description": "Loop with 4-point roll (from bottom) (K5)"
+ },
+ {
+  "number": "01.6",
+  "name": "Loop, 4pt roll",
+  "short_name": "loop",
+  "description": "Loop with 4-point roll (from bottom) inverted entry (K5)"
+ },
+ {
+  "number": "01.7",
+  "name": "Knife-Edge Loop",
+  "short_name": "keLoop",
+  "description": "Knife-edge loop (K6)"
+ },
+ {
+  "number": "01.8",
+  "name": "Knife-Edge Loop",
+  "short_name": "keLoop",
+  "description": "Knife-edge loop, inverted entry and exit (K6)"
+ },
+ {
+  "number": "01.9",
+  "name": "Knife-Edge Loop",
+  "short_name": "keLoop",
+  "description": "Knife-edge loop from top (K6)"
+ },
+ {
+  "number": "01.10",
+  "name": "Knife-Edge Loop",
+  "short_name": "keLoop",
+  "description": "Knife-edge loop from top, inverted entry and exit (K6)"
+ },
+ {
+  "number": "01.11",
+  "name": "Knife-Edge Loop, snap on top",
+  "short_name": "keLoop",
+  "description": "Knife-edge loop with snap roll on top (K6)"
+ },
+ {
+  "number": "01.12",
+  "name": "Knife-Edge Loop, snap on top",
+  "short_name": "keLoop",
+  "description": "Knife-edge loop with snap roll on top, inverted entry and exit (K6)"
+ },
+ {
+  "number": "02.1",
+  "name": "Two Loops, 1/2 rolls at top",
+  "short_name": "loops",
+  "description": "Two loops with half rolls at top (from bottom) (K3)"
+ },
+ {
+  "number": "02.2",
+  "name": "Two Loops, 1/2 rolls at top",
+  "short_name": "loops",
+  "description": "Two loops with half rolls at top (from bottom) inverted entry (K4)"
+ },
+ {
+  "number": "02.3",
+  "name": "Two Loops, 1/2 rolls at bottom",
+  "short_name": "loops",
+  "description": "Two loops with half rolls at bottom (from top) (K4)"
+ },
+ {
+  "number": "02.4",
+  "name": "Two Loops, 1/2 rolls at bottom",
+  "short_name": "loops",
+  "description": "Two loops with half rolls at bottom (from top) inverted entry (K3)"
+ },
+ {
+  "number": "02.5",
+  "name": "Two Loops",
+  "short_name": "loops",
+  "description": "Two loops with full roll first top, half roll second (from bottom) (K4)"
+ },
+ {
+  "number": "02.6",
+  "name": "Two Loops",
+  "short_name": "loops",
+  "description": "Two loops with full roll first top, half roll second, inverted entry (from bottom) (K4)"
+ },
+ {
+  "number": "02.7",
+  "name": "Two Loops",
+  "short_name": "loops",
+  "description": "Two loops with half roll first top, full roll second (from bottom) (K4)"
+ },
+ {
+  "number": "02.8",
+  "name": "Two Loops",
+  "short_name": "loops",
+  "description": "Two loops with half roll first top, full roll second, inverted entry (from bottom) (K4)"
+ },
+ {
+  "number": "02.9",
+  "name": "Two Loops",
+  "short_name": "loops",
+  "description": "Two loops with full roll first bottom, half roll second (from top) (K4)"
+ },
+ {
+  "number": "02.10",
+  "name": "Two Loops",
+  "short_name": "loops",
+  "description": "Two loops with full roll first bottom, half roll second (from top) inverted entry (K4)"
+ },
+ {
+  "number": "02.11",
+  "name": "Two Loops",
+  "short_name": "loops",
+  "description": "Two loops with half roll first bottom, full roll second (from top) (K4)"
+ },
+ {
+  "number": "02.12",
+  "name": "Two Loops",
+  "short_name": "loops",
+  "description": "Two loops with half roll first bottom, full roll second (from top) inverted entry (K4)"
+ },
+ {
+  "number": "03.1",
+  "name": "Avalanche, snap",
+  "short_name": "aval",
+  "description": "Avalanche with full snap (from bottom) (K3)"
+ },
+ {
+  "number": "03.2",
+  "name": "Avalanche, snap",
+  "short_name": "aval",
+  "description": "Avalanche with full snap (from bottom) inverted entry (K3)"
+ },
+ {
+  "number": "03.3",
+  "name": "Avalanche, 1 1/2 snap",
+  "short_name": "aval",
+  "description": "Avalanche with 1 1/2 snap (from bottom) (K4)"
+ },
+ {
+  "number": "03.4",
+  "name": "Avalanche, 1 1/2 snap",
+  "short_name": "aval",
+  "description": "Avalanche with 1 1/2 snap, inverted entry (from bottom) (K4)"
+ },
+ {
+  "number": "03.5",
+  "name": "Avalanche, 1 negative snap",
+  "short_name": "aval",
+  "description": "Avalanche with 1 negative snap (from top) (K4)"
+ },
+ {
+  "number": "03.6",
+  "name": "Avalanche, 1 positive snap",
+  "short_name": "aval",
+  "description": "Avalanche with 1 positive snap (from top) inverted entry (K3)"
+ },
+ {
+  "number": "04.1",
+  "name": "Triangle, roll",
+  "short_name": "trgle",
+  "description": "Triangular loop with full roll (from bottom) (K4)"
+ },
+ {
+  "number": "04.2",
+  "name": "Triangle, roll",
+  "short_name": "trgle",
+  "description": "Triangular loop with full roll (from bottom) inverted entry (K4)"
+ },
+ {
+  "number": "04.3",
+  "name": "Triangle, 2/2pt roll",
+  "short_name": "trgle",
+  "description": "Triangular loop with 2/2pt roll (from bottom) (K4)"
+ },
+ {
+  "number": "04.4",
+  "name": "Triangle, 2/2pt roll",
+  "short_name": "trgle",
+  "description": "Triangular loop with 2/2pt roll (from bottom) inverted entry (K4)"
+ },
+ {
+  "number": "04.5",
+  "name": "Triangle, 2/4pt roll",
+  "short_name": "trgle",
+  "description": "Triangular loop with 2/4pt roll (from bottom) (K4)"
+ },
+ {
+  "number": "04.6",
+  "name": "Triangle, 2/4pt roll",
+  "short_name": "trgle",
+  "description": "Triangular loop with 2/4pt roll (from bottom) inverted entry (K4)"
+ },
+ {
+  "number": "04.7",
+  "name": "Triangle, snap",
+  "short_name": "trgle",
+  "description": "Triangular loop with snap roll (from bottom) (K4)"
+ },
+ {
+  "number": "04.8",
+  "name": "Triangle, snap",
+  "short_name": "trgle",
+  "description": "Triangular loop with snap roll (from bottom) inverted entry (K4)"
+ },
+ {
+  "number": "04.9",
+  "name": "Triangle, 1 1/2 snap",
+  "short_name": "trgle",
+  "description": "Triangular loop with 1 1/2 snap roll (from bottom) (K4)"
+ },
+ {
+  "number": "04.10",
+  "name": "Triangle, 1 1/2 snap",
+  "short_name": "trgle",
+  "description": "Triangular loop with 1 1/2 snap roll (from bottom) inverted entry (K4)"
+ },
+ {
+  "number": "04.11",
+  "name": "Triangle, 1/2 rolls",
+  "short_name": "trgle",
+  "description": "Triangular loop with 1/2 rolls (from bottom) (K3)"
+ },
+ {
+  "number": "04.12",
+  "name": "Triangle, 1/2 rolls",
+  "short_name": "trgle",
+  "description": "Triangular loop with 1/2 rolls (from bottom) inverted entry (K3)"
+ },
+ {
+  "number": "04.13",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop (base at bottom) with half rolls in 45 degree legs (K3)"
+ },
+ {
+  "number": "04.14",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop (base at bottom) with half rolls in 45 degree legs, inverted entry (K3)"
+ },
+ {
+  "number": "04.15",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop (base at bottom) with 2/4pt rolls in 45 degree legs (K4)"
+ },
+ {
+  "number": "04.16",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop (base at bottom) with 2/4pt rolls in 45 degree legs, inverted entry (K4)"
+ },
+ {
+  "number": "04.17",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop (base at bottom) with 2/2pt rolls in 45 degree legs (K4)"
+ },
+ {
+  "number": "04.18",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop (base at bottom) with 2/2pt rolls in 45 degree legs, inverted entry (K4)"
+ },
+ {
+  "number": "04.19",
+  "name": "Triangle, 1/2 rolls in 45s",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at top) with half rolls in 45 degree legs (K4)"
+ },
+ {
+  "number": "04.20",
+  "name": "Triangle, 1/2 rolls in 45s",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at top) with half rolls in 45 degree legs, inverted entry (K4)"
+ },
+ {
+  "number": "04.21",
+  "name": "Triangle, 2/4pt rolls in 45s",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at top) with 2/4pt rolls in 45 degree legs (K4)"
+ },
+ {
+  "number": "04.22",
+  "name": "Triangle, 2/4pt rolls in 45s",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at top) with 2/4pt rolls in 45 degree legs, inverted entry (K4)"
+ },
+ {
+  "number": "04.23",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at bottom) with half rolls in 45 degree legs (K4)"
+ },
+ {
+  "number": "04.24",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at bottom) with half rolls in 45 degree legs, inverted entry (K4)"
+ },
+ {
+  "number": "04.25",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at bottom) with 2/4pt rolls in 45 degree legs (K4)"
+ },
+ {
+  "number": "04.26",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at bottom) with 2/4pt rolls in 45 legs, inverted entry (K4)"
+ },
+ {
+  "number": "04.27",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at bottom) with 2/4pt roll at bottom (K4)"
+ },
+ {
+  "number": "04.28",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at bottom) with 2/4pt roll at bottom, inverted entry (K4)"
+ },
+ {
+  "number": "04.29",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at bottom) with full roll (K4)"
+ },
+ {
+  "number": "04.30",
+  "name": "Triangle",
+  "short_name": "trgle",
+  "description": "Triangular loop from top (base at bottom) with full roll, inverted entry (K4)"
+ },
+ {
+  "number": "04.31",
+  "name": "Knife-Edge Triangle",
+  "short_name": "keTrgl",
+  "description": "Knife-edge triangular loop (base at top) (K6)"
+ },
+ {
+  "number": "04.32",
+  "name": "Knife-Edge Triangle",
+  "short_name": "keTrgl",
+  "description": "Knife-edge triangular loop (base at top), inverted entry and exit (K6)"
+ },
+ {
+  "number": "04.33",
+  "name": "KE Triangle, snap on base",
+  "short_name": "keTrgl",
+  "description": "Knife-edge triangular loop (base at top), snap roll on horizontal leg (K6)"
+ },
+ {
+  "number": "04.34",
+  "name": "KE Triangle, snap on base",
+  "short_name": "keTrgl",
+  "description": "Knife-edge triangular loop (base at top), snap roll on horizontal leg, inverted entry and exit (K6)"
+ },
+ {
+  "number": "04.35",
+  "name": "KE Triangle, roll on base",
+  "short_name": "keTrgl",
+  "description": "Knife-edge triangular loop (base at top), roll on horizontal leg (K6)"
+ },
+ {
+  "number": "04.36",
+  "name": "KE Triangle, roll on base",
+  "short_name": "keTrgl",
+  "description": "Knife-edge triangular loop (base at top), roll on horizontal leg, inverted entry and exit (K6)"
+ },
+ {
+  "number": "05.1",
+  "name": "Square Loop, 1/2 rolls",
+  "short_name": "sqL",
+  "description": "Square loop with half rolls (K5)"
+ },
+ {
+  "number": "05.2",
+  "name": "Square Loop, 1/2 rolls",
+  "short_name": "sqL",
+  "description": "Square loop with half rolls, inverted entry (K5)"
+ },
+ {
+  "number": "05.3",
+  "name": "Square Loop, 2/4pt rolls",
+  "short_name": "sqL",
+  "description": "Square loop with 2/4pt rolls (K5)"
+ },
+ {
+  "number": "05.4",
+  "name": "Square Loop, 2/4pt rolls",
+  "short_name": "sqL",
+  "description": "Square loop with 2/4pt rolls, inverted entry (K5)"
+ },
+ {
+  "number": "05.5",
+  "name": "Square Loop, snap over top",
+  "short_name": "sqL",
+  "description": "Square loop with full snap over top (K4)"
+ },
+ {
+  "number": "05.6",
+  "name": "Square Loop, snap over top",
+  "short_name": "sqL",
+  "description": "Square loop with full snap over top, inverted entry (K4)"
+ },
+ {
+  "number": "05.7",
+  "name": "Square Loop, 1/2 rolls",
+  "short_name": "sqL",
+  "description": "Square loop from top with half rolls (K5)"
+ },
+ {
+  "number": "05.8",
+  "name": "Square Loop, 1/2 rolls",
+  "short_name": "sqL",
+  "description": "Square loop from top with half rolls, inverted entry (K5)"
+ },
+ {
+  "number": "05.9",
+  "name": "Square Loop, 2/4pt rolls",
+  "short_name": "sqL",
+  "description": "Square loop from top with 2/4pt rolls (K5)"
+ },
+ {
+  "number": "05.10",
+  "name": "Square Loop, 2/4pt rolls",
+  "short_name": "sqL",
+  "description": "Square loop from top with 2/4pt rolls, inverted entry (K5)"
+ },
+ {
+  "number": "05.11",
+  "name": "Square Loop, snap at bottom",
+  "short_name": "sqL",
+  "description": "Square loop from top with full snap at bottom (K4)"
+ },
+ {
+  "number": "05.12",
+  "name": "Square Loop, snap at bottom",
+  "short_name": "sqL",
+  "description": "Square loop from top with full snap at bottom, inverted entry (K4)"
+ },
+ {
+  "number": "06.1",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner (K3)"
+ },
+ {
+  "number": "06.2",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner, inverted entry (K3)"
+ },
+ {
+  "number": "06.3",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner with half rolls in legs 1 & 3 (K4)"
+ },
+ {
+  "number": "06.4",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner with half rolls in legs 1 & 3, inverted entry (K4)"
+ },
+ {
+  "number": "06.5",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner with full roll in leg 1, half roll in leg 3 (K4)"
+ },
+ {
+  "number": "06.6",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner with full roll in leg 1, half roll in leg 3, inverted entry (K4)"
+ },
+ {
+  "number": "06.7",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner with four half rolls (K5)"
+ },
+ {
+  "number": "06.8",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner with four half rolls, inverted entry (K5)"
+ },
+ {
+  "number": "06.9",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner from top (K3)"
+ },
+ {
+  "number": "06.10",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner from top , inverted entry (K3)"
+ },
+ {
+  "number": "06.11",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner from top with half rolls in legs 1 & 3 (K4)"
+ },
+ {
+  "number": "06.12",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner from top with half rolls in legs 1 & 3, inverted entry (K4)"
+ },
+ {
+  "number": "06.13",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner from top with full roll in leg 1, half roll in leg 3 (K4)"
+ },
+ {
+  "number": "06.14",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner from top with full roll in leg 1, half roll in leg 3, inverted entry (K4)"
+ },
+ {
+  "number": "06.15",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner from top with four half rolls (K5)"
+ },
+ {
+  "number": "06.16",
+  "name": "Square Loop on Corner",
+  "short_name": "sqLC",
+  "description": "Square loop on corner from top with four half rolls, inverted entry (K5)"
+ },
+ {
+  "number": "07.1",
+  "name": "Six Sided Loop",
+  "short_name": "hexL",
+  "description": "Six sided loop (K4)"
+ },
+ {
+  "number": "07.2",
+  "name": "Six Sided Loop",
+  "short_name": "hexL",
+  "description": "Six sided loop, inverted entry (K4)"
+ },
+ {
+  "number": "07.3",
+  "name": "Six Sided Loop",
+  "short_name": "hexL",
+  "description": "Six sided loop from top (K4)"
+ },
+ {
+  "number": "07.4",
+  "name": "Six Sided Loop",
+  "short_name": "hexL",
+  "description": "Six sided loop from top , inverted entry (K4)"
+ },
+ {
+  "number": "08.1",
+  "name": "Cobra Roll, 2/4pt rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll with 2/4pt rolls (K3)"
+ },
+ {
+  "number": "08.2",
+  "name": "Cobra Roll, 2/4pt rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll with 2/4pt rolls, inverted entry (K3)"
+ },
+ {
+  "number": "08.3",
+  "name": "Cobra Roll, 2/2pt rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll with 2/2pt rolls (K3)"
+ },
+ {
+  "number": "08.4",
+  "name": "Cobra Roll, 2/2pt rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll with 2/2pt rolls, inverted entry (K3)"
+ },
+ {
+  "number": "08.5",
+  "name": "Cobra Roll, 1/2 rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll from top with half rolls (K3)"
+ },
+ {
+  "number": "08.6",
+  "name": "Cobra Roll, 1/2 rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll from top with half rolls, inverted entry (K3)"
+ },
+ {
+  "number": "08.7",
+  "name": "Cobra Roll, 2/4pt rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll from top with 2/4pt rolls (K3)"
+ },
+ {
+  "number": "08.8",
+  "name": "Cobra Roll, 2/4pt rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll from top with 2/4pt rolls, inverted entry (K3)"
+ },
+ {
+  "number": "08.9",
+  "name": "Cobra Roll, 2/2pt rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll from top with 2/2pt rolls (K3)"
+ },
+ {
+  "number": "08.10",
+  "name": "Cobra Roll, 2/2pt rolls",
+  "short_name": "cobra",
+  "description": "Cobra roll from top with 2/2pt rolls, inverted entry (K3)"
+ },
+ {
+  "number": "09.1",
+  "name": "Golf Ball",
+  "short_name": "golf",
+  "description": "Golf ball (45 degrees up, 3/4 inside loop, 45 degrees down, pull to level), (K3)"
+ },
+ {
+  "number": "09.2",
+  "name": "Golf Ball",
+  "short_name": "golf",
+  "description": "Golf ball, inverted entry (K3)"
+ },
+ {
+  "number": "09.3",
+  "name": "Golf Ball, 1/2 rolls",
+  "short_name": "golf",
+  "description": "Golf ball with half rolls (K3)"
+ },
+ {
+  "number": "09.4",
+  "name": "Golf Ball, 1/2 rolls",
+  "short_name": "golf",
+  "description": "Golf ball with half rolls, inverted entry (K3)"
+ },
+ {
+  "number": "09.5",
+  "name": "Golf Ball, 2/4pt rolls",
+  "short_name": "golf",
+  "description": "Golf ball with 2/4pt rolls (K3)"
+ },
+ {
+  "number": "09.6",
+  "name": "Golf Ball, 2/4pt rolls",
+  "short_name": "golf",
+  "description": "Golf ball with 2/4pt rolls, inverted entry (K3)"
+ },
+ {
+  "number": "10.1",
+  "name": "Cuban Eight, 2/4pt rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight with 2/4pt rolls (K3)"
+ },
+ {
+  "number": "10.2",
+  "name": "Cuban Eight, 2/4pt rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight with 2/4pt rolls, inverted entry (K3)"
+ },
+ {
+  "number": "10.3",
+  "name": "Cuban Eight, rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight with full rolls (K4)"
+ },
+ {
+  "number": "10.4",
+  "name": "Cuban Eight, rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight with full rolls, inverted entry (K4)"
+ },
+ {
+  "number": "10.5",
+  "name": "Rev Cuban Eight, 2/4pt rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight (from bottom) with 2/4pt rolls (K4)"
+ },
+ {
+  "number": "10.6",
+  "name": "Rev Cuban Eight, 2/4pt rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight (from bottom) with 2/4pt rolls, inverted entry (K4)"
+ },
+ {
+  "number": "10.7",
+  "name": "Rev Cuban Eight, rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight (from bottom) with full rolls (K4)"
+ },
+ {
+  "number": "10.8",
+  "name": "Rev Cuban Eight, rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight (from bottom) with full rolls, inverted entry (K4)"
+ },
+ {
+  "number": "10.9",
+  "name": "Cuban Eight, 1/2 rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight from top with half rolls (K3)"
+ },
+ {
+  "number": "10.10",
+  "name": "Cuban Eight, 1/2 rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight from top with half rolls, inverted entry (K3)"
+ },
+ {
+  "number": "10.11",
+  "name": "Cuban Eight, 2/4pt rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight from top with 2/4pt rolls (K4)"
+ },
+ {
+  "number": "10.12",
+  "name": "Cuban Eight, 2/4pt rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight from top with 2/4pt rolls, inverted entry (K4)"
+ },
+ {
+  "number": "10.13",
+  "name": "Cuban Eight, rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight from top with full rolls (K4)"
+ },
+ {
+  "number": "10.14",
+  "name": "Cuban Eight, rolls",
+  "short_name": "cuban",
+  "description": "Cuban eight from top with full rolls, inverted entry (K4)"
+ },
+ {
+  "number": "10.15",
+  "name": "Rev Cuban Eight, 1/2 rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight from top with half rolls (K3)"
+ },
+ {
+  "number": "10.16",
+  "name": "Rev Cuban Eight, 1/2 rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight from top with half rolls, inverted entry (K3)"
+ },
+ {
+  "number": "10.17",
+  "name": "Rev Cuban Eight, 2/4pt rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight from top with 2/4pt rolls (K4)"
+ },
+ {
+  "number": "10.18",
+  "name": "Rev Cuban Eight, 2/4pt rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight from top with 2/4pt rolls, inverted entry (K4)"
+ },
+ {
+  "number": "10.19",
+  "name": "Rev Cuban Eight, rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight from top with full rolls (K4)"
+ },
+ {
+  "number": "10.20",
+  "name": "Rev Cuban Eight, rolls",
+  "short_name": "rCuban",
+  "description": "Reverse cuban eight from top with full rolls, inverted entry (K4)"
+ },
+ {
+  "number": "10.21",
+  "name": "Knife-Edge Cuban Eight",
+  "short_name": "keCuban",
+  "description": "Knife-edge Cuban eight (K6)"
+ },
+ {
+  "number": "10.22",
+  "name": "Knife-Edge Cuban Eight",
+  "short_name": "keCuban",
+  "description": "Knife-edge Cuban eight, inverted entry and exit (K6)"
+ },
+ {
+  "number": "10.23",
+  "name": "Knife-Edge Cuban Eight, rolls",
+  "short_name": "keCuban",
+  "description": "Knife-edge Cuban eight with full rolls (K6)"
+ },
+ {
+  "number": "10.24",
+  "name": "Knife-Edge Cuban Eight, rolls",
+  "short_name": "keCuban",
+  "description": "Knife-edge Cuban eight with full rolls, inverted entry and exit (K6)"
+ },
+ {
+  "number": "10.25",
+  "name": "Knife-Edge Rev Cuban Eight",
+  "short_name": "keRCuban",
+  "description": "Knife-edge reverse Cuban eight (K6)"
+ },
+ {
+  "number": "10.26",
+  "name": "Knife-Edge Rev Cuban Eight",
+  "short_name": "keRCuban",
+  "description": "Knife-edge reverse Cuban eight, inverted entry and exit (K6)"
+ },
+ {
+  "number": "10.27",
+  "name": "KE Rev Cuban Eight, rolls",
+  "short_name": "keRCuban",
+  "description": "Knife-edge reverse Cuban eight with full rolls (K6)"
+ },
+ {
+  "number": "10.28",
+  "name": "KE Rev Cuban Eight, rolls",
+  "short_name": "keRCuban",
+  "description": "Knife-edge reverse Cuban eight with full rolls, inverted entry and exit (K6)"
+ },
+ {
+  "number": "11.1",
+  "name": "45 Downline, snap",
+  "short_name": "dn45",
+  "description": "45 degree down with full snap roll (K3)"
+ },
+ {
+  "number": "11.2",
+  "name": "45 Downline, snap",
+  "short_name": "dn45",
+  "description": "45 degree down with full snap roll, inverted entry (K3)"
+ },
+ {
+  "number": "11.3",
+  "name": "45 Downline, 1 1/2 snap",
+  "short_name": "dn45",
+  "description": "45 degree down with 1 1/2 snap roll (K3)"
+ },
+ {
+  "number": "11.4",
+  "name": "45 Downline, 1 1/2 snap",
+  "short_name": "dn45",
+  "description": "45 degree down with 1 1/2 snap roll, inverted entry (K3)"
+ },
+ {
+  "number": "11.5",
+  "name": "45 Downline, 2x 2/4pt reversed",
+  "short_name": "dn45",
+  "description": "45 degree down with two 2/4 pt rolls reversed (K4)"
+ },
+ {
+  "number": "11.6",
+  "name": "45 Downline, 2x 2/4pt reversed",
+  "short_name": "dn45",
+  "description": "45 degree down with two 2/4 pt. rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "11.7",
+  "name": "45 Downline, 2x 4/8pt reversed",
+  "short_name": "dn45",
+  "description": "45 degree down with two 4/8 pt. rolls reversed (K4)"
+ },
+ {
+  "number": "11.8",
+  "name": "45 Downline, 2x 4/8pt reversed",
+  "short_name": "dn45",
+  "description": "45 degree down with two 4/8 pt. rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "11.9",
+  "name": "45 Upline, 1 1/2 snap",
+  "short_name": "up45",
+  "description": "45 degree up with 1 1/2 snap roll (K4)"
+ },
+ {
+  "number": "11.10",
+  "name": "45 Upline, 1 1/2 snap",
+  "short_name": "up45",
+  "description": "45 degree up with 1 1/2 snap roll, inverted entry (K4)"
+ },
+ {
+  "number": "11.11",
+  "name": "45 Upline, snap",
+  "short_name": "up45",
+  "description": "45 degree up with full snap roll (K3)"
+ },
+ {
+  "number": "11.12",
+  "name": "45 Upline, snap",
+  "short_name": "up45",
+  "description": "45 degree up with full snap roll, inverted entry (K3)"
+ },
+ {
+  "number": "11.13",
+  "name": "45 Upline, 2x 2/4pt reversed",
+  "short_name": "up45",
+  "description": "45 degree up with two 2/4 pt rolls reversed (K4)"
+ },
+ {
+  "number": "11.14",
+  "name": "45 Upline, 2x 2/4pt reversed",
+  "short_name": "up45",
+  "description": "45 degree up with two 2/4 pt rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "11.15",
+  "name": "45 Upline, 2x 4/8pt reversed",
+  "short_name": "up45",
+  "description": "45 degree up with two 4/8 pt rolls reversed (K4)"
+ },
+ {
+  "number": "11.16",
+  "name": "45 Upline, 2x 4/8pt reversed",
+  "short_name": "up45",
+  "description": "45 degree up with two 4/8 pt rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "12.1",
+  "name": "Figure Z, 1/2 up",
+  "short_name": "figZ",
+  "description": "Figure Z with half roll up (K3)"
+ },
+ {
+  "number": "12.2",
+  "name": "Figure Z, 1/2 up",
+  "short_name": "figZ",
+  "description": "Figure Z with half roll up, inverted entry (K3)"
+ },
+ {
+  "number": "12.3",
+  "name": "Figure Z, 2/4pt up",
+  "short_name": "figZ",
+  "description": "Figure Z with 2/4pt roll up (K4)"
+ },
+ {
+  "number": "12.4",
+  "name": "Figure Z, 2/4pt up",
+  "short_name": "figZ",
+  "description": "Figure Z with 2/4pt roll up, inverted entry (K4)"
+ },
+ {
+  "number": "12.5",
+  "name": "Figure Z, 2/2pt up",
+  "short_name": "figZ",
+  "description": "Figure Z with 2/2pt roll up (K4)"
+ },
+ {
+  "number": "12.6",
+  "name": "Figure Z, 2/2pt up",
+  "short_name": "figZ",
+  "description": "Figure Z with 2/2pt roll up, inverted entry (K4)"
+ },
+ {
+  "number": "12.7",
+  "name": "Figure Z, 1/2 down",
+  "short_name": "figZ",
+  "description": "Figure Z from top with half roll down (K3)"
+ },
+ {
+  "number": "12.8",
+  "name": "Figure Z, 1/2 down",
+  "short_name": "figZ",
+  "description": "Figure Z from top with half roll down, inverted entry (K3)"
+ },
+ {
+  "number": "12.9",
+  "name": "Figure Z, 2/4pt down",
+  "short_name": "figZ",
+  "description": "Figure Z from top with 2/4pt roll down (K4)"
+ },
+ {
+  "number": "12.10",
+  "name": "Figure Z, 2/4pt down",
+  "short_name": "figZ",
+  "description": "Figure Z from top with 2/4pt roll down, inverted entry (K4)"
+ },
+ {
+  "number": "12.11",
+  "name": "Figure Z, 2/2pt roll",
+  "short_name": "figZ",
+  "description": "Figure Z from top with 2/2pt roll (K4)"
+ },
+ {
+  "number": "12.12",
+  "name": "Figure Z, 2/2pt roll",
+  "short_name": "figZ",
+  "description": "Figure Z from top with 2/2pt roll, inverted entry (K4)"
+ },
+ {
+  "number": "13.1",
+  "name": "Hourglass",
+  "short_name": "hrglss",
+  "description": "Hourglass (K4)"
+ },
+ {
+  "number": "13.2",
+  "name": "Hourglass",
+  "short_name": "hrglss",
+  "description": "Hourglass, inverted entry (K4)"
+ },
+ {
+  "number": "13.3",
+  "name": "Hourglass, 1/2 up & down",
+  "short_name": "hrglss",
+  "description": "Hourglass with half rolls up and down (K4)"
+ },
+ {
+  "number": "13.4",
+  "name": "Hourglass, 1/2 up & down",
+  "short_name": "hrglss",
+  "description": "Hourglass with half rolls up and down, inverted entry (K5)"
+ },
+ {
+  "number": "13.5",
+  "name": "Hourglass, 2/4pt up & down",
+  "short_name": "hrglss",
+  "description": "Hourglass with 2/4pt rolls up and down (K5)"
+ },
+ {
+  "number": "13.6",
+  "name": "Hourglass, 2/4pt up & down",
+  "short_name": "hrglss",
+  "description": "Hourglass with 2/4pt rolls up and down, inverted entry (K5)"
+ },
+ {
+  "number": "13.7",
+  "name": "Hourglass",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, top first) (K4)"
+ },
+ {
+  "number": "13.8",
+  "name": "Hourglass",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, top first) inverted entry (K4)"
+ },
+ {
+  "number": "13.9",
+  "name": "Hourglass, 1/2 down",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, top first), half roll down (K4)"
+ },
+ {
+  "number": "13.10",
+  "name": "Hourglass, 1/2 down",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, top first) half roll down, inverted entry (K4)"
+ },
+ {
+  "number": "13.11",
+  "name": "Hourglass, 2/4pt down",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, top first) 2/4pt roll down (K5)"
+ },
+ {
+  "number": "13.12",
+  "name": "Hourglass, 2/4pt down",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, top first) 2/4pt roll down, inverted entry (K5)"
+ },
+ {
+  "number": "13.13",
+  "name": "Hourglass",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, bottom first) (K4)"
+ },
+ {
+  "number": "13.14",
+  "name": "Hourglass",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, bottom first), inverted entry (K4)"
+ },
+ {
+  "number": "13.15",
+  "name": "Hourglass, 1/2 up",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, bottom first) half roll up (K4)"
+ },
+ {
+  "number": "13.16",
+  "name": "Hourglass, 1/2 up",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, bottom first) half roll up, inverted entry (K4)"
+ },
+ {
+  "number": "13.17",
+  "name": "Hourglass, 2/4pt up",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, bottom first) 2/4pt roll up (K4)"
+ },
+ {
+  "number": "13.18",
+  "name": "Hourglass, 2/4pt up",
+  "short_name": "hrglss",
+  "description": "Hourglass (middle entry, bottom first) 2/4pt roll up, inverted entry (K4)"
+ },
+ {
+  "number": "13.19",
+  "name": "Hourglass",
+  "short_name": "hrglss",
+  "description": "Hourglass (top entry) (K4)"
+ },
+ {
+  "number": "13.20",
+  "name": "Hourglass",
+  "short_name": "hrglss",
+  "description": "Hourglass (top entry), inverted entry (K4)"
+ },
+ {
+  "number": "13.21",
+  "name": "Hourglass, 1/2 down & up",
+  "short_name": "hrglss",
+  "description": "Hourglass (top entry) with half rolls down and up (K5)"
+ },
+ {
+  "number": "13.22",
+  "name": "Hourglass, 1/2 down & up",
+  "short_name": "hrglss",
+  "description": "Hourglass (top entry) with half rolls down and up, inverted entry (K5)"
+ },
+ {
+  "number": "13.23",
+  "name": "Hourglass, 2/4pt down & up",
+  "short_name": "hrglss",
+  "description": "Hourglass (top entry) with 2/4pt rolls down and up (K5)"
+ },
+ {
+  "number": "13.24",
+  "name": "Hourglass, 2/4pt down & up",
+  "short_name": "hrglss",
+  "description": "Hourglass (top entry) with 2/4pt rolls down and up, inverted entry (K5)"
+ },
+ {
+  "number": "14.1",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from bottom) (K3)"
+ },
+ {
+  "number": "14.2",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from bottom) inverted entry (K3)"
+ },
+ {
+  "number": "14.3",
+  "name": "Vertical Eight, 1/2 rolls",
+  "short_name": "v8",
+  "description": "Vertical eight (from bottom) with half rolls (K4)"
+ },
+ {
+  "number": "14.4",
+  "name": "Vertical Eight, 1/2 rolls",
+  "short_name": "v8",
+  "description": "Vertical eight (from bottom) with half rolls, inverted entry (K4)"
+ },
+ {
+  "number": "14.5",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from bottom) with half roll after first half loop (K4)"
+ },
+ {
+  "number": "14.6",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from bottom) with half roll after first half loop, inverted entry (K4)"
+ },
+ {
+  "number": "14.7",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from middle) (K3)"
+ },
+ {
+  "number": "14.8",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from middle) inverted entry (K3)"
+ },
+ {
+  "number": "14.9",
+  "name": "Vertical Eight, 1/2 roll",
+  "short_name": "v8",
+  "description": "Vertical eight (from middle) with half roll (K3)"
+ },
+ {
+  "number": "14.10",
+  "name": "Vertical Eight, 1/2 roll",
+  "short_name": "v8",
+  "description": "Vertical eight (from middle) with half roll, inverted entry (K3)"
+ },
+ {
+  "number": "14.11",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from top) (K3)"
+ },
+ {
+  "number": "14.12",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from top) inverted entry (K3)"
+ },
+ {
+  "number": "14.13",
+  "name": "Vertical Eight, 1/2 rolls",
+  "short_name": "v8",
+  "description": "Vertical eight (from top) with half rolls (K4)"
+ },
+ {
+  "number": "14.14",
+  "name": "Vertical Eight, 1/2 rolls",
+  "short_name": "v8",
+  "description": "Vertical eight (from top) with half rolls, inverted entry (K4)"
+ },
+ {
+  "number": "14.15",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from top) with half roll after first half loop (K4)"
+ },
+ {
+  "number": "14.16",
+  "name": "Vertical Eight",
+  "short_name": "v8",
+  "description": "Vertical eight (from top) with half roll after first half loop, inverted entry (K4)"
+ },
+ {
+  "number": "14.17",
+  "name": "Vertical Knife-Edge Eight",
+  "short_name": "keV8",
+  "description": "Vertical knife-edge eight (K6)"
+ },
+ {
+  "number": "14.18",
+  "name": "Vertical Knife-Edge Eight",
+  "short_name": "keV8",
+  "description": "Vertical Knife-edge eight, inverted entry and exit (K6)"
+ },
+ {
+  "number": "14.19",
+  "name": "KE Vertical Eight, 2x 1/2 roll",
+  "short_name": "keV8",
+  "description": "Vertical Knife-edge eight with two half roll (K6)"
+ },
+ {
+  "number": "14.20",
+  "name": "KE Vertical Eight, 2x 1/2 roll",
+  "short_name": "keV8",
+  "description": "Vertical Knife-edge eight with two half roll, inverted entry and exit (K6)"
+ },
+ {
+  "number": "14.21",
+  "name": "Vertical Knife-Edge Eight",
+  "short_name": "keV8",
+  "description": "Vertical Knife-edge eight, middle entry and exit, top first (K6)"
+ },
+ {
+  "number": "14.22",
+  "name": "Vertical Knife-Edge Eight",
+  "short_name": "keV8",
+  "description": "Vertical Knife-edge eight, middle entry and exit, top first (K6)"
+ },
+ {
+  "number": "15.1",
+  "name": "Square Horizontal Eight",
+  "short_name": "sqH8",
+  "description": "Square horizontal eight (K5)"
+ },
+ {
+  "number": "15.2",
+  "name": "Square Horizontal Eight",
+  "short_name": "sqH8",
+  "description": "Square horizontal eight, inverted entry (K5)"
+ },
+ {
+  "number": "15.3",
+  "name": "Square Horizontal Eight",
+  "short_name": "sqH8",
+  "description": "Square horizontal eight (from top) (K5)"
+ },
+ {
+  "number": "15.4",
+  "name": "Square Horizontal Eight",
+  "short_name": "sqH8",
+  "description": "Square horizontal eight (from top) inverted entry (K5)"
+ },
+ {
+  "number": "15.5",
+  "name": "Square Vertical Eight",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from bottom) (K5)"
+ },
+ {
+  "number": "15.6",
+  "name": "Square Vertical Eight",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from bottom) inverted entry (K5)"
+ },
+ {
+  "number": "15.7",
+  "name": "Sq Vertical Eight, 1/2 rolls",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from bottom) with half rolls (K5)"
+ },
+ {
+  "number": "15.8",
+  "name": "Sq Vertical Eight, 1/2 rolls",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from bottom) with half rolls, inverted entry (K5)"
+ },
+ {
+  "number": "15.9",
+  "name": "Square Vertical Eight",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from middle) (K5)"
+ },
+ {
+  "number": "15.10",
+  "name": "Square Vertical Eight",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from middle) inverted entry (K5)"
+ },
+ {
+  "number": "15.11",
+  "name": "Sq Vertical Eight, 1/2 roll",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from middle) with half roll (K5)"
+ },
+ {
+  "number": "15.12",
+  "name": "Sq Vertical Eight, 1/2 roll",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from middle) with half roll, inverted entry (K5)"
+ },
+ {
+  "number": "15.13",
+  "name": "Square Vertical Eight",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from top) (K5)"
+ },
+ {
+  "number": "15.14",
+  "name": "Square Vertical Eight",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from top) inverted entry (K5)"
+ },
+ {
+  "number": "15.15",
+  "name": "Sq Vertical Eight, 1/2 rolls",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from top) with half rolls (K5)"
+ },
+ {
+  "number": "15.16",
+  "name": "Sq Vertical Eight, 1/2 rolls",
+  "short_name": "sqV8",
+  "description": "Square vertical eight (from top) with half rolls, inverted entry (K5)"
+ },
+ {
+  "number": "16.1",
+  "name": "Figure M, 3/4 rolls",
+  "short_name": "figM",
+  "description": "Figure M with 3/4 rolls Centre half-loop is always flown negative (inverted) (K5)"
+ },
+ {
+  "number": "16.2",
+  "name": "Figure M, 3/4 rolls",
+  "short_name": "figM",
+  "description": "Figure M with 3/4 rolls, inverted entry (K5)"
+ },
+ {
+  "number": "16.3",
+  "name": "Figure M, 3/4pt rolls",
+  "short_name": "figM",
+  "description": "Figure M with 3/4 pt rolls (K5)"
+ },
+ {
+  "number": "16.4",
+  "name": "Figure M, 3/4pt rolls",
+  "short_name": "figM",
+  "description": "Figure M with 3/4 pt rolls, inverted entry (K5)"
+ },
+ {
+  "number": "16.5",
+  "name": "Figure M, 3/4pt up, 1/4 down",
+  "short_name": "figM",
+  "description": "Figure M with 3/4pt rolls up, 1/4 rolls down (K5)"
+ },
+ {
+  "number": "16.6",
+  "name": "Figure M, 3/4pt up, 1/4 down",
+  "short_name": "figM",
+  "description": "Figure M with 3/4pt rolls up, 1/4 rolls down, inverted entry (K5)"
+ },
+ {
+  "number": "17.1",
+  "name": "Top Hat, 2/4pt rolls",
+  "short_name": "tHat",
+  "description": "Top hat with 2/4pt rolls (K4)"
+ },
+ {
+  "number": "17.2",
+  "name": "Top Hat, 2/4pt rolls",
+  "short_name": "tHat",
+  "description": "Top hat with 2/4pt rolls, inverted entry (K4)"
+ },
+ {
+  "number": "17.3",
+  "name": "Top Hat, 2/2pt rolls",
+  "short_name": "tHat",
+  "description": "Top hat with 2/2pt rolls (K4)"
+ },
+ {
+  "number": "17.4",
+  "name": "Top Hat, 2/2pt rolls",
+  "short_name": "tHat",
+  "description": "Top hat with 2/2pt rolls, inverted entry (K4)"
+ },
+ {
+  "number": "17.5",
+  "name": "Top Hat, 2/4pt rolls",
+  "short_name": "tHat",
+  "description": "Top hat from top with 2/4pt rolls (K4)"
+ },
+ {
+  "number": "17.6",
+  "name": "Top Hat, 2/4pt rolls",
+  "short_name": "tHat",
+  "description": "Top hat from top with 2/4pt rolls, inverted entry (K4)"
+ },
+ {
+  "number": "17.7",
+  "name": "Top Hat, 2/2pt rolls",
+  "short_name": "tHat",
+  "description": "Top hat from top with 2/2pt rolls (K4)"
+ },
+ {
+  "number": "17.8",
+  "name": "Top Hat, 2/2pt rolls",
+  "short_name": "tHat",
+  "description": "Top hat from top with 2/2pt rolls, inverted entry (K4)"
+ },
+ {
+  "number": "18.1",
+  "name": "Humpty, 1/2 up, 2/4pt down",
+  "short_name": "humpty",
+  "description": "Humpty bump, half roll up, 2/4pt roll down (K4)"
+ },
+ {
+  "number": "18.2",
+  "name": "Humpty, 1/2 up, 2/4pt down",
+  "short_name": "humpty",
+  "description": "Humpty bump, 1/2 roll up, 2/4pt roll down, inverted entry (K4)"
+ },
+ {
+  "number": "18.3",
+  "name": "Humpty, 2/4pt up, snap down",
+  "short_name": "humpty",
+  "description": "Humpty bump, 2/4pt roll up, full snap down (K5)"
+ },
+ {
+  "number": "18.4",
+  "name": "Humpty, 2/4pt up, snap down",
+  "short_name": "humpty",
+  "description": "Humpty bump, 2/4pt roll up, full snap down, inverted entry (K5)"
+ },
+ {
+  "number": "18.5",
+  "name": "Humpty, 1/2 down, 2/4pt up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, half roll down, 2/4pt roll up (K4)"
+ },
+ {
+  "number": "18.6",
+  "name": "Humpty, 1/2 down, 2/4pt up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, half roll down, 2/4pt roll up, inverted entry (K4)"
+ },
+ {
+  "number": "18.7",
+  "name": "Humpty, 2/4pt down, roll up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 2/4pt roll down, full roll up (K4)"
+ },
+ {
+  "number": "18.8",
+  "name": "Humpty, 2/4pt down, roll up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 2/4pt roll down, full roll up, inverted entry (K4)"
+ },
+ {
+  "number": "19.1",
+  "name": "2 1/2 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/2 turn spin, inverted exit (K3)"
+ },
+ {
+  "number": "19.2",
+  "name": "2 1/2 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/2 turn spin, inverted entry, upright exit (K3)"
+ },
+ {
+  "number": "19.3",
+  "name": "2 Turn Opposite Spin",
+  "short_name": "spin",
+  "description": "2 turn opposite spin (K4)"
+ },
+ {
+  "number": "19.4",
+  "name": "2 Turn Opposite Spin",
+  "short_name": "spin",
+  "description": "Two turn opposite spin, inverted entry (K4)"
+ },
+ {
+  "number": "19.5",
+  "name": "3 Turn Spin",
+  "short_name": "spin",
+  "description": "Three turn spin (K3)"
+ },
+ {
+  "number": "19.6",
+  "name": "3 Turn Spin",
+  "short_name": "spin",
+  "description": "Three turn spin, inverted entry (K3)"
+ },
+ {
+  "number": "19.7",
+  "name": "2 1/2 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/2 Turn spin, half roll exit (K3)"
+ },
+ {
+  "number": "19.8",
+  "name": "2 1/2 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/2 turn spin, half roll exit, inverted entry (K3)"
+ },
+ {
+  "number": "19.9",
+  "name": "2 1/4 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry upright. Exit upright (K4)"
+ },
+ {
+  "number": "19.10",
+  "name": "2 1/4 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry upright. Exit inverted (K4)"
+ },
+ {
+  "number": "19.11",
+  "name": "2 1/4 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry inverted. Exit upright. (K4)"
+ },
+ {
+  "number": "19.12",
+  "name": "2 1/4 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry inverted. Exit inverted (K4)"
+ },
+ {
+  "number": "20.1",
+  "name": "Stall Turn, 3/4 up, 3/4pt down",
+  "short_name": "stall",
+  "description": "Stall turn 3/4 roll up, 3/4pt roll down (K3)"
+ },
+ {
+  "number": "20.2",
+  "name": "Stall Turn, 3/4 up, 3/4pt down",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4 roll up, 3/4pt roll down, inverted entry (K3)"
+ },
+ {
+  "number": "20.3",
+  "name": "Stall Turn, 3/4 up, 3/4pt down",
+  "short_name": "stall",
+  "description": "Stall turn 3/4 roll up, 3/4 pt roll down, inverted exit (K3)"
+ },
+ {
+  "number": "20.4",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4 roll up, 1 1/4 snap roll down (K5)"
+ },
+ {
+  "number": "20.5",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4 roll up, 1 1/4 snap roll down, inverted entry (K5)"
+ },
+ {
+  "number": "20.6",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4 roll up, 1 1/4 snap roll down, inverted exit (K5)"
+ },
+ {
+  "number": "20.7",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4pt roll up, 1 1/4 snap roll down (K5)"
+ },
+ {
+  "number": "20.8",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4pt roll up, 1 1/4 snap roll down, inverted entry (K5)"
+ },
+ {
+  "number": "20.9",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4pt roll up, 1 1/4 snap roll down, inverted exit (K5)"
+ },
+ {
+  "number": "21.1",
+  "name": "Double Immelmann, 1/2 rolls",
+  "short_name": "dImm",
+  "description": "Double Immelmann with half rolls (K3)"
+ },
+ {
+  "number": "21.2",
+  "name": "Double Immelmann, 1/2 rolls",
+  "short_name": "dImm",
+  "description": "Double Immelmann with half rolls, inverted entry (K3)"
+ },
+ {
+  "number": "21.3",
+  "name": "Double Immelmann",
+  "short_name": "dImm",
+  "description": "Double Immelmann with half roll first, full roll second (K4)"
+ },
+ {
+  "number": "21.4",
+  "name": "Double Immelmann",
+  "short_name": "dImm",
+  "description": "Double Immelmann with half roll first, full roll second, inverted entry (K4)"
+ },
+ {
+  "number": "21.5",
+  "name": "Double Immelmann, rolls",
+  "short_name": "dImm",
+  "description": "Double Immelmann with full rolls (K3)"
+ },
+ {
+  "number": "21.6",
+  "name": "Double Immelmann, rolls",
+  "short_name": "dImm",
+  "description": "Double Immelmann with full rolls, inverted entry (K3)"
+ },
+ {
+  "number": "21.7",
+  "name": "Double Immelmann, 1/2 rolls",
+  "short_name": "dImm",
+  "description": "Double Immelmann from top, half rolls (K3)"
+ },
+ {
+  "number": "21.8",
+  "name": "Double Immelmann, 1/2 rolls",
+  "short_name": "dImm",
+  "description": "Double Immelmann from top, half rolls, inverted entry (K3)"
+ },
+ {
+  "number": "21.9",
+  "name": "Double Immelmann",
+  "short_name": "dImm",
+  "description": "Double Immelmann from top, half roll first, full roll second (K4)"
+ },
+ {
+  "number": "21.10",
+  "name": "Double Immelmann",
+  "short_name": "dImm",
+  "description": "Double Immelmann from top, half roll first, full roll second, inverted entry (K4)"
+ },
+ {
+  "number": "21.11",
+  "name": "Double Immelmann, rolls",
+  "short_name": "dImm",
+  "description": "Double Immelmann from top with full rolls (K4)"
+ },
+ {
+  "number": "21.12",
+  "name": "Double Immelmann, rolls",
+  "short_name": "dImm",
+  "description": "Double Immelmann from top with full rolls, inverted entry (K4)"
+ },
+ {
+  "number": "22.1",
+  "name": "Rolling Circle, 1 roll in",
+  "short_name": "rCirc",
+  "description": "Rolling circle with one roll inside (K5)"
+ },
+ {
+  "number": "22.2",
+  "name": "Rolling Circle, 1 roll in",
+  "short_name": "rCirc",
+  "description": "Rolling circle with one roll inside, inverted entry (K5)"
+ },
+ {
+  "number": "22.3",
+  "name": "Rolling Circle, 1 roll out",
+  "short_name": "rCirc",
+  "description": "Rolling circle with one roll outside (K5)"
+ },
+ {
+  "number": "22.4",
+  "name": "Rolling Circle, 1 roll out",
+  "short_name": "rCirc",
+  "description": "Rolling circle with one roll outside, inverted entry (K5)"
+ },
+ {
+  "number": "22.5",
+  "name": "Rolling Circle, 2 rolls in",
+  "short_name": "rCirc",
+  "description": "Rolling circle with 2 rolls inside (K5)"
+ },
+ {
+  "number": "22.6",
+  "name": "Rolling Circle, 2 rolls in",
+  "short_name": "rCirc",
+  "description": "Rolling circle with 2 rolls inside, inverted entry (K5)"
+ },
+ {
+  "number": "22.7",
+  "name": "Rolling Circle, 2 rolls out",
+  "short_name": "rCirc",
+  "description": "Rolling circle with 2 rolls outside (K5)"
+ },
+ {
+  "number": "22.8",
+  "name": "Rolling Circle, 2 rolls out",
+  "short_name": "rCirc",
+  "description": "Rolling circle with 2 rolls outside, inverted entry (K5)"
+ },
+ {
+  "number": "22.9",
+  "name": "Rolling Circle, 4 rolls in",
+  "short_name": "rCirc",
+  "description": "Rolling circle with 4 rolls inside (K5)"
+ },
+ {
+  "number": "22.10",
+  "name": "Rolling Circle, 4 rolls in",
+  "short_name": "rCirc",
+  "description": "Rolling circle with 4 rolls inside, inverted entry (K5)"
+ },
+ {
+  "number": "22.11",
+  "name": "Rolling Circle, 4 rolls out",
+  "short_name": "rCirc",
+  "description": "Rolling circle with 4 rolls outside (K5)"
+ },
+ {
+  "number": "22.12",
+  "name": "Rolling Circle, 4 rolls out",
+  "short_name": "rCirc",
+  "description": "Rolling circle with 4 rolls outside, inverted entry (K5)"
+ },
+ {
+  "number": "23.1",
+  "name": "1 1/2 Rolls Reversed",
+  "short_name": "rollC",
+  "description": "1 1/2 rolls reversed (K4)"
+ },
+ {
+  "number": "23.2",
+  "name": "1 1/2 Rolls Reversed",
+  "short_name": "rollC",
+  "description": "1 1/2 rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "23.3",
+  "name": "Two Rolls Reversed",
+  "short_name": "rollC",
+  "description": "Two rolls reversed (K4)"
+ },
+ {
+  "number": "23.4",
+  "name": "Two Rolls Reversed",
+  "short_name": "rollC",
+  "description": "Two rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "23.5",
+  "name": "4pt Roll",
+  "short_name": "rollC",
+  "description": "Four point roll (K4)"
+ },
+ {
+  "number": "23.6",
+  "name": "4pt Roll",
+  "short_name": "rollC",
+  "description": "Four point roll, inverted entry (K4)"
+ },
+ {
+  "number": "23.7",
+  "name": "8pt Roll",
+  "short_name": "rollC",
+  "description": "Eight point roll (K4)"
+ },
+ {
+  "number": "23.8",
+  "name": "8pt Roll",
+  "short_name": "rollC",
+  "description": "Eight point roll, inverted entry (K4)"
+ },
+ {
+  "number": "23.9",
+  "name": "Two 3/4pt Rolls Reversed",
+  "short_name": "rollC",
+  "description": "Two 3/4 pt. rolls reversed (K4)"
+ },
+ {
+  "number": "23.10",
+  "name": "Two 3/4pt Rolls Reversed",
+  "short_name": "rollC",
+  "description": "Two 3/4 pt. rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "23.11",
+  "name": "Two 2/2pt Rolls Reversed",
+  "short_name": "rollC",
+  "description": "Two 2/2 pt. rolls reversed (K4)"
+ },
+ {
+  "number": "23.12",
+  "name": "Two 2/2pt Rolls Reversed",
+  "short_name": "rollC",
+  "description": "Two 2/2 pt. rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "23.13",
+  "name": "Two 2/4pt Rolls Reversed",
+  "short_name": "rollC",
+  "description": "Two 2/4 pt. rolls reversed (K4)"
+ },
+ {
+  "number": "23.14",
+  "name": "Two 2/4pt Rolls Reversed",
+  "short_name": "rollC",
+  "description": "Two 2/4 pt. rolls reversed, inverted entry (K4)"
+ },
+ {
+  "number": "23.15",
+  "name": "Slow Roll",
+  "short_name": "rollC",
+  "description": "Slow roll (K3)"
+ },
+ {
+  "number": "23.16",
+  "name": "Slow Roll",
+  "short_name": "rollC",
+  "description": "Slow roll, inverted entry (K3)"
+ },
+ {
+  "number": "23.17",
+  "name": "Knife-Edge Flight",
+  "short_name": "keFlt",
+  "description": "Knife edge flight (K4)"
+ },
+ {
+  "number": "23.18",
+  "name": "Knife-Edge Flight",
+  "short_name": "keFlt",
+  "description": "Knife edge flight, inverted entry (K4)"
+ },
+ {
+  "number": "23.19",
+  "name": "Reverse Knife-Edge Flight",
+  "short_name": "rKeFlt",
+  "description": "Reverse knife edge flight (K5)"
+ },
+ {
+  "number": "23.20",
+  "name": "Reverse Knife-Edge Flight",
+  "short_name": "rKeFlt",
+  "description": "Reverse knife edge flight, inverted entry (K5)"
+ },
+ {
+  "number": "23.21",
+  "name": "Snap Roll",
+  "short_name": "snap",
+  "description": "One horizontal snap roll (K3)"
+ },
+ {
+  "number": "23.22",
+  "name": "Snap Roll",
+  "short_name": "snap",
+  "description": "One horizontal snap roll, inverted entry (K4)"
+ },
+ {
+  "number": "23.23",
+  "name": "Two Snaps Reversed",
+  "short_name": "rollC",
+  "description": "Two snap rolls reversed (K5)"
+ },
+ {
+  "number": "23.24",
+  "name": "Two Snaps Reversed",
+  "short_name": "rollC",
+  "description": "Two snap rolls reversed, inverted entry (K5)"
+ },
+ {
+  "number": "23.25",
+  "name": "2/2pt Roll, Snap Opposite",
+  "short_name": "rollC",
+  "description": "2/2pt roll, full snap roll opposite (K5)"
+ },
+ {
+  "number": "23.26",
+  "name": "2/2pt Roll, Snap Opposite",
+  "short_name": "rollC",
+  "description": "2/2pt roll, full snap roll opposite, inverted entry (K5)"
+ },
+ {
+  "number": "23.27",
+  "name": "2/4pt, 1 1/2 Snap Opposite",
+  "short_name": "rollC",
+  "description": "2/4pt roll, 1 1/2 snap roll opposite (K5)"
+ },
+ {
+  "number": "23.28",
+  "name": "2/4pt, 1 1/2 Snap Opposite",
+  "short_name": "rollC",
+  "description": "2/4pt roll, 1 1/2 snap roll opposite, inverted entry (K5)"
+ },
+ {
+  "number": "24.1",
+  "name": "Double Key",
+  "short_name": "dKey",
+  "description": "Double key: pull into vertical upline, 3/4 pt. roll up, 5/8 knife-edge loop towards the back, 3/4 roll down, pull into 45 degree upline, 3/4 roll up, 5/8 knife-edge loop towards the back, 3/4 pt. roll down, pull to exit upright (K6)"
+ },
+ {
+  "number": "24.2",
+  "name": "Double Key",
+  "short_name": "dKey",
+  "description": "Double key: from inverted push into vertical upline, 3/4 pt. roll up, 5/8 knife-edge loop towards the back, 3/4 roll down, pull into 45 degree upline, 3/4 roll up, 5/8 knife-edge loop towards the back, 3/4 pt. roll down, push to exit inverted (K6)"
+ },
+ {
+  "number": "24.3",
+  "name": "Double Key",
+  "short_name": "dKey",
+  "description": "Double key: pull into vertical upline, 3/4 pt. roll up, 5/8 knife-edge loop towards the back, 3/4 roll down, push into 45 degree upline, 3/4 roll up, 5/8 knife-edge loop towards the back, 3/4 pt. roll down, pull to exit upright (K6)"
+ },
+ {
+  "number": "24.4",
+  "name": "Double Key",
+  "short_name": "dKey",
+  "description": "Double key: from inverted push into vertical upline, 3/4 pt. roll up, 5/8 knife-edge loop towards the back, 3/4 roll down, push into 45 degree upline, 3/4 roll up, 5/8 knife-edge loop towards the back, 3/4 pt. roll down, push to exit inverted (K6)"
+ },
+ {
+  "number": "25.1",
+  "name": "Horizontal Eight",
+  "short_name": "h8",
+  "description": "Horizontal eight with one roll integrated in each loop (K6)"
+ },
+ {
+  "number": "25.2",
+  "name": "Horizontal Eight",
+  "short_name": "h8",
+  "description": "Horizontal eight with one roll integrated in each loop, inverted entry and exit (K6)"
+ },
+ {
+  "number": "25.3",
+  "name": "Horizontal Eight",
+  "short_name": "h8",
+  "description": "Horizontal eight with two rolls integrated in each loop (K6)"
+ },
+ {
+  "number": "25.4",
+  "name": "Horizontal Eight",
+  "short_name": "h8",
+  "description": "Horizontal eight with two rolls integrated in each loop, inverted entry and exit (K6)"
+ },
+ {
+  "number": "25.5",
+  "name": "Horizontal Eight",
+  "short_name": "h8",
+  "description": "Horizontal eight with four rolls integrated in each loop (K6)"
+ },
+ {
+  "number": "25.6",
+  "name": "Horizontal Eight",
+  "short_name": "h8",
+  "description": "Horizontal eight with four rolls integrated in each loop, inverted entry and exit (K 6)"
+ },
+ {
+  "number": "26.1",
+  "name": "Figure N",
+  "short_name": "figN",
+  "description": "Figure N. Vertical upline from upright, 1/4 roll, stall turn, 1/8 knife-edge loop, 45° knife-edge downline, 3/8 knife-edge loop, 1/2 roll, stall turn, 1/4 roll, exit upright (K6)"
+ },
+ {
+  "number": "26.2",
+  "name": "Figure N",
+  "short_name": "figN",
+  "description": "Figure N. Vertical upline from upright, 1/4 roll, stall turn, 1/8 knife-edge loop, 45° knife-edge downline, 3/8 knife-edge loop, 1/2 roll, stall turn, 1/4 roll, exit inverted (K6)"
+ },
+ {
+  "number": "26.3",
+  "name": "Figure N",
+  "short_name": "figN",
+  "description": "Figure N. Vertical upline from inverted, 1/4 roll, stall turn, 1/8 knife-edge loop, 45° knife-edge downline, 3/8 knife-edge loop, 1/2 roll, stall turn, 1/4 roll, exit upright (K6)"
+ },
+ {
+  "number": "26.4",
+  "name": "Figure N",
+  "short_name": "figN",
+  "description": "Figure N. Vertical upline from inverted, 1/4 roll, stall turn, 1/8 knife-edge loop, 45° knife-edge downline, 3/8 knife-edge loop, 1/2 roll, stall turn, 1/4 roll, exit inverted (K6)"
+ },
+ {
+  "number": "26.5",
+  "name": "Figure N",
+  "short_name": "figN",
+  "description": "Figure N. Vertical line from upright, roll, 3/8 pushed loop, 45° downline, snap roll, 3/8 pulled loop, vertical upline, 1 1/4 snap-roll, stall turn, 1/4 roll, exit upright (K6)"
+ },
+ {
+  "number": "26.6",
+  "name": "Figure N",
+  "short_name": "figN",
+  "description": "Figure N. Vertical line from upright, roll, 3/8 pushed loop, 45° downline, snap roll, 3/8 pulled loop, vertical upline, 1 1/4 snap-roll, stall turn, 1/4 roll, exit inverted (K6)"
+ },
+ {
+  "number": "26.7",
+  "name": "Figure N",
+  "short_name": "figN",
+  "description": "Figure N. Vertical line from inverted, roll, 3/8 pulled loop, 45° downline, snap roll, 3/8 pushed loop, vertical upline, 1 1/4 snap-roll, stall turn, 1/4 roll, exit upright (K6)"
+ },
+ {
+  "number": "26.8",
+  "name": "Figure N",
+  "short_name": "figN",
+  "description": "Figure N. Vertical line from inverted, roll, 3/8 pulled loop, 45° downline, snap roll, 3/8 pushed loop, vertical upline, 1 1/4 snap-roll, stall turn, 1/4 roll, exit inverted (K6)"
+ },
+ {
+  "number": "27.1",
+  "name": "Infinite Loop",
+  "short_name": "infL",
+  "description": "Infinite loop. From upright, past centre, 1/2 loop with integrated 1/2 roll, 1/8 pushed loop, two opposite snap-rolls, 1/8 loop, ½ pulled loop with integrated 1/2 roll, exit upright. (K6)"
+ },
+ {
+  "number": "27.2",
+  "name": "Infinite Loop",
+  "short_name": "infL",
+  "description": "Infinite loop. From inverted, past centre, 1/2 loop with integrated 1/2 roll, 1/8 pulled loop, two opposite snap-rolls, ⅛ pushed loop, 1/2 loop with integrated 1/2 roll, exit inverted. (K6)"
+ },
+ {
+  "number": "27.3",
+  "name": "Infinite Loop",
+  "short_name": "infL",
+  "description": "Infinite loop. From upright, four consecutive 1/4 rolls, 1/2 loop with integrated 1/2 roll, 1/8 pushed loop, two opposite snap-rolls, ⅛ pulled loop, 1/2 loop with integrated 1/2 roll, two opposite 1/2 rolls, exit upright. (K6)"
+ },
+ {
+  "number": "27.4",
+  "name": "Infinite Loop",
+  "short_name": "infL",
+  "description": "Infinite loop. From inverted, four consecutive 1/4 rolls, 1/2 loop with integrated 1/2 roll, ⅛ pulled loop, two opposite snap-rolls, ⅛ pushed loop, 1/2 loop with integrated 1/2 roll, two opposite 1/2 rolls, exit inverted. (K6)"
+ },
+ {
+  "number": "28.1",
+  "name": "Figure H",
+  "short_name": "figH",
+  "description": "Figure H. From upright, 1/4 loop, 3/4 snap-roll, stall turn, 1/4 knife-edge loop, line with roll, 1/4 knife-edge loop, stall turn, 3/4 snap-roll, 1/4 roll. Exit upright (K6)"
+ },
+ {
+  "number": "28.2",
+  "name": "Figure H",
+  "short_name": "figH",
+  "description": "Figure H. From upright, 1/4 loop, 3/4 snap-roll, stall turn, 1/4 knife-edge loop, line with roll, 1/4 knife-edge loop, stall turn, 3/4 snap-roll, 1/4 roll. Exit inverted (K6)"
+ },
+ {
+  "number": "28.3",
+  "name": "Figure H",
+  "short_name": "figH",
+  "description": "Figure H. From inverted, 1/4 loop, 3/4 snap-roll, stall turn, 1/4 knife-edge loop, line with roll, 1/4 knife-edge loop, stall turn, 3/4 snap-roll, 1/4 roll. Exit upright (K6)"
+ },
+ {
+  "number": "28.4",
+  "name": "Figure H",
+  "short_name": "figH",
+  "description": "Figure H. From inverted, 1/4 loop, 3/4 snap-roll, stall turn, 1/4 knife-edge loop, line with roll, 1/4 knife-edge loop, stall turn, 3/4 snap-roll, 1/4 roll. Exit inverted (K6)"
+ },
+ {
+  "number": "29.1",
+  "name": "Half Clover Leaf",
+  "short_name": "hClvr",
+  "description": "Half clover leaf. From bottom upright, 3/4 roll, 3/4 knife-edge loop, snap-roll, ¾ knife-edge loop, 3/4 roll. Exit upright. (K5)"
+ },
+ {
+  "number": "29.2",
+  "name": "Half Clover Leaf",
+  "short_name": "hClvr",
+  "description": "Half clover leaf. From bottom upright, 3/4 roll, 3/4 knife-edge loop, snap-roll, 3/4 knife-edge loop, 3/4 roll. Exit inverted. (K5)"
+ },
+ {
+  "number": "29.3",
+  "name": "Half Clover Leaf",
+  "short_name": "hClvr",
+  "description": "Half clover leaf. From bottom inverted, 3/4 roll, 3/4 knife-edge loop, snap-roll, 3/4 knife-edge loop, 3/4 roll. Exit upright. (K5)"
+ },
+ {
+  "number": "29.4",
+  "name": "Half Clover Leaf",
+  "short_name": "hClvr",
+  "description": "Half clover leaf. From bottom inverted, 3/4 roll, 3/4 knife-edge loop, snap-roll, 3/4 knife-edge loop, 3/4 roll. Exit inverted (K5)"
+ },
+ {
+  "number": "29.5",
+  "name": "Half Clover Leaf",
+  "short_name": "hClvr",
+  "description": "Half clover leaf. From top upright, 3/4 roll, 3/4 knife-edge loop, snap-roll, 3/4 knife-edge loop, 3/4 roll. Exit upright. (K5)"
+ },
+ {
+  "number": "29.6",
+  "name": "Half Clover Leaf",
+  "short_name": "hClvr",
+  "description": "Half clover leaf. From top upright, 3/4 roll, 3/4 knife-edge loop, snap-roll, 3/4 knife-edge loop, 3/4 roll. Exit inverted. (K5)"
+ },
+ {
+  "number": "29.7",
+  "name": "Half Clover Leaf",
+  "short_name": "hClvr",
+  "description": "Half clover leaf. From top inverted, 3/4 roll, 3/4 knife-edge loop, snap-roll, 3/4 knife-edge loop, 3/4 roll. Exit upright. (K5)"
+ },
+ {
+  "number": "29.8",
+  "name": "Half Clover Leaf",
+  "short_name": "hClvr",
+  "description": "Half clover leaf. From top inverted, 3/4 roll, 3/4 knife-edge loop, snap-roll, 3/4 knife-edge loop, 3/4 roll. Exit inverted. (K5)"
+ },
+ {
+  "number": "30.1",
+  "name": "Diamond in a Loop",
+  "short_name": "diamL",
+  "description": "Diamond in a loop. From bottom upright, pulled loop with two opposite integrated half-rolls, square loop on corner with half-roll in each leg. Exit upright. N.B. Radii for loop and square loop can be different. (K5)"
+ },
+ {
+  "number": "30.2",
+  "name": "Diamond in a Loop",
+  "short_name": "diamL",
+  "description": "Diamond in a loop. From bottom inverted, pushed loop with two opposite integrated half-rolls, square loop on corner with half-roll in each leg. Exit inverted. N.B. Radii for loop and square loop can be different. (K5) (K5)"
+ },
+ {
+  "number": "30.3",
+  "name": "Diamond in a Loop",
+  "short_name": "diamL",
+  "description": "Diamond in a loop From top upright, pushed loop with two opposite integrated half-rolls, square loop on corner with half-roll in each leg. Exit upright. N.B. Radii for loop and square loop can be different. (K5)"
+ },
+ {
+  "number": "30.4",
+  "name": "Diamond in a Loop",
+  "short_name": "diamL",
+  "description": "Diamond in a loop. From top inverted, puled loop with two opposite integrated half-rolls, square loop on corner with half-roll in each leg. Exit inverted. N.B. Radii for loop and square loop can be different. (K5)"
+ },
+ {
+  "number": "A.5",
+  "name": "Half Square Loop, 2/4pt up",
+  "short_name": "hSqL",
+  "description": "Half square loop with 2/4pt roll up (K2)"
+ },
+ {
+  "number": "A.6",
+  "name": "Half Square Loop, 2/4pt up",
+  "short_name": "hSqL",
+  "description": "Half square loop with 2/4pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "A.7",
+  "name": "Half Square Loop, 2/2pt up",
+  "short_name": "hSqL",
+  "description": "Half square loop with 2/2pt roll up (K2)"
+ },
+ {
+  "number": "A.8",
+  "name": "Half Square Loop, 2/2pt up",
+  "short_name": "hSqL",
+  "description": "Half square loop with 2/2pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "A.9",
+  "name": "Half Square Loop, roll up",
+  "short_name": "hSqL",
+  "description": "Half square loop with full roll up (K2)"
+ },
+ {
+  "number": "A.10",
+  "name": "Half Square Loop, roll up",
+  "short_name": "hSqL",
+  "description": "Half square loop with full roll up, inverted entry (K2)"
+ },
+ {
+  "number": "A.15",
+  "name": "Half Square Loop, 2/4pt down",
+  "short_name": "hSqL",
+  "description": "Half square loop from top, 2/4pt roll down (K2)"
+ },
+ {
+  "number": "A.16",
+  "name": "Half Square Loop, 2/4pt down",
+  "short_name": "hSqL",
+  "description": "Half square loop from top, 2/4pt roll down , inverted entry (K2)"
+ },
+ {
+  "number": "A.17",
+  "name": "Half Square Loop, 2/2pt down",
+  "short_name": "hSqL",
+  "description": "Half square loop from top, 2/2pt roll down (K2)"
+ },
+ {
+  "number": "A.18",
+  "name": "Half Square Loop, 2/2pt down",
+  "short_name": "hSqL",
+  "description": "Half square loop from top, 2/2pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "A.19",
+  "name": "Half Square Loop, roll down",
+  "short_name": "hSqL",
+  "description": "Half square loop from top, full roll down (K2)"
+ },
+ {
+  "number": "A.20",
+  "name": "Half Square Loop, roll down",
+  "short_name": "hSqL",
+  "description": "Half square loop from top, full roll down, inverted entry (K2)"
+ },
+ {
+  "number": "A.21",
+  "name": "Half Square Loop, snap down",
+  "short_name": "hSqL",
+  "description": "Half square loop from top, full snap down (K3)"
+ },
+ {
+  "number": "A.22",
+  "name": "Half Square Loop, snap down",
+  "short_name": "hSqL",
+  "description": "Half square loop from top, full snap down, inverted entry (K3)"
+ },
+ {
+  "number": "A.23",
+  "name": "Half Square Loop",
+  "short_name": "hSqL",
+  "description": "Half square loop from upright, 1/4 roll integrated, snap-roll, 1/4 roll integrated, exit upright (K4)"
+ },
+ {
+  "number": "A.24",
+  "name": "Half Square Loop",
+  "short_name": "hSqL",
+  "description": "Half square loop from upright, 1/4 roll integrated, snap-roll, 1/4 roll integrated, exit inverted (K4)"
+ },
+ {
+  "number": "A.25",
+  "name": "Half Square Loop",
+  "short_name": "hSqL",
+  "description": "Half square loop from inverted, 1/4 roll integrated, snap-roll, 1/4 roll integrated, exit upright (K4)"
+ },
+ {
+  "number": "A.26",
+  "name": "Half Square Loop",
+  "short_name": "hSqL",
+  "description": "Half square loop from inverted, 1/4 roll integrated, snap-roll, 1/4 roll integrated, exit inverted (K4)"
+ },
+ {
+  "number": "A.27",
+  "name": "Half Square Loop",
+  "short_name": "hSqL",
+  "description": "Half square loop from top upright, 1/4 roll integrated, snap-roll, 1/4 roll integrated, exit upright (K4)"
+ },
+ {
+  "number": "A.28",
+  "name": "Half Square Loop",
+  "short_name": "hSqL",
+  "description": "Half square loop from top inverted, 1/4 roll integrated, snap-roll, 1/4 roll integrated, exit upright (K4)"
+ },
+ {
+  "number": "A.29",
+  "name": "Half Square Loop",
+  "short_name": "hSqL",
+  "description": "Half square loop from top upright, 1/4 roll integrated, snap-roll, 1/4 roll integrated, exit inverted (K4)"
+ },
+ {
+  "number": "A.30",
+  "name": "Half Square Loop",
+  "short_name": "hSqL",
+  "description": "Half square loop from top inverted, 1/4 roll integrated, snap-roll, 1/4 roll integrated, exit inverted (K4)"
+ },
+ {
+  "number": "C.3",
+  "name": "Split S, roll",
+  "short_name": "splitS",
+  "description": "Split S , full roll, from top (K2)"
+ },
+ {
+  "number": "C.4",
+  "name": "Split S, roll",
+  "short_name": "splitS",
+  "description": "Split S , full roll, from top, inverted entry (K2)"
+ },
+ {
+  "number": "D.1",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann turn (K2)"
+ },
+ {
+  "number": "D.2",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann turn, inverted entry (K2)"
+ },
+ {
+  "number": "D.3",
+  "name": "Immelmann, roll",
+  "short_name": "imm",
+  "description": "Immelmann turn, full roll (K2)"
+ },
+ {
+  "number": "D.4",
+  "name": "Immelmann, roll",
+  "short_name": "imm",
+  "description": "Immelmann turn, full roll, inverted entry (K2)"
+ },
+ {
+  "number": "D.5",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann Turn from upright with 1/4 roll, knife-edge half loop up, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "D.6",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann Turn from upright with 1/4 roll, knife-edge half loop up, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "D.7",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann Turn from upright with 1/4 roll, knife-edge half loop down, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "D.8",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann Turn from upright with 1/4 roll, knife-edge half loop down, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "D.9",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann Turn from inverted with 1/4 roll, knife-edge half loop up, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "D.10",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann Turn from inverted with 1/4 roll, knife-edge half loop up, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "D.11",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann Turn from inverted with 1/4 roll, knife-edge half loop down, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "D.12",
+  "name": "Immelmann",
+  "short_name": "imm",
+  "description": "Immelmann Turn from inverted with 1/4 roll, knife-edge half loop down, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "E.5",
+  "name": "Figure 9, 2/4pt up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom, 2/4pt roll up (K2)"
+ },
+ {
+  "number": "E.6",
+  "name": "Figure 9, 2/4pt up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom, 2/4pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "E.7",
+  "name": "Figure 9, 2/2pt up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom, 2/2pt roll up (K2)"
+ },
+ {
+  "number": "E.8",
+  "name": "Figure 9, 2/2pt up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom, 2/2pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "E.9",
+  "name": "Figure 9, roll up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom, full roll up (K2)"
+ },
+ {
+  "number": "E.10",
+  "name": "Figure 9, roll up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom, full roll up, inverted entry (K2)"
+ },
+ {
+  "number": "E.15",
+  "name": "Figure 6, 2/4pt up",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle (bottom first), 2/4pt roll up (K2)"
+ },
+ {
+  "number": "E.16",
+  "name": "Figure 6, 2/4pt up",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle (bottom first), 2/4pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "E.17",
+  "name": "Figure 6, 2/2pt up",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle (bottom first), 2/2pt roll up (K2)"
+ },
+ {
+  "number": "E.18",
+  "name": "Figure 6, 2/2pt up",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle (bottom first), 2/2pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "E.19",
+  "name": "Figure 6, roll up",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle (bottom first), full roll up (K2)"
+ },
+ {
+  "number": "E.20",
+  "name": "Figure 6, roll up",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle (bottom first), full roll up, inverted entry (K2)"
+ },
+ {
+  "number": "E.25",
+  "name": "Figure 9, 2/4pt down",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle (top first), 2/4pt roll down (K2)"
+ },
+ {
+  "number": "E.26",
+  "name": "Figure 9, 2/4pt down",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle (top first), 2/4pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "E.27",
+  "name": "Figure 9, 2/2pt down",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle (top first), 2/2pt roll down (K2)"
+ },
+ {
+  "number": "E.28",
+  "name": "Figure 9, 2/2pt down",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle (top first), 2/2pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "E.29",
+  "name": "Figure 9, roll down",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle (top first), full roll down (K2)"
+ },
+ {
+  "number": "E.30",
+  "name": "Figure 9, roll down",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle (top first), full roll down, inverted entry (K2)"
+ },
+ {
+  "number": "E.31",
+  "name": "Figure 9, snap down",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle (top first), full snap down (K3)"
+ },
+ {
+  "number": "E.32",
+  "name": "Figure 9, snap down",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle (top first), full snap down, inverted entry (K3)"
+ },
+ {
+  "number": "E.37",
+  "name": "Figure 6, 2/4pt down",
+  "short_name": "fig6",
+  "description": "Figure 6 from top, 2/4pt roll down (K2)"
+ },
+ {
+  "number": "E.38",
+  "name": "Figure 6, 2/4pt down",
+  "short_name": "fig6",
+  "description": "Figure 6 from top, 2/4pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "E.39",
+  "name": "Figure 6, 2/2pt down",
+  "short_name": "fig6",
+  "description": "Figure 6 from top, 2/2pt roll down (K2)"
+ },
+ {
+  "number": "E.40",
+  "name": "Figure 6, 2/2pt down",
+  "short_name": "fig6",
+  "description": "Figure 6 from top, 2/2pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "E.41",
+  "name": "Figure 6, roll down",
+  "short_name": "fig6",
+  "description": "Figure 6 from top, full roll down (K2)"
+ },
+ {
+  "number": "E.42",
+  "name": "Figure 6, roll down",
+  "short_name": "fig6",
+  "description": "Figure 6 from top , full roll down, inverted entry (K2)"
+ },
+ {
+  "number": "E.43",
+  "name": "Figure 6, snap down",
+  "short_name": "fig6",
+  "description": "Figure 6 from top, full snap down (K3)"
+ },
+ {
+  "number": "E.44",
+  "name": "Figure 6, snap down",
+  "short_name": "fig6",
+  "description": "Figure 6 from top, full snap down, inverted entry (K3)"
+ },
+ {
+  "number": "E.45",
+  "name": "Figure 9, snap up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom upright with snap roll up (K3)"
+ },
+ {
+  "number": "E.46",
+  "name": "Figure 9, snap up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom inverted with snap roll up (K3)"
+ },
+ {
+  "number": "E.47",
+  "name": "Figure 9, 1 1/2 snaps up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom upright with 1 1/2 snap rolls up (K3)"
+ },
+ {
+  "number": "E.48",
+  "name": "Figure 9, 1 1/2 snaps up",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom inverted with 1 1/2 snap rolls up (K3)"
+ },
+ {
+  "number": "E.49",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom upright with integrated roll in top 180 degree of loop, exit inverted (K3)"
+ },
+ {
+  "number": "E.50",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom inverted with integrated roll in top 180 degree of loop, exit upright (K3)"
+ },
+ {
+  "number": "E.51",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from top upright with integrated 1/2 roll on bottom 180 degree of loop, exit upright (K3)"
+ },
+ {
+  "number": "E.52",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from top inverted with integrated 1/2 roll on bottom 180 degree of loop, exit inverted (K3)"
+ },
+ {
+  "number": "E.53",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom upright with 1/4 roll up, 3/4 knife edge loop, 1/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "E.54",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom upright with 1/4 roll up, 3/4 knife edge loop, 1/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "E.55",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom inverted with 1/4 roll up, 3/4 knife edge loop, 1/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "E.56",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom inverted with 1/4 roll up, 3/4 knife edge loop, 1/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "E.57",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom upright with 3 consecutive 1/4 rolls up, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit upright (K4)"
+ },
+ {
+  "number": "E.58",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom upright with 3 consecutive 1/4 rolls up, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit inverted (K4)"
+ },
+ {
+  "number": "E.59",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom inverted with 3 consecutive 1/4 rolls up, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit upright (K4)"
+ },
+ {
+  "number": "E.60",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from bottom inverted with 3 consecutive 1/4 rolls up, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit inverted (K4)"
+ },
+ {
+  "number": "E.61",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle upright with 3 consecutive 1/4 rolls, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit upright (K4)"
+ },
+ {
+  "number": "E.62",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle upright with 3 consecutive 1/4 rolls , 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit inverted (K4)"
+ },
+ {
+  "number": "E.63",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle inverted with 3 consecutive 1/4 rolls , 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit upright (K4)"
+ },
+ {
+  "number": "E.64",
+  "name": "Figure 9",
+  "short_name": "fig9",
+  "description": "Figure 9 from middle inverted with 3 consecutive 1/4 rolls , 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit inverted (K4)"
+ },
+ {
+  "number": "E.65",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle upright with 3 consecutive 1/4 rolls , 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit upright (K4)"
+ },
+ {
+  "number": "E.66",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle upright with 3 consecutive 1/4 rolls, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit inverted (K4)"
+ },
+ {
+  "number": "E.67",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle inverted with 3 consecutive 1/4 rolls, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit upright (K4)"
+ },
+ {
+  "number": "E.68",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from middle inverted with 3 consecutive 1/4 rolls, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit inverted (K4)"
+ },
+ {
+  "number": "E.69",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from top upright with 3/4 snap roll down, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit upright (K4)"
+ },
+ {
+  "number": "E.70",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from top upright with 3/4 snap roll down, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit inverted (K4)"
+ },
+ {
+  "number": "E.71",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from top inverted with 3/4 snap roll down, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit upright (K4)"
+ },
+ {
+  "number": "E.72",
+  "name": "Figure 6",
+  "short_name": "fig6",
+  "description": "Figure 6 from top inverted with 3/4 snap roll down, 3/4 knife edge loop, 3 consecutive 1/4 rolls, exit inverted (K4)"
+ },
+ {
+  "number": "F.3",
+  "name": "Half Cuban Eight, 2/4pt roll",
+  "short_name": "hCuban",
+  "description": "Half cuban eight, 2/4pt roll (K2)"
+ },
+ {
+  "number": "F.4",
+  "name": "Half Cuban Eight, 2/4pt roll",
+  "short_name": "hCuban",
+  "description": "Half cuban eight, 2/4pt roll, inverted entry (K2)"
+ },
+ {
+  "number": "F.5",
+  "name": "Half Cuban Eight, 2/2pt roll",
+  "short_name": "hCuban",
+  "description": "Half cuban eight, 2/2pt roll (K2)"
+ },
+ {
+  "number": "F.6",
+  "name": "Half Cuban Eight, 2/2pt roll",
+  "short_name": "hCuban",
+  "description": "Half cuban eight, 2/2pt roll, inverted entry (K2)"
+ },
+ {
+  "number": "F.7",
+  "name": "Half Cuban Eight, roll",
+  "short_name": "hCuban",
+  "description": "Half cuban eight with full roll (K2)"
+ },
+ {
+  "number": "F.8",
+  "name": "Half Cuban Eight, roll",
+  "short_name": "hCuban",
+  "description": "Half cuban eight with full roll, inverted entry (K2)"
+ },
+ {
+  "number": "F.9",
+  "name": "Half Cuban Eight, snap",
+  "short_name": "hCuban",
+  "description": "Half cuban eight with full snap roll (K3)"
+ },
+ {
+  "number": "F.10",
+  "name": "Half Cuban Eight, snap",
+  "short_name": "hCuban",
+  "description": "Half cuban eight with full snap roll, inverted entry (K3)"
+ },
+ {
+  "number": "F.11",
+  "name": "Half Cuban Eight, 1 1/2 snap",
+  "short_name": "hCuban",
+  "description": "Half cuban eight with 1 1/2 snap roll (K3)"
+ },
+ {
+  "number": "F.12",
+  "name": "Half Cuban Eight, 1 1/2 snap",
+  "short_name": "hCuban",
+  "description": "Half cuban eight with 1 1/2 snap roll, inverted entry (K3)"
+ },
+ {
+  "number": "F.15",
+  "name": "Half Cuban Eight, 2/4pt up",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top, 2/4pt roll up (K2)"
+ },
+ {
+  "number": "F.16",
+  "name": "Half Cuban Eight, 2/4pt up",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top, 2/4pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "F.17",
+  "name": "Half Cuban Eight, 2/2pt up",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top, 2/2pt roll up (K2)"
+ },
+ {
+  "number": "F.18",
+  "name": "Half Cuban Eight, 2/2pt up",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top, 2/2pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "F.19",
+  "name": "Half Cuban Eight, roll up",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top, full roll up (K2)"
+ },
+ {
+  "number": "F.22",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight, inverted entry (K2)"
+ },
+ {
+  "number": "F.23",
+  "name": "Half Rev Cuban, 2/4pt roll",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight, 2/4pt roll (K2)"
+ },
+ {
+  "number": "F.24",
+  "name": "Half Rev Cuban, 2/4pt roll",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight, 2/4pt roll, inverted entry (K2)"
+ },
+ {
+  "number": "F.25",
+  "name": "Half Rev Cuban, 2/2pt roll",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight, 2/2pt roll (K2)"
+ },
+ {
+  "number": "F.26",
+  "name": "Half Rev Cuban, 2/2pt roll",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight, 2/2pt roll, inverted entry (K2)"
+ },
+ {
+  "number": "F.27",
+  "name": "Half Rev Cuban, roll",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight with full roll (K2)"
+ },
+ {
+  "number": "F.28",
+  "name": "Half Rev Cuban, roll",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight with full roll, inverted entry (K2)"
+ },
+ {
+  "number": "F.29",
+  "name": "Half Rev Cuban, snap",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight with full snap roll (K3)"
+ },
+ {
+  "number": "F.30",
+  "name": "Half Rev Cuban, snap",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight with full snap roll, inverted entry (K3)"
+ },
+ {
+  "number": "F.31",
+  "name": "Half Rev Cuban, 1 1/2 snap",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight with 1 1/2 snap roll (K3)"
+ },
+ {
+  "number": "F.32",
+  "name": "Half Rev Cuban, 1 1/2 snap",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight with 1 1/2 snap roll, inverted entry (K3)"
+ },
+ {
+  "number": "F.35",
+  "name": "Half Rev Cuban, 2/4pt down",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top, 2/4pt roll down (K2)"
+ },
+ {
+  "number": "F.36",
+  "name": "Half Rev Cuban, 2/4pt down",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top, 2/4pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "F.37",
+  "name": "Half Rev Cuban, 2/2pt down",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top, 2/2pt roll down (K2)"
+ },
+ {
+  "number": "F.38",
+  "name": "Half Rev Cuban, 2/2pt down",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top, 2/2pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "F.39",
+  "name": "Half Rev Cuban, roll down",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top, full roll down (K2)"
+ },
+ {
+  "number": "F.40",
+  "name": "Half Rev Cuban, roll down",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top, full roll down, inverted entry (K2)"
+ },
+ {
+  "number": "F.41",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half Cuban Eight from upright up with 1/2 roll integrated in first 180 degree of loop, exit upright (K3)"
+ },
+ {
+  "number": "F.42",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half Cuban Eight from inverted up with 1/2 roll integrated in first 180 degree of loop, exit inverted (K3)"
+ },
+ {
+  "number": "F.43",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half Cuban Eight from upright up with roll integrated in first 180 degree of loop, exit inverted (K4)"
+ },
+ {
+  "number": "F.44",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half Cuban Eight from inverted up with roll integrated in first 180 degree of loop, exit upright (K4)"
+ },
+ {
+  "number": "F.45",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half Cuban Eight from upright down with 1/2 roll integrated in first 180 degree of loop, exit upright (K3)"
+ },
+ {
+  "number": "F.46",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half Cuban Eight from inverted down with 1/2 roll integrated in first 180 degree of loop, exit inverted (K3)"
+ },
+ {
+  "number": "F.47",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half Cuban Eight from upright down with roll integrated in first 180 degree of loop, exit inverted (K4)"
+ },
+ {
+  "number": "F.48",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half Cuban Eight from inverted down with roll integrated in first 180 degree of loop, exit upright (K4)"
+ },
+ {
+  "number": "F.49",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from upright with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "F.50",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from upright with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "F.51",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from inverted with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "F.52",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from inverted with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "F.53",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from upright with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "F.54",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from upright with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "F.55",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from inverted with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "F.56",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from inverted with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "F.57",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top upright with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "F.58",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top upright with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "F.59",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top inverted with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "F.60",
+  "name": "Half Cuban Eight",
+  "short_name": "hCuban",
+  "description": "Half cuban eight from top inverted with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "F.61",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top upright with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "F.62",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top upright with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "F.63",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top inverted with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "F.64",
+  "name": "Half Reverse Cuban Eight",
+  "short_name": "hRCuban",
+  "description": "Half reverse cuban eight from top inverted with 3 consecutive 1/4 rolls, 5/8 knife edge loop, 3/4 roll, exit inverted (K4)"
+ },
+ {
+  "number": "G.1",
+  "name": "2 Turn Spin",
+  "short_name": "spin",
+  "description": "Two turn spin (K2)"
+ },
+ {
+  "number": "G.2",
+  "name": "2 Turn Spin",
+  "short_name": "spin",
+  "description": "Two turn spin, inverted entry (K2)"
+ },
+ {
+  "number": "G.3",
+  "name": "2 1/2 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/2 turn spin (K2)"
+ },
+ {
+  "number": "G.4",
+  "name": "2 1/2 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/2 turn spin, inverted entry (K2)"
+ },
+ {
+  "number": "G.5",
+  "name": "2 1/4 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry upright. Exit upright (K4)"
+ },
+ {
+  "number": "G.6",
+  "name": "2 1/4 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry upright. Exit inverted (K4)"
+ },
+ {
+  "number": "G.7",
+  "name": "2 1/4 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry inverted. Exit upright (K4)"
+ },
+ {
+  "number": "G.8",
+  "name": "2 1/4 Turn Spin",
+  "short_name": "spin",
+  "description": "2 1/4 turn spin, 1/4 loop with 1/4 roll integrated. Entry inverted. Exit inverted (K4)"
+ },
+ {
+  "number": "H.3",
+  "name": "Stall Turn, 1/2 up, 2/4pt down",
+  "short_name": "stall",
+  "description": "Stall turn, half roll up, 2/4pt roll down (K2)"
+ },
+ {
+  "number": "H.4",
+  "name": "Stall Turn, 1/2 up, 2/4pt down",
+  "short_name": "stall",
+  "description": "Stall turn, half roll up, 2/4pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "H.5",
+  "name": "Stall Turn, roll up, 1/2 down",
+  "short_name": "stall",
+  "description": "Stall turn, full roll up, half roll down (K2)"
+ },
+ {
+  "number": "H.6",
+  "name": "Stall Turn, roll up, 1/2 down",
+  "short_name": "stall",
+  "description": "Stall turn, full roll up, half roll down, inverted entry (K2)"
+ },
+ {
+  "number": "H.7",
+  "name": "Stall Turn, 2/4pt up, 1/2 down",
+  "short_name": "stall",
+  "description": "Stall turn, 2/4pt roll up, half roll down (K2)"
+ },
+ {
+  "number": "H.8",
+  "name": "Stall Turn, 2/4pt up, 1/2 down",
+  "short_name": "stall",
+  "description": "Stall turn, 2/4pt roll up, half roll down, inverted entry (K2)"
+ },
+ {
+  "number": "H.9",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 2/2pt roll up, 2/4pt roll down (K2)"
+ },
+ {
+  "number": "H.10",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 2/2pt roll up, 2/4pt roll down, inverted entry (K2)"
+ },
+ {
+  "number": "H.11",
+  "name": "Stall Turn, 1/2 up, snap down",
+  "short_name": "stall",
+  "description": "Stall turn, half roll up, full snap down (K4)"
+ },
+ {
+  "number": "H.12",
+  "name": "Stall Turn, 1/2 up, snap down",
+  "short_name": "stall",
+  "description": "Stall turn, half roll up, full snap down, inverted entry (K4)"
+ },
+ {
+  "number": "H.13",
+  "name": "Stall Turn, 3/4pt up, 1/4 down",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4pt roll up, 1/4 roll down (K3)"
+ },
+ {
+  "number": "H.14",
+  "name": "Stall Turn, 3/4pt up 1/4 down",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4pt roll up 1/4 roll down, inverted entry (K3)"
+ },
+ {
+  "number": "H.15",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn, 3/4 roll up, 1 1/4 snap down (K4)"
+ },
+ {
+  "number": "H.16",
+  "name": "Stall Turn",
+  "short_name": "stall",
+  "description": "Stall turn 3/4 roll up, 1 1/4 snap down, inverted entry (K4)"
+ },
+ {
+  "number": "J.1",
+  "name": "Top Hat, 3/4 up, 1/4 down",
+  "short_name": "tHat",
+  "description": "Top hat, 3/4 roll up, 1/4 roll down (K2)"
+ },
+ {
+  "number": "J.2",
+  "name": "Top Hat, 3/4 up, 1/4 down",
+  "short_name": "tHat",
+  "description": "Top hat, 3/4 roll up, 1/4 roll down, inverted entry (K2)"
+ },
+ {
+  "number": "J.3",
+  "name": "Top Hat, 3/4pt up, 3/4 down",
+  "short_name": "tHat",
+  "description": "Top hat, 3/4pt roll up, 3/4 roll down (K2)"
+ },
+ {
+  "number": "J.4",
+  "name": "Top Hat, 3/4pt up, 3/4 down",
+  "short_name": "tHat",
+  "description": "Top hat, 3/4pt roll up, 3/4 roll down, inverted entry (K2)"
+ },
+ {
+  "number": "J.5",
+  "name": "Top Hat, 3/4pt up, 3/4pt down",
+  "short_name": "tHat",
+  "description": "Top hat, 3/4pt roll up, 3/4 pt roll down, inverted exit (K2)"
+ },
+ {
+  "number": "J.6",
+  "name": "Top Hat, 3/4pt up, 3/4pt down",
+  "short_name": "tHat",
+  "description": "Top hat, 3/4pt roll up, 3/4pt roll down, inverted entry and exit (K2)"
+ },
+ {
+  "number": "J.7",
+  "name": "Top Hat, 1/4 up, 1/4 down",
+  "short_name": "tHat",
+  "description": "Top hat, 1/4 roll up, 1/4 roll down (K2)"
+ },
+ {
+  "number": "J.8",
+  "name": "Top Hat, 1/4 up, 1/4 down",
+  "short_name": "tHat",
+  "description": "Top hat, 1/4 roll up, 1/4 roll down, inverted entry (K2)"
+ },
+ {
+  "number": "J.9",
+  "name": "Top Hat, 1/4 up, 1/4 down",
+  "short_name": "tHat",
+  "description": "Top hat, 1/4 roll up, 1/4 roll down, inverted exit (K2)"
+ },
+ {
+  "number": "J.10",
+  "name": "Top Hat, 1/4 up, 1/4 down",
+  "short_name": "tHat",
+  "description": "Top hat, 1/4 roll up, 1/4 roll down, inverted entry and exit (K2)"
+ },
+ {
+  "number": "J.11",
+  "name": "Top Hat, 3/4 down, 3/4pt up",
+  "short_name": "tHat",
+  "description": "Top hat from top, 3/4 roll down, 3/4pt roll up (K3)"
+ },
+ {
+  "number": "J.12",
+  "name": "Top Hat, 3/4 down, 3/4pt up",
+  "short_name": "tHat",
+  "description": "Top hat from top, 3/4 roll down, 3/4pt roll up, inverted entry (K3)"
+ },
+ {
+  "number": "J.13",
+  "name": "Top Hat, 3/4 down, 1/4 up",
+  "short_name": "tHat",
+  "description": "Top hat from top, 3/4 roll down, 1/4 roll up (K2)"
+ },
+ {
+  "number": "J.14",
+  "name": "Top Hat, 3/4 down, 1/4 up",
+  "short_name": "tHat",
+  "description": "Top hat from top, 3/4 roll down, 1/4 roll up, inverted entry (K2)"
+ },
+ {
+  "number": "J.15",
+  "name": "Top Hat, 1/4 down, 3/4pt up",
+  "short_name": "tHat",
+  "description": "Top hat from top, 1/4 roll down, 3/4pt roll up (K2)"
+ },
+ {
+  "number": "J.16",
+  "name": "Top Hat, 1/4 down, 3/4pt up",
+  "short_name": "tHat",
+  "description": "Top hat from top, 1/4 roll down, 3/4pt roll up, inverted entry (K2)"
+ },
+ {
+  "number": "J.17",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from upright, three consecutive 1/4 rolls up, 1 3/4 snap roll down, exit upright (K4)"
+ },
+ {
+  "number": "J.18",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from upright, three consecutive 1/4 rolls up, 1 3/4 snap roll down, exit inverted (K4)"
+ },
+ {
+  "number": "J.19",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from inverted, three consecutive 1/4 rolls up, 1 3/4 snap roll down, exit upright (K4)"
+ },
+ {
+  "number": "J.20",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from inverted, three consecutive 1/4 rolls up, 1 3/4 snap roll down, exit inverted (K4)"
+ },
+ {
+  "number": "J.22",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from top upright, 3/4 roll down, 1 3/4 snap roll up, exit upright (K4)"
+ },
+ {
+  "number": "J.23",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from top upright, 3/4 roll down, 1 3/4 snap roll up, exit inverted (K4)"
+ },
+ {
+  "number": "J.24",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from top inverted, 3/4 roll down, 1 3/4 snap roll up, exit upright (K4)"
+ },
+ {
+  "number": "J.25",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from top inverted, 3/4 roll down, 1 3/4 snap roll up, exit inverted (K4)"
+ },
+ {
+  "number": "J.26",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from upright, 3/4 roll up, 1 1/4 snap roll down, exit upright (K4)"
+ },
+ {
+  "number": "J.27",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from upright, 3/4 roll up, 1 1/4 snap roll down, exit inverted (K4)"
+ },
+ {
+  "number": "J.28",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from inverted, 3/4 roll up, 1 1/4 snap roll down, exit upright (K4)"
+ },
+ {
+  "number": "J.29",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from inverted, 3/4 roll up, 1 1/4 snap roll down, exit inverted (K4)"
+ },
+ {
+  "number": "J.30",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from top upright, 3/4 roll down, 1 1/4 snap roll up, exit upright (K4)"
+ },
+ {
+  "number": "J.31",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from top upright, 3/4 roll down, 1 1/4 snap roll up, exit inverted (K4)"
+ },
+ {
+  "number": "J.32",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from top inverted, 3/4 roll down, 1 1/4 snap roll up, exit upright (K4)"
+ },
+ {
+  "number": "J.33",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat, from top inverted, 3/4 roll down, 1 1/4 snap roll up, exit inverted (K4)"
+ },
+ {
+  "number": "J.34",
+  "name": "Top Hat, 1/2 up, snap down",
+  "short_name": "tHat",
+  "description": "Top Hat, from upright, 1/2 roll up, snap roll down, exit upright (K3)"
+ },
+ {
+  "number": "J.35",
+  "name": "Top Hat, 1/2 up, snap down",
+  "short_name": "tHat",
+  "description": "Top Hat, from inverted, 1/2 roll up, snap roll down, exit inverted (K3)"
+ },
+ {
+  "number": "J.36",
+  "name": "Top Hat, 1/2 down, snap up",
+  "short_name": "tHat",
+  "description": "Top Hat, from top upright, 1/2 roll down, snap roll up, exit upright (K3)"
+ },
+ {
+  "number": "J.37",
+  "name": "Top Hat, 1/2 down, snap up",
+  "short_name": "tHat",
+  "description": "Top Hat, from top inverted, 1/2 roll down, snap roll up, exit inverted (K3)"
+ },
+ {
+  "number": "J.38",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat from top upright with 2 1/4 turn Spin entry, 3/4 Roll up, exit upright (K4)"
+ },
+ {
+  "number": "J.39",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat from top upright with 2 1/4 turn Spin entry, 3/4 Roll up, exit inverted (K4)"
+ },
+ {
+  "number": "J.40",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat from top inverted with 2 1/4 turn Spin entry, 3/4 Roll up, exit upright (K4)"
+ },
+ {
+  "number": "J.41",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat from top inverted with 2 1/4 turn Spin entry, 3/4 Roll up, exit inverted (K4)"
+ },
+ {
+  "number": "J.42",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat from top upright with 2 turn Spin entry, Full Roll up, exit inverted (K3)"
+ },
+ {
+  "number": "J.43",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat from top inverted with 2 turn Spin entry, Full Roll up, exit upright (K3)"
+ },
+ {
+  "number": "J.44",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat from top upright with 2 turn Spin entry, four consecutive 1/4 rolls up, exit inverted (K3)"
+ },
+ {
+  "number": "J.45",
+  "name": "Top Hat",
+  "short_name": "tHat",
+  "description": "Top Hat from top inverted with 2 turn Spin entry, four consecutive 1/4 rolls up, exit upright (K3)"
+ },
+ {
+  "number": "K.1",
+  "name": "45 Half Loop",
+  "short_name": "hLoop45",
+  "description": "45 degree up, 2/4pt roll, half loop (inside or outside), full roll down (K3)"
+ },
+ {
+  "number": "K.2",
+  "name": "45 Half Loop",
+  "short_name": "hLoop45",
+  "description": "45 degree up, 2/4pt roll, half loop (inside or outside), full roll down, inverted entry (K3)"
+ },
+ {
+  "number": "K.3",
+  "name": "45 Half Loop",
+  "short_name": "hLoop45",
+  "description": "45 degree up, 2/2pt roll, half loop (inside or outside), 2/4pt roll down (K3)"
+ },
+ {
+  "number": "K.4",
+  "name": "45 Half Loop",
+  "short_name": "hLoop45",
+  "description": "45 degree up, 2/2pt roll, half loop (inside or outside), 2/4pt roll down, inverted entry (K3)"
+ },
+ {
+  "number": "K.5",
+  "name": "45 Half Loop",
+  "short_name": "hLoop45",
+  "description": "45 degree up, full roll, half loop (inside or outside), 2/4pt roll down (K3)"
+ },
+ {
+  "number": "K.6",
+  "name": "45 Half Loop",
+  "short_name": "hLoop45",
+  "description": "45 degree up, full roll, half loop (inside or outside), 2/4pt roll down, inverted entry (K3)"
+ },
+ {
+  "number": "K.7",
+  "name": "45 Half Loop",
+  "short_name": "hLoop45",
+  "description": "45 degree up, 2/2pt roll, half loop (inside or outside), full snap roll down (K4)"
+ },
+ {
+  "number": "K.8",
+  "name": "45 Half Loop",
+  "short_name": "hLoop45",
+  "description": "45 degree up, 2/2pt roll, half loop (inside or outside), full snap roll down, inverted entry (K4)"
+ },
+ {
+  "number": "K.9",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, 1/4 roll, knife-edge half loop (up or down), three consecutive 1/4 rolls down, exit upright (K4)"
+ },
+ {
+  "number": "K.10",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, 1/4 roll, knife-edge half loop (up or down), three consecutive 1/4 rolls down, exit inverted (K4)"
+ },
+ {
+  "number": "K.11",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, 1/4 roll, knife-edge half loop (up or down), three consecutive 1/4 rolls down, exit upright (K4)"
+ },
+ {
+  "number": "K.12",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, 1/4 roll, knife-edge half loop (up or down), three consecutive 1/4 rolls down, exit inverted (K4)"
+ },
+ {
+  "number": "K.13",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, 3/4 roll, knife-edge half loop (up or down), three consecutive 1/4 rolls down, exit upright (K4)"
+ },
+ {
+  "number": "K.14",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, 3/4 roll, knife-edge half loop (up or down), three consecutive 1/4 rolls down, exit inverted (K4)"
+ },
+ {
+  "number": "K.15",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, 3/4 roll, knife-edge half loop (up or down), three consecutive 1/4 rolls down, exit upright (K4)"
+ },
+ {
+  "number": "K.16",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, 3/4 roll, knife-edge half loop (up or down), three consecutive 1/4 rolls down, exit inverted (K4)"
+ },
+ {
+  "number": "K.17",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, three consecutive 1/4 rolls, knife-edge half loop (up or down), 1/4 roll down, exit upright (K4)"
+ },
+ {
+  "number": "K.18",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, three consecutive 1/4 rolls, knife-edge half loop (up or down), 1/4 roll down, exit inverted (K4)"
+ },
+ {
+  "number": "K.19",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, three consecutive 1/4 rolls, knife-edge half loop (up or down), 1/4 roll down, exit upright (K4)"
+ },
+ {
+  "number": "K.20",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, three consecutive 1/4 rolls, knife-edge half loop (up or down), 1/4 roll down, exit inverted (K4)"
+ },
+ {
+  "number": "K.21",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, three consecutive 1/4 rolls, knife-edge half loop (up or down), 3/4 roll down, exit upright (K4)"
+ },
+ {
+  "number": "K.22",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, three consecutive 1/4 rolls, knife-edge half loop (up or down), 3/4 roll down, exit inverted (K4)"
+ },
+ {
+  "number": "K.23",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, three consecutive 1/4 rolls, knife-edge half loop (up or down), 3/4 roll down, exit upright (K4)"
+ },
+ {
+  "number": "K.24",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, three consecutive 1/4 rolls, knife-edge half loop (up or down), 3/4 roll down, exit inverted (K4)"
+ },
+ {
+  "number": "K.25",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, 1/4 roll, knife-edge half loop (up or down), 3/4 snap roll down, exit upright (K5)"
+ },
+ {
+  "number": "K.26",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, 1/4 roll, knife-edge half loop (up or down), 3/4 snap roll down, exit inverted (K5)"
+ },
+ {
+  "number": "K.27",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, 1/4 roll, knife-edge half loop (up or down), 3/4 snap roll down, exit upright (K5)"
+ },
+ {
+  "number": "K.28",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, 1/4 roll, knife-edge half loop (up or down), 3/4 snap roll down, exit inverted (K5)"
+ },
+ {
+  "number": "K.29",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, 3/4 roll, knife-edge half loop (up or down), 3/4 snap roll down, exit upright (K5)"
+ },
+ {
+  "number": "K.30",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from upright, 3/4 roll, knife-edge half loop (up or down), 3/4 snap roll down, exit inverted (K5)"
+ },
+ {
+  "number": "K.31",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, 3/4 roll, knife-edge half loop (up or down), 3/4 snap roll down, exit upright (K5)"
+ },
+ {
+  "number": "K.32",
+  "name": "Knife-Edge 45 Half Loop",
+  "short_name": "keHL45",
+  "description": "45 degree up-line from inverted, 3/4 roll, knife-edge half loop (up or down), 3/4 snap roll down, exit inverted (K5)"
+ },
+ {
+  "number": "L.1",
+  "name": "Humpty, 1/2 up, 2/4pt down",
+  "short_name": "humpty",
+  "description": "Humpty bump (pull, pull, push) half roll up, 2/4pt roll down (K3)"
+ },
+ {
+  "number": "L.2",
+  "name": "Humpty, 1/2 up, 2/4pt down",
+  "short_name": "humpty",
+  "description": "Humpty bump (push, push, pull) half roll up, 2/4pt roll down, inverted entry (K3)"
+ },
+ {
+  "number": "L.3",
+  "name": "Humpty, 1/2 up, 2/2pt down",
+  "short_name": "humpty",
+  "description": "Humpty bump (pull, pull, pull) half roll up, 2/2pt roll down (K3)"
+ },
+ {
+  "number": "L.4",
+  "name": "Humpty, 1/2 up, 2/2pt down",
+  "short_name": "humpty",
+  "description": "Humpty bump (push, push, push) half roll up, 2/2pt roll down, inverted entry (K3)"
+ },
+ {
+  "number": "L.5",
+  "name": "Humpty, 2/4pt up, 1/2 down",
+  "short_name": "humpty",
+  "description": "Humpty bump (pull, pull, push) 2/4pt roll up, half roll down (K3)"
+ },
+ {
+  "number": "L.6",
+  "name": "Humpty, 2/4pt up, 1/2 down",
+  "short_name": "humpty",
+  "description": "Humpty bump (push, push, pull) 2/4pt roll up, half roll down, inverted entry (K3)"
+ },
+ {
+  "number": "L.7",
+  "name": "Humpty, 1/4 up, 3/4 down",
+  "short_name": "humpty",
+  "description": "Humpty bump (pull, pull, push, or pull, push, push) 1/4 roll up, 3/4 roll down (K3)"
+ },
+ {
+  "number": "L.8",
+  "name": "Humpty, 1/4 up, 3/4 down",
+  "short_name": "humpty",
+  "description": "Humpty bump (push, pull, pull, or push, push, pull) 1/4 roll up, 3/4 roll down, inverted entry (K3)"
+ },
+ {
+  "number": "L.9",
+  "name": "Humpty, 3/4pt up, 1/4 down",
+  "short_name": "humpty",
+  "description": "Humpty bump (pull, pull, pull) 3/4pt roll up, 1/4 roll down (K3)"
+ },
+ {
+  "number": "L.10",
+  "name": "Humpty, 3/4pt up, 1/4 down",
+  "short_name": "humpty",
+  "description": "Humpty bump (push, pull, pull) 3/4pt roll up, 1/4 roll down, inverted entry (K3)"
+ },
+ {
+  "number": "L.11",
+  "name": "Humpty Bump",
+  "short_name": "humpty",
+  "description": "Humpty bump with roll options, (half roll up or 1/4 roll up and down) (K2)"
+ },
+ {
+  "number": "L.12",
+  "name": "Humpty Bump",
+  "short_name": "humpty",
+  "description": "Humpty bump with roll options, (half roll up or 1/4 roll up and down) inverted entry (K2)"
+ },
+ {
+  "number": "M.1",
+  "name": "Humpty, 1/2 down",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, half roll down (push, push, push) (K3)"
+ },
+ {
+  "number": "M.2",
+  "name": "Humpty, 1/2 down",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, half roll down, inverted entry (pull, pull, pull) (K2)"
+ },
+ {
+  "number": "M.3",
+  "name": "Humpty, 2/4pt down, 1/2 up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 2/4pt roll down, half roll up (push, push, pull) (K3)"
+ },
+ {
+  "number": "M.4",
+  "name": "Humpty, 2/4pt down, 1/2 up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 2/4pt roll down, half roll up, inverted entry (pull, pull, push) (K3)"
+ },
+ {
+  "number": "M.5",
+  "name": "Humpty, 2/4pt down, 2/2pt up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 2/4pt roll down, 2/2pt roll up (push, push, push) (K3)"
+ },
+ {
+  "number": "M.6",
+  "name": "Humpty, 2/4pt down, 2/2pt up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 2/4pt roll down, 2/2pt roll up, inverted entry (pull, pull, pull) (K3)"
+ },
+ {
+  "number": "M.7",
+  "name": "Humpty, 1/4 down, 3/4 up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 1/4 roll down, 3/4 roll up (push, push, push) (K3)"
+ },
+ {
+  "number": "M.8",
+  "name": "Humpty, 1/4 down, 3/4 up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 1/4 roll down, 3/4 roll up, inverted entry (pull, push, push) (K3)"
+ },
+ {
+  "number": "M.9",
+  "name": "Humpty, 1/4 down, 3/4 up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 1/4 roll down, 3/4 roll up, inverted entry and exit (pull, push, pull) (K3)"
+ },
+ {
+  "number": "M.10",
+  "name": "Humpty, 1/4 down, 3/4 up",
+  "short_name": "humpty",
+  "description": "Humpty bump from top, 1/4 roll down, 3/4 roll up, inverted exit (push, push, pull) (K3)"
+ },
+ {
+  "number": "N.1",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright up with 1/4 roll on first leg, 1/4 roll on second leg, exit upright (K3)"
+ },
+ {
+  "number": "N.2",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright up with 1/4 roll on first leg, 1/4 roll on second leg, exit inverted (K3)"
+ },
+ {
+  "number": "N.3",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted up with 1/4 roll on first leg, 1/4 roll on second leg, exit upright (K3)"
+ },
+ {
+  "number": "N.4",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted up with 1/4 roll on first leg, 1/4 roll on second leg, exit inverted (K3)"
+ },
+ {
+  "number": "N.5",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright down with 1/4 roll on first leg, 1/4 roll on second leg, exit upright (K3)"
+ },
+ {
+  "number": "N.6",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright down with 1/4 roll on first leg, 1/4 roll on second leg, exit inverted (K3)"
+ },
+ {
+  "number": "N.7",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted down with 1/4 roll on first leg, 1/4 roll on second leg, exit upright (K3)"
+ },
+ {
+  "number": "N.8",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted down with 1/4 roll on first leg, 1/4 roll on second leg, exit inverted (K3)"
+ },
+ {
+  "number": "N.9",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright up with snap roll on first leg, snap roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.10",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted up with snap roll on first leg, snap roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.11",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright down with snap roll on first leg, snap roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.12",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted down with snap roll on first leg, snap roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.13",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright up with 11/4 snap roll on first leg, 3/4 roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.14",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright up with 11/4 snap roll on first leg, 3/4 roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.15",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted up with 11/4 roll on first leg, 3/4 roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.16",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted up with 11/4 roll on first leg, 3/4 roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.17",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright down with 11/4 roll on first leg, 3/4 roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.18",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright down with 11/4 roll on first leg, 3/4 roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.19",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted down with 11/4 roll on first leg, 3/4 roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.20",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted down with 11/4 roll on first leg, 3/4 roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.21",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright up with 11/4 snap roll on first leg, 11/4 snap roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.22",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright up with 11/4 snap roll on first leg, 11/4 snap roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.23",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted up with 11/4 roll on first leg, 11/4 snap roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.24",
+  "name": "Half Sq Loop on Corner, Up",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted up with 11/4 roll on first leg, 11/4 snap roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.25",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright down with 11/4 roll on first leg, 11/4 snap roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.26",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from upright down with 11/4 roll on first leg, 11/4 snap roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "N.27",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted down with 11/4 roll on first leg, 11/4 snap roll on second leg, exit upright (K5)"
+ },
+ {
+  "number": "N.28",
+  "name": "Half Sq Loop on Corner, Down",
+  "short_name": "hSqLC",
+  "description": "Half Square Loop on Corner from inverted down with 11/4 roll on first leg, 11/4 snap roll on second leg, exit inverted (K5)"
+ },
+ {
+  "number": "P.1",
+  "name": "5/8 Loop, snap, 1/2 roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from upright, snap-roll, half roll, exit upright (K4)"
+ },
+ {
+  "number": "P.2",
+  "name": "5/8 Loop, snap, roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from upright, snap-roll, roll, exit inverted (K4)"
+ },
+ {
+  "number": "P.3",
+  "name": "5/8 Loop, snap, roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from inverted, snap-roll, roll, exit upright (K4)"
+ },
+ {
+  "number": "P.4",
+  "name": "5/8 Loop, snap, 1/2 roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from inverted, snap-roll, half roll, exit inverted (K4)"
+ },
+ {
+  "number": "P.5",
+  "name": "5/8 Loop, snap, 1/2 roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from top upright, snap-roll, half roll, exit upright (K4)"
+ },
+ {
+  "number": "P.6",
+  "name": "5/8 Loop, snap, roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from upright, snap-roll, roll, exit inverted (K4)"
+ },
+ {
+  "number": "P.7",
+  "name": "5/8 Loop, snap, roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from top inverted, snap-roll, roll, exit upright (K4)"
+ },
+ {
+  "number": "P.8",
+  "name": "5/8 Loop, snap, 1/2 roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from top inverted, snap-roll, half roll, exit inverted (K4)"
+ },
+ {
+  "number": "P.9",
+  "name": "5/8 Loop, 3/4 snap, 1/4 roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from upright, 3/4 snap-roll, 1/4 roll, exit upright (K4)"
+ },
+ {
+  "number": "P.10",
+  "name": "5/8 Loop",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from upright, 3/4 snap-roll, 1/4 half roll, exit inverted (K4)"
+ },
+ {
+  "number": "P.11",
+  "name": "5/8 Loop",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from inverted, 3/4 snap-roll, 1/4 half roll, exit upright (K4)"
+ },
+ {
+  "number": "P.12",
+  "name": "5/8 Loop, 3/4 snap, 1/4 roll",
+  "short_name": "loop58",
+  "description": "Vertical 5/8 loop from top inverted, 3/4 snap-roll, 1/4 half roll, exit upright (K4)"
+ },
+ {
+  "number": "Q.1",
+  "name": "Almost Eight",
+  "short_name": "alm8",
+  "description": "Almost 8. From bottom upright, pulled half loop with roll integrated, pushed half loop with roll integrated, pushed half loop with roll integrated, exit middle inverted (K5)"
+ },
+ {
+  "number": "Q.2",
+  "name": "Almost Eight",
+  "short_name": "alm8",
+  "description": "Almost 8. From bottom upright, pulled half loop, pushed half loop with 1/2 roll integrated, pulled half loop, exit middle upright (K4)"
+ },
+ {
+  "number": "Q.3",
+  "name": "Almost Eight",
+  "short_name": "alm8",
+  "description": "Almost 8. From top upright, pushed half loop with roll integrated, pulled half loop with roll integrated, pulled half loop with roll integrated, exit middle inverted (K5)"
+ },
+ {
+  "number": "Q.4",
+  "name": "Almost Eight",
+  "short_name": "alm8",
+  "description": "Almost 8. From top upright pushed, half loop, pulled half loop with 1/2 roll integrated, pushed half loop, exit middle upright (K4)"
+ },
+ {
+  "number": "Q.5",
+  "name": "Almost Eight",
+  "short_name": "alm8",
+  "description": "Almost 8. From middle inverted, pushed half loop with roll integrated, pushed half loop with roll integrated, pulled half loop with roll integrated, exit bottom upright (K5)"
+ },
+ {
+  "number": "Q.6",
+  "name": "Almost Eight",
+  "short_name": "alm8",
+  "description": "Almost 8. From middle upright, pulled half loop, pulled half loop with 1/2 roll integrated, pulled half loop, exit bottom upright (K4)"
+ },
+ {
+  "number": "Q.8",
+  "name": "Almost Eight",
+  "short_name": "alm8",
+  "description": "Almost 8. From middle inverted, pulled half loop with roll integrated, pulled half loop with roll integrated, pushed half loop with roll integrated, exit top upright (K5)"
+ },
+ {
+  "number": "Q.9",
+  "name": "Almost Eight",
+  "short_name": "alm8",
+  "description": "Almost 8. From middle upright, pushed half loop, pushed half loop with 1/2 roll integrated, pushed half loop, exit top upright (K4)"
+ }
+]
