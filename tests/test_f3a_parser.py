@@ -2779,13 +2779,19 @@ def test_k_does_not_change_group_11():
 # ---------------------------------------------------------------- group J: top hat turnarounds
 
 
-def _j_loops(text):
+def _j_members(text):
+    """The J entry's figures: an Option's members, or the one figure."""
     fig = parse_f3a_description(text)
+    return fig.figures if isinstance(fig, a.Option) else [fig]
+
+
+def _j_loops(text, member=0):
+    fig = _j_members(text)[member]
     return fig, [e for e in fig.elements if e.kind == "loop"]
 
 
-def _j_template(text, mb, option=0):
-    fig = parse_f3a_description(text)
+def _j_template(text, mb, option=0, member=0):
+    fig = _j_members(text)[member]
     mdef = mb.create_mdef(fig)
     if "roll_option" in mdef.mps.data:
         mdef.mps.data["roll_option"].defaul = option
@@ -2799,47 +2805,90 @@ J1 = "J.1 Top hat, 3/4 roll up, 1/4 roll down (K2)"
 J11 = "J.11 Top hat from top, 3/4 roll down, 3/4pt roll up (K3)"
 J17 = "J.17 Top Hat, from upright, three consecutive 1/4 rolls up, 1 3/4 snap roll down, exit upright (K4)"
 J38 = "J.38 Top Hat from top upright with 2 1/4 turn Spin entry, 3/4 Roll up, exit upright (K4)"
+J_ENTRIES = {
+    entry["number"]: f"{entry['number']} {entry['text']}"
+    for entry in json.loads((Path(__file__).parent / "data" / "f3a" / "rulebook_2026.json").read_text())
+    if entry["number"].startswith("J.")
+}
+# drawn cross-box (the first roll leaves the wings vertical): an Option of the in-plane top
+# hat and the cross-box one; the others are drawn in the plane
+J_CROSS_BOX = [n for n in J_ENTRIES if int(n[2:]) <= 33 or 38 <= int(n[2:]) <= 41]
+J_IN_PLANE = [n for n in J_ENTRIES if n not in J_CROSS_BOX]
+
+
+def test_j_entry_sets():
+    assert len(J_ENTRIES) == 44 and len(J_CROSS_BOX) == 36 and len(J_IN_PLANE) == 8
+    assert {n for n in J_IN_PLANE} == {f"J.{i}" for i in (34, 35, 36, 37, 42, 43, 44, 45)}
+
+
+@pytest.mark.parametrize("number", sorted(J_ENTRIES, key=lambda n: int(n[2:])))
+def test_j_entry_is_an_option_of_the_in_plane_top_hat_and_the_cross_box_one(number, mb):
+    # catalogue review 2026-11-21 and the owner's decision 2026-11-22: the cross-box entries
+    # are an Option as the sequence layout takes them; member 1 is the straight (in-plane)
+    # top hat, which sizes the figure, then the cross-box one. J.34-J.37 and J.42-J.45 are
+    # drawn in the plane and stay one figure.
+    fig = parse_f3a_description(J_ENTRIES[number])
+    if number in J_IN_PLANE:
+        assert isinstance(fig, a.Figure)
+        assert float(np.ptp(_j_template(J_ENTRIES[number], mb).pos.y)) < 1e-6
+        return
+    assert isinstance(fig, a.Option) and len(fig.figures) == 2
+    plane, cross = fig.figures
+    assert plane.info == cross.info  # one catalogue entry
+    ends = []
+    for option in (0, 1):
+        straight = _j_template(J_ENTRIES[number], mb, option, 0)
+        across = _j_template(J_ENTRIES[number], mb, option, 1)
+        assert float(np.ptp(straight.pos.y)) < 1e-6  # member 1 is planar
+        assert float(np.ptp(across.pos.y)) > 100  # member 2 moves in depth
+        ends.append(float(across.pos.y[-1] - across.pos.y[0]))
+        # both leave the same way (heading and attitude): one exit, which the layout shares
+        assert abs(float(np.dot(straight.att[-1].data[0], across.att[-1].data[0]))) == pytest.approx(1, abs=1e-6)
+        np.testing.assert_allclose(straight.pos.z[-1] - straight.pos.z[0], across.pos.z[-1] - across.pos.z[0], atol=1e-6)
+        vx = np.diff(across.pos.x)
+        assert vx[0] * vx[-1] < 0  # a turnaround
+    # the first roll's direction (the pilot's choice) takes the line in or out
+    assert ends[0] * ends[1] < 0
 
 
 @pytest.mark.parametrize("text, pull", [(J1, True), (J17, True), (J11, False), (J38, False)])
-def test_j_quarter_rolls_fly_the_top_line_across_the_box(text, pull):
-    # catalogue review 2026-11-21: the drawings' oblique top (bottom) line is cross-box.
-    # Its two corners are plain loops (no knife-edge), pulled over the top and pushed
-    # under the bottom (the drawings dash the line: inverted).
-    fig, loops = _j_loops(text)
-    cross = [e for e in loops if "ke" not in e.kwargs and abs(e.args[0]) == pytest.approx(np.pi / 2)]
+def test_j_cross_box_member_flies_the_top_line_across_the_box(text, pull):
+    # the drawings' oblique top (bottom) line: plain loops (no knife-edge), pulled over the
+    # top and pushed under the bottom (the drawings dash the line: inverted)
+    fig, loops = _j_loops(text, 1)
     assert not any(e.kwargs.get("ke") for e in loops)
-    assert len(cross) >= 2
     corners = loops[-3:-1]
     assert [c.args[0] for c in corners] == pytest.approx([np.pi / 2 if pull else -np.pi / 2] * 2)
     values, mirrored = fig.ndmps["roll_option"]
     assert mirrored == pytest.approx([-v for v in values])
 
 
-@pytest.mark.parametrize("text", [J1, J11, J17, J38])
-def test_j_cross_box_goes_in_or_out_with_the_mirror_option_and_exits_back(text, mb):
-    # the first roll's direction (the pilot's choice) takes the line in or out; the exit
-    # flies back along the box the way the figure came
-    ends = []
-    for option in (0, 1):
-        st = _j_template(text, mb, option)
-        pos = st.pos
-        assert float(np.ptp(pos.y)) > 100
-        ends.append(float(pos.y[-1] - pos.y[0]))
-        vx = np.diff(pos.x)
-        assert vx[0] * vx[-1] < 0  # a turnaround
-    assert ends[0] * ends[1] < 0
+def test_j_in_plane_member_is_the_drawn_top_hat_with_knife_edge_corners():
+    # J.1-J.10 fly the top line on (corners 1/4, -1/4, -1/4, -1/4), the others back (1/4, 1/4,
+    # 1/4, -1/4); the roll and the knife-edge corners are one mirror option
+    fig, loops = _j_loops(J1, 0)
+    assert [e.kind for e in fig.elements] == ["loop", "roll", "loop", "line", "loop", "roll", "loop"]
+    values, mirrored = fig.ndmps["roll_option"]
+    assert mirrored == pytest.approx([-v for v in values]) and len(values) == 4
+    assert [loops[i].kwargs["ke"] for i in (1, 2)] == [pytest.approx(np.pi / 2)] * 2
+    assert values[1] == pytest.approx(values[2])  # the second and third corners turn the same way
+    values, _ = _j_loops(J17, 0)[0].ndmps["roll_option"]
+    assert len(values) == 6 and values[1 + 2] == pytest.approx(values[1 + 3])
+
+
+def test_j_the_in_plane_exit_is_beyond_the_start_only_with_a_forward_top_line(mb):
+    ends = {
+        n: float((st := _j_template(J_ENTRIES[n], mb)).pos.x[-1] - st.pos.x[0])
+        for n in ("J.1", "J.11", "J.26")
+    }
+    assert ends["J.1"] * ends["J.11"] < 0 and ends["J.11"] * ends["J.26"] > 0
 
 
 def test_j_in_plane_entries_keep_their_drawn_top_line(mb):
     # J.34 (half roll and snap: wings level) flies the top line on, in the plane; J.42 (whole
     # spin turns) flies the bottom line back, in the plane
-    for text in (
-        "J.34 Top Hat, from upright, 1/2 roll up, snap roll down, exit upright (K3)",
-        "J.42 Top Hat from top upright with 2 turn Spin entry, Full Roll up, exit inverted (K3)",
-    ):
-        st = _j_template(text, mb)
-        assert float(np.ptp(st.pos.y)) < 1e-6
+    for text in (J_ENTRIES["J.34"], J_ENTRIES["J.42"]):
+        assert float(np.ptp(_j_template(text, mb).pos.y)) < 1e-6
 
 
 @pytest.mark.parametrize(
@@ -2856,17 +2905,14 @@ def test_j_in_plane_entries_keep_their_drawn_top_line(mb):
     ],
 )
 @pytest.mark.parametrize("option", [0, 1])
-def test_j_top_hat_finishes_at_its_entry_height_in_both_mirror_options(text, option, mb):
+@pytest.mark.parametrize("member", [0, 1])
+def test_j_top_hat_finishes_at_its_entry_height_in_both_mirror_options(text, option, member, mb):
     # a 3/4pt roll and its pads are longer than line_length, so the vertical lines are
     # (1.5*line_length): the figure still finishes where it started (the snap's
     # pads are sized for 15 m and it flies about 17.6, so a snap leaves a few metres)
-    mdef = mb.create_mdef(parse_f3a_description(text))
-    if "roll_option" in mdef.mps.data:
-        mdef.mps.data["roll_option"].defaul = option
-    templates = mdef.create().create_template(
-        g.Transformation(g.Euler(p.Orientation.UPRIGHT, 0, p.Heading.RTOL), g.P0())
-    )
-    z = State.stack(templates, "element").pos.z
+    if member >= len(_j_members(text)):
+        pytest.skip("drawn in the plane: one figure")
+    z = _j_template(text, mb, option, member).pos.z
     assert float(z[-1] - z[0]) == pytest.approx(0, abs=4 if "snap" in text else 1e-6)
 
 
@@ -2897,12 +2943,13 @@ def test_j_spin_entry_replaces_the_first_corner():
     assert [e.args[0] for e in fig.elements if e.kind == "loop"] == pytest.approx([-np.pi / 2, -np.pi / 2, np.pi / 2])
 
 
-def test_j_quarter_turn_spin_is_one_mirror_option_with_the_cross_box_bottom():
-    fig = parse_f3a_description(J38)
-    values, mirrored = fig.ndmps["roll_option"]
-    assert mirrored == pytest.approx([-v for v in values])
-    assert len(values) == 2  # the spin and the 3/4 roll; the corners are plain pushes
-    assert abs(values[0]) / (2 * np.pi) == pytest.approx(2.25)
+def test_j_quarter_turn_spin_is_one_mirror_option_in_each_member():
+    plane, cross = _j_members(J38)
+    for member, count in ((plane, 4), (cross, 2)):
+        values, mirrored = member.ndmps["roll_option"]
+        assert mirrored == pytest.approx([-v for v in values])
+        assert abs(values[0]) / (2 * np.pi) == pytest.approx(2.25)
+        assert len(values) == count  # the spin, the 3/4 roll and (in the plane) two knife-edge corners
 
 
 @pytest.mark.parametrize(
