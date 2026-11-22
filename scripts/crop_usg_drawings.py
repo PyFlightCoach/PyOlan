@@ -38,6 +38,9 @@ ROW_SLACK = 8  # points a row's header may sit above the top of its drawing
 WHITE = 235  # pixels at or above this grey level are margin
 MARGIN = 4  # px kept around the trimmed drawing
 SLOT_LTOR, SLOT_RTOL = 1, 2
+# USG number -> catalogue (rulebook) number, where they differ. Applied to file names only.
+# The rulebook's Q.8 and Q.9 are USG's Q.7 and Q.8.
+USG_TO_CATALOGUE = {"Q.7": "Q.8", "Q.8": "Q.9"}
 ZOOM = 2  # pdftohtml scales every coordinate by this
 
 
@@ -102,8 +105,13 @@ def trim(im: Image.Image) -> Image.Image:
                     min(im.width, xs.max() + MARGIN + 1), min(im.height, ys.max() + MARGIN + 1)))
 
 
+def catalogue_number(usg_number: str) -> str:
+    return USG_TO_CATALOGUE.get(usg_number, usg_number)
+
+
 def crop_name(number: str, slot: int) -> str:
-    return f"{number}_{slot}.png"
+    """File name for a USG number (renumbered to the catalogue's)."""
+    return f"{catalogue_number(number)}_{slot}.png"
 
 
 def placed_images(pdf: Path, work: Path) -> tuple[list[Placed], float]:

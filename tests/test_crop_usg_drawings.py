@@ -71,3 +71,9 @@ def test_trim_blank_unchanged():
 def test_crop_name():
     assert crop.crop_name("01.9", 1) == "01.9_1.png"
     assert crop.crop_name("J.10", 2) == "J.10_2.png"
+
+
+def test_usg_numbers_mapped_to_catalogue():
+    assert crop.crop_name("Q.8", 1) == "Q.9_1.png"
+    assert crop.crop_name("Q.7", 2) == "Q.8_2.png"
+    assert crop.crop_name("Q.6", 1) == "Q.6_1.png"
