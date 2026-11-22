@@ -434,6 +434,51 @@ def test_triangle_45_degree_legs_are_the_same_length(text, sloping, mb):
     assert legs[sloping[0]] == pytest.approx(legs[sloping[1]])
 
 
+TRIANGLE_ENTRIES = [e for e in FIXTURE if e["number"].startswith("04.")]
+
+
+def _triangle_closure(fig, builder, loop_radius=None, line_length=None):
+    """(x, z) from the start of the first loop to the end of the last, in the built template."""
+    mdef = builder.create_mdef(fig)
+    if loop_radius:
+        mdef.mps.data["loop_radius"].defaul = loop_radius
+    if line_length:
+        mdef.mps.data["line_length"].defaul = line_length
+    manoeuvre = mdef.create()
+    templates = list(
+        manoeuvre.create_template(
+            g.Transformation(g.Euler(fig.info.start.orientation, 0, p.Heading.LTOR), g.P0())
+        ).values()
+    )
+    loops = [i for i, el in enumerate(manoeuvre.elements) if type(el).__name__ == "Loop"]
+    first, last = templates[loops[0]], templates[loops[-1]]
+    return float(last.pos.x[-1] - first.pos.x[0]), float(last.pos.z[-1] - first.pos.z[0])
+
+
+@pytest.mark.parametrize("entry", TRIANGLE_ENTRIES, ids=lambda e: e["number"])
+def test_triangle_starting_at_the_apex_closes(entry):
+    # user decision 2026-11-22: the horizontal side is not the 45 degree legs' length, the
+    # figure starts and finishes at the same point, so it is sqrt(2)*line_length long and
+    # has no line_length comparison. A triangle that starts on its base has no horizontal
+    # side in the figure (the base is the entry and exit line).
+    builder = load_builder("f3a")
+    fig = parse_f3a_description(entry["description"], entry["number"], entry["k"])
+    mdef = builder.create_mdef(fig)
+    base = [n for n, ed in mdef.eds.data.items() if "line_length*1.41" in str(ed)]
+    if not base:
+        assert entry["number"] in {f"04.{n}" for n in range(13, 23)}
+        return
+    for mp in mdef.mps.data.values():
+        if mp.name == "line_length":
+            collected = str(mp.collectors)
+            assert not any(f"{n.split('_pad')[0]}." in collected or f"{n}." in collected for n in base)
+    # a snap's template is a little shorter than its nominal length
+    tolerance = 5.0 if "snap" in entry["description"] else 1e-3
+    for radius, length in ((None, None), (30, 180), (70, 220)):
+        x, z = _triangle_closure(fig, builder, radius, length)
+        assert abs(x) < tolerance and abs(z) < 1e-3, (radius, length, x, z)
+
+
 def test_six_sided_loop_has_45_degree_lines():
     # corners 1/8, 1/4, 1/8, 1/8, 1/4, 1/8 give lines at 45, 135, 180, 225 and 315 degrees
     turns = [1 / 8, 1 / 4, 1 / 8, 1 / 8, 1 / 4, 1 / 8]

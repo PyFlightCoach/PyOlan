@@ -26,7 +26,9 @@ Conventions decided per family (check against the drawings at review):
 - triangular loop (04): one loop in the shape of a triangle with 45 degree
   legs. It starts at the apex (corners 1/8, 3/8, 3/8, 1/8, the base flown
   backwards) or on the base (3/8, 1/4, 3/8: the base is the entry and exit
-  line). The base is opposite the start height unless "(base at ...)" says
+  line). Starting at the apex the base closes the figure (sqrt(2)*line_length, user
+  decision 2026-11-22, not compared with the legs); starting on the base the entry
+  and exit lines are the base. The base is opposite the start height unless "(base at ...)" says
   otherwise. A lone roll goes on the base, plural rolls ("1/2 rolls") on every
   leg and "in 45 degree legs" on the two sloping legs.
 - a roll that starts or ends a figure is separated from its neighbouring loop by
@@ -272,6 +274,7 @@ def avalanche(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause]:
     return [Entry(mods.entry), Loop(Fraction(1), sense=_sense(mods), roll=roll), Exit(mods.exit)]
 
 
+TRIANGLE_CLOSING_LENGTH = "(line_length*1.4142135623730951)"
 _BASE_RE = re.compile(r"^\(base at (?P<base>top|bottom)\)$")
 _LEGS_45_RE = re.compile(r"^(?P<roll>.+?) in 45 (?:degree )?legs$")
 _ON_BASE_RE = re.compile(r"^(?P<roll>.+?) (?:on|at) (?P<where>horizontal leg|top|bottom)$")
@@ -323,7 +326,12 @@ def triangular_loop(name: str, mods: Modifiers, phrases: list[str]) -> list[Clau
             put((base_leg,), roll, phrase)
         else:
             raise F3AParseError(f"{name}: unexpected {phrase!r}")
-    return _polygon(mods, sense, corners, rolls, knife_edge)
+    # The horizontal side of a triangle that starts at its apex closes the figure
+    # (user decision 2026-11-22): the two 45 degree legs rise and fall line_length
+    # each, the corner radii cancel in x, so it is sqrt(2)*line_length long. An
+    # expression has no comparison collector, so it is not compared with the legs.
+    lengths = {2: TRIANGLE_CLOSING_LENGTH} if apex_start else None
+    return _polygon(mods, sense, corners, rolls, knife_edge, lengths)
 
 
 _SIDE_RE = re.compile(r"^(?P<roll>.+?) (?P<where>over top|at top|at bottom)$")

@@ -1053,20 +1053,6 @@
      "catalogue": 4.0,
      "decision": "schedule-specific",
      "reason": "K comes from the schedule for the known figure and from the rulebook unknown list for the catalogue entry; they are different documents."
-    },
-    {
-     "path": "mp.line_length.collectors",
-     "known": [
-      "#2.#2.length.0",
-      "#10.#10.length.0"
-     ],
-     "catalogue": [
-      "#2.#2.length.0",
-      "#4.#8.length.0",
-      "#10.#10.length.0"
-     ],
-     "decision": "open",
-     "reason": "the catalogue triangle base roll has pad lines that line_length compares; the known base is a single roll line whose length is computed from line_length. Same figure, different set of lines compared."
     }
    ]
   },
