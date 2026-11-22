@@ -28,8 +28,24 @@ can choose in or out, otherwise it needs to be as per the drawing"):
      loops are pulled over the top and pushed under the bottom (``steps.CrossBox``). Whether
      the line goes in or out follows from the first roll's direction, the pilot's choice; the
      second roll's direction is linked to it in one mirror option by the stated exit
-     attitude. The verticals share one length (so the figure finishes at its entry height).
+     attitude.
   Both members leave in the same attitude and heading and at the same height.
+  The members have different element names (owner, 2026-11-22): the cross-box line across
+  the box is built as ``e_<n>_cross`` (``CrossBox.name``). ``select_mdef`` in FlightAnalysis
+  picks the member of an Option whose element names equal the flown labels, and only scores
+  both when the names are identical, so the labels decide, as for P27's top hat options
+  (whose names differ by their roll elements).
+- the lines of every entry, in-plane ones included, are free (owner, 2026-11-22: "top line length doesn't need to match
+  the verticals. Verticals can also differ from each other as it's a turnaround"): the top
+  line (the bottom line from top, and of the spin entries) and each vertical line, the spin
+  entries' downline included, have a number of their own as length (``Line.length`` and
+  ``CrossBox.length`` with a number; steps.FREE_VERTICAL, more for a roll of three or four
+  stops, is the start value). The layout treats each as a variable of its own, compared with
+  no other line, so the figure need not finish at its entry height (MB and BM top hats are
+  ordinary pairs). The cross-box member has the same element kinds in the same order, so
+  the layout copies the planar member's lengths onto it by element index.
+- scoring leaves the back wall as it is: ``relax_back`` stays False for both members (as P27's
+  top hat), and the layout does not hold the cross-box member to the front or back wall.
 - the other entries are drawn in the plane and are one figure, as drawn:
   - J.34-J.37 ("1/2 roll up, snap roll down, exit upright"): the wings stay level, so
     the top line (bottom line from top) is flown on in the direction of travel (corners
@@ -47,8 +63,8 @@ can choose in or out, otherwise it needs to be as per the drawing"):
   entry corner and its nose drop, followed by the vertical downline, the bottom
   (an Option of in-plane and cross-box after 2 1/4 turns, which leave the wings vertical; in
   the plane after whole turns, which leave the figure inverted without a roll, as in group 19) and the
-  up line with the roll. The up line is lengthened by the drop of the spin so that the
-  figure finishes at the height it started.
+  up line with the roll. The lines are free like the others (the figure need not finish at the
+  height it started).
 """
 
 from __future__ import annotations
@@ -62,7 +78,7 @@ import schemas.positioning as p
 from ..rolls import OlanRoll
 from .errors import F3AParseError
 from .rolls import is_quarter, parse_amount, require_roll
-from .steps import DOWN_LINE, UP, Clause, CrossBox, Entry, Exit, Line, Loop, Roll, Spin
+from .steps import DOWN_LINE, FREE_VERTICAL, UP, Clause, CrossBox, Entry, Exit, Line, Loop, Roll, Spin
 
 from .families import FAMILIES, Modifiers  # isort: skip
 
@@ -119,15 +135,18 @@ def _forward_top(mods: Modifiers, desc: _Description) -> bool:
     return len(desc.rolls) == 2 and kinds == [("roll", 0.5), ("snap", 1.0)]
 
 
-def _vertical_length(rolls: dict[str, OlanRoll]) -> str | None:
-    """A builder length for both vertical lines, when a roll needs more than ``line_length``.
+# the name of the cross-box member's line across the box (see ``CrossBox.name``)
+CROSS_LINE = "cross"
+
+
+def _vertical_length(rolls: dict[str, OlanRoll]) -> float:
+    """The start value (m) of a vertical line, which the layout chooses (see the docstring).
 
     A roll of three or four stops and its pads are longer than the default line (a
-    3/4 roll is not), so the lines would be unequal and the figure would finish above
-    its entry height (as for Figure M, ``families_15_16``).
+    3/4 roll is not), so those start longer, as Figure M's do (``families_15_16``).
     """
     stops = max((len(r.roll_arr) for r in rolls.values()), default=0)
-    return "(2*line_length)" if stops >= 4 else "(1.5*line_length)" if stops == 3 else None
+    return 2 * FREE_VERTICAL if stops >= 4 else 1.5 * FREE_VERTICAL if stops == 3 else FREE_VERTICAL
 
 
 def top_hat_turnaround(name: str, mods: Modifiers, phrases: list[str]) -> list[Clause] | list[list[Clause]]:
@@ -154,7 +173,7 @@ def top_hat_turnaround(name: str, mods: Modifiers, phrases: list[str]) -> list[C
     in_plane: list[Clause] = [Entry(desc.entry)]
     for leg in range(1, 4):
         in_plane.append(Loop(Fraction(1, 4), sense=signs[leg - 1]))
-        in_plane.append(Line(theta(leg, signs), label=f"leg {leg}", length=length if leg != 2 else None))
+        in_plane.append(Line(theta(leg, signs), label=f"leg {leg}", length=length if leg != 2 else FREE_VERTICAL))
         if leg == 1:
             in_plane.append(Roll(desc.rolls[first]))
         elif leg == 3:
@@ -170,7 +189,7 @@ def top_hat_turnaround(name: str, mods: Modifiers, phrases: list[str]) -> list[C
         Loop(Fraction(1, 4), sense=sense),
         Line(UP if not top else DOWN_LINE, label="leg 1", length=length),
         Roll(desc.rolls[first]),
-        CrossBox(pull=not top),
+        CrossBox(pull=not top, length=FREE_VERTICAL, name=CROSS_LINE),
         Line(DOWN_LINE if not top else UP, label="leg 3", length=length),
         Roll(desc.rolls[second]),
         Exit(exit_),
@@ -186,7 +205,7 @@ def _spin_entry(name: str, mods: Modifiers, desc: _Description, exit_: p.Orienta
     length = _vertical_length(desc.rolls)
     in_plane_bottom: list[Clause] = [
         Loop(Fraction(1, 4), sense=-1),
-        Line(frozenset({Fraction(1, 2)}), label="bottom line"),
+        Line(frozenset({Fraction(1, 2)}), label="bottom line", length=FREE_VERTICAL),
         Loop(Fraction(1, 4), sense=-1),
     ]
 
@@ -203,7 +222,7 @@ def _spin_entry(name: str, mods: Modifiers, desc: _Description, exit_: p.Orienta
 
     # 2 1/4 turns leave the wings vertical: the bottom line is cross-box on the drawing, so
     # the in-plane figure (it sizes) comes first and the cross-box one is the correction
-    return [figure(in_plane_bottom), figure([CrossBox(pull=False)])] if linked else figure(in_plane_bottom)
+    return [figure(in_plane_bottom), figure([CrossBox(pull=False, length=FREE_VERTICAL, name=CROSS_LINE)])] if linked else figure(in_plane_bottom)
 
 
 def _wrap_top_hat() -> None:

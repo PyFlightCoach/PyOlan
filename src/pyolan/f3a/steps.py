@@ -60,7 +60,8 @@ class Line:
     angles: frozenset[Fraction] | None = None
     knife_edge: bool | None = None
     label: str = ""
-    length: str | dict[int, str] | None = None  # a builder expression such as "2*loop_radius"
+    length: str | float | dict[int, str] | None = None  # a builder expression such as "2*loop_radius"
+    # or a number (a metre value the layout may change: the line is compared with no other)
     # that length in line units (a loop radius is 0.5), for the heights the figure
     # starts and ends at; a line without it is one unit long
     units: float | dict[int, float] | None = None
@@ -148,9 +149,16 @@ class CrossBox:
     out of the plane, a line across the box and a 1/4 loop on into the opposite
     vertical line (up to down, or down to up). Both loops are pulled or both pushed;
     which way across the box (in or out) follows from the roll direction before it,
-    which is the pilot's choice. The heights see the top (or bottom) of a top hat."""
+    which is the pilot's choice. The heights see the top (or bottom) of a top hat.
+
+    ``length`` is the line across the box (a number is a value of its own for the layout,
+    as for ``Line.length``). ``name`` is the builder name of that line: the element name
+    decides which member of an Option a flown figure is scored against, so a cross-box
+    member that must be told apart from an in-plane one by its labels names its line."""
 
     pull: bool
+    length: str | float | None = None
+    name: str | None = None
 
 
 @dataclass
@@ -173,7 +181,8 @@ LEVEL = frozenset({Fraction(0), Fraction(1, 2)})
 class RLine:
     rolls: list[OlanRoll] = field(default_factory=list)
     linked: bool = False  # the roll direction is linked to the mirror option
-    length: str | None = None  # a builder expression for the line length
+    length: str | float | None = None  # a builder expression (or a number) for the line length
+    name: str | None = None  # the builder name of a line without a roll (CrossBox.name)
     group: int = 0  # which mirror option the roll is linked to
     closed: bool = False  # a roll of its own (Roll.alone): the next line is another one
     free: bool = False  # a vertical line whose length is the layout's to choose (Roll.free_vertical)
@@ -541,7 +550,7 @@ def _fly(
                     group=group,
                     radius=radius,
                 )
-            case CrossBox(pull=pull):
+            case CrossBox(pull=pull, length=cross_length, name=cross_name):
                 if flight.theta not in VERTICAL or not isinstance(items[-1], RLine):
                     raise F3AParseError("a cross-box line starts from a vertical line")
                 if not flight.knife_edge():
@@ -554,7 +563,7 @@ def _fly(
                 flight.z += 0.5 * rise
                 flight.zs.append(flight.z)
                 items.append(RLoop(angle, False, start, Fraction(rise, 4)))
-                items.append(RLine())
+                items.append(RLine(length=cross_length, name=cross_name))
                 flight.frame = _rotate(flight.frame, flight.by, angle)
                 flight.z -= 0.5 * rise
                 flight.zs.append(flight.z)
@@ -773,6 +782,14 @@ def figure_ndmps(items: list[Item]) -> dict[str, a.NewComparison]:
     return ndmps
 
 
+def _plain_line(item: RLine, index: int) -> a.PE:
+    """A line without a roll; a named one (``CrossBox.name``) is built as e_<index>_<name>."""
+    kwargs = {"length": item.length} if item.length else {}
+    if item.name:
+        kwargs["force_name"] = f"e_{index}_{item.name}"
+    return a.line(**kwargs)
+
+
 def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
     """The elements; with linked the mirror parameters refer to roll_option."""
     pes: list[a.PE] = []
@@ -817,7 +834,7 @@ def create_elements(items: list[Item], linked: bool) -> list[a.PE]:
                         # and so does one that starts it
                         pes.append(a.line(length=ROLL_LINE))
                 elif padded:
-                    pes.append(a.line(length=item.length) if item.length else a.line())
+                    pes.append(_plain_line(item, len(pes)))
             case RLoop():
                 angle = ref(item.group) if linked and item.ke else float(item.angle)
                 kwargs = _loop_roll_kwargs(item) if item.roll is not None else {}

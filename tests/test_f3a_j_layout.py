@@ -85,13 +85,17 @@ def test_a_sequence_with_a_j_entry_lays_out_and_the_correction_shares_the_exit(f
         assert template.pos.y[-1] == pytest.approx(planar.geometry.exit.pos.y[0], abs=0.5)  # back on the plane
 
 
-def test_heights_are_derived_for_the_planar_member_and_the_layout_reads_them(f3a):
+def test_heights_are_derived_for_the_planar_member_including_non_level_pairs_and_the_layout_reads_them(f3a):
     # derive_heights runs each member alone: the planar one gets its pairs (the only set the
     # layout reads: it sizes the figure); the correction cannot exit on the plane alone
     builder, settings = f3a
     planar, correction = parse_f3a_description(RULEBOOK["J.1"]).figures
     pairs = figure_heights(planar, builder, settings)
-    assert {(pair.entry, pair.exit) for pair in pairs} >= {(p.Height.BTM, p.Height.BTM)}
+    # the lines are free (owner 2026-11-22), so the top hat need not finish at its entry height:
+    # BM and MB are pairs as well as BB and MM
+    found = {(pair.entry, pair.exit) for pair in pairs}
+    assert found >= {(p.Height.BTM, p.Height.BTM), (p.Height.MID, p.Height.MID),
+                     (p.Height.BTM, p.Height.MID), (p.Height.MID, p.Height.BTM)}
     stored = a.Option(figures=[
         planar.model_copy(update={"heights": pairs, "heights_source": heights_source(planar, builder, settings)}),
         correction.model_copy(update={"heights": [], "heights_source": heights_source(correction, builder, settings)}),

@@ -404,11 +404,39 @@
    },
    "differences": [
     {
+     "path": "el.#10.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "el.#2.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "el.#4.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
      "path": "el.#6.length",
      "known": 50.0,
-     "catalogue": "ManParm:line_length",
-     "decision": "open",
-     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+     "catalogue": 130.0,
+     "decision": "intended",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line is a free line with a start value of FREE_VERTICAL (130 m) that the layout chooses, compared with no other line. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "el.#8.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
     },
     {
      "path": "info.k",
@@ -423,13 +451,16 @@
       "#2.#4.length.0",
       "#8.#10.length.0"
      ],
-     "catalogue": [
-      "#2.#4.length.0",
-      "#6.#6.length.0",
-      "#8.#10.length.0"
-     ],
-     "decision": "open",
-     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+     "catalogue": null,
+     "decision": "intended",
+     "reason": "the known verticals are compared through line_length; the catalogue lines are free, so line_length has no collectors in the J figure. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "mp.line_length.criteria",
+     "known": "Comparison",
+     "catalogue": null,
+     "decision": "intended",
+     "reason": "the known verticals are compared through line_length; the catalogue lines are free, so line_length has no criteria in the J figure. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
     }
    ]
   },
@@ -798,6 +829,13 @@
    },
    "differences": [
     {
+     "path": "el.#10.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
      "path": "el.#11.angle",
      "known": -1.5708,
      "catalogue": 1.5708,
@@ -805,11 +843,32 @@
      "reason": "the known P27 figure ends with a -90 degree final loop and opposite roll directions up and down; the catalogue J.1 uses +90 and the same direction. The rulebook words do not give the relation; check which exit attitude J.1 means."
     },
     {
+     "path": "el.#2.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "el.#4.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
      "path": "el.#6.length",
      "known": 50.0,
-     "catalogue": "ManParm:line_length",
-     "decision": "open",
-     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+     "catalogue": 130.0,
+     "decision": "intended",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line is a free line with a start value of FREE_VERTICAL (130 m) that the layout chooses, compared with no other line. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "el.#8.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
     },
     {
      "path": "info.k",
@@ -849,13 +908,16 @@
       "#2.#4.length.0",
       "#8.#10.length.0"
      ],
-     "catalogue": [
-      "#2.#4.length.0",
-      "#6.#6.length.0",
-      "#8.#10.length.0"
-     ],
-     "decision": "open",
-     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+     "catalogue": null,
+     "decision": "intended",
+     "reason": "the known verticals are compared through line_length; the catalogue lines are free, so line_length has no collectors in the J figure. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "mp.line_length.criteria",
+     "known": "Comparison",
+     "catalogue": null,
+     "decision": "intended",
+     "reason": "the known verticals are compared through line_length; the catalogue lines are free, so line_length has no criteria in the J figure. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
     }
    ]
   },
@@ -1392,11 +1454,39 @@
    },
    "differences": [
     {
+     "path": "el.#10.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "el.#2.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "el.#4.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
      "path": "el.#6.length",
      "known": 50.0,
-     "catalogue": "ManParm:line_length",
-     "decision": "open",
-     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+     "catalogue": 130.0,
+     "decision": "intended",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line is a free line with a start value of FREE_VERTICAL (130 m) that the layout chooses, compared with no other line. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "el.#8.length",
+     "known": "FunOpp:min_pad_length:combination@#3.#3.roll.0+line_length+partial_roll_rate+speed",
+     "catalogue": "FunOpp:min_pad_length:combination@#3.#3.roll.0+partial_roll_rate+speed",
+     "decision": "intended",
+     "reason": "the vertical's pad is sized from the line_length ManParm in the known figure; the catalogue vertical has a number of its own (a free line, a layout variable), so its pad is not tied to line_length. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
     },
     {
      "path": "info.k",
@@ -1411,13 +1501,16 @@
       "#2.#4.length.0",
       "#8.#10.length.0"
      ],
-     "catalogue": [
-      "#2.#4.length.0",
-      "#6.#6.length.0",
-      "#8.#10.length.0"
-     ],
-     "decision": "open",
-     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+     "catalogue": null,
+     "decision": "intended",
+     "reason": "the known verticals are compared through line_length; the catalogue lines are free, so line_length has no collectors in the J figure. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
+    },
+    {
+     "path": "mp.line_length.criteria",
+     "known": "Comparison",
+     "catalogue": null,
+     "decision": "intended",
+     "reason": "the known verticals are compared through line_length; the catalogue lines are free, so line_length has no criteria in the J figure. (owner decision 2026-11-22: the lines of a J turnaround are free (the top line need not match the verticals, nor the verticals each other))"
     }
    ]
   }

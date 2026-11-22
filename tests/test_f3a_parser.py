@@ -23,6 +23,7 @@ from pyolan.f3a import F3AParseError
 from pyolan.f3a import parse_f3a_description as _parse_f3a_description
 from pyolan.f3a.normalise import normalise, normalise_number, split_description
 from pyolan.f3a.rolls import parse_roll
+from pyolan.f3a.steps import FREE_VERTICAL
 
 
 
@@ -2902,6 +2903,34 @@ def test_j_in_plane_entries_keep_their_drawn_top_line(mb):
         assert float(np.ptp(_j_template(text, mb).pos.y)) < 1e-6
 
 
+@pytest.mark.parametrize("number", sorted(J_ENTRIES, key=lambda n: int(n[2:])))
+def test_j_lines_are_free_and_compared_with_no_other_line(number):
+    # owner 2026-11-22: the top line need not match the verticals, nor the verticals each
+    # other (a turnaround): every straight line has a number of its own, a layout variable,
+    # and none uses the shared line_length ManParm
+    for fig in _j_members(J_ENTRIES[number]):
+        straight = [e for e in fig.elements if e.kind in ("line", "roll")]
+        assert len(straight) >= 3  # two verticals and a top (or bottom) line
+        values = [e.kwargs.get("length", e.kwargs.get("line_length")) for e in straight]
+        assert all(isinstance(v, float) and v >= FREE_VERTICAL for v in values), values
+        assert "line_length" not in fig.ndmps
+
+
+@pytest.mark.parametrize("number", [n for n in sorted(J_ENTRIES, key=lambda n: int(n[2:])) if n in J_CROSS_BOX])
+def test_j_members_have_different_element_names_so_the_labels_pick_the_member(number, mb):
+    # FlightAnalysis select_mdef picks an Option member by the element names of the flown
+    # labels and scores both only when the names are identical (as P27's top hat options,
+    # whose roll elements are named differently). The cross-box line is named e_<n>_cross.
+    plane, cross = (list(mb.create_mdef(fig).eds.data) for fig in _j_members(J_ENTRIES[number]))
+    assert len(plane) == len(cross)  # the same elements in the same order
+    (differ,) = [(x, y) for x, y in zip(plane, cross) if x != y]  # one named differently
+    assert differ[1] == differ[0] + "_cross"
+    # select_mdef keeps the options whose names equal the flown labels (ManoeuvreAnalysis.select_mdef):
+    # the labels of either member match that member only, so no score decides between them
+    for labels in (plane, cross):
+        assert [names == labels for names in (plane, cross)].count(True) == 1
+
+
 @pytest.mark.parametrize(
     "text",
     [
@@ -2932,7 +2961,8 @@ def test_j_four_stop_roll_makes_both_vertical_lines_longer():
         "J.44 Top Hat from top upright with 2 turn Spin entry, four consecutive 1/4 rolls up, exit inverted (K3)"
     )
     lengths = [e.kwargs.get("length") or e.kwargs.get("line_length") for e in fig.elements if e.kind in ("roll", "line")]
-    assert lengths.count("(2*line_length)") == 2
+    assert lengths.count(2 * FREE_VERTICAL) == 2  # the downline and the roll's line, each a number of its own
+    assert lengths.count(FREE_VERTICAL) == 1  # the bottom line
 
 
 def test_j_exit_is_upright_unless_stated():
