@@ -1,0 +1,2041 @@
+{
+ "description": "Figures of the known F3A schedules P25, F25, P27, F27 and A27 that are the same as a catalogue entry (task S2, docs/plans/f3a-catalogue-continuation.md). Used by tests/test_f3a_known_parity.py.",
+ "how_matched": "The known schedules carry no rulebook words. Each known figure was decoded from its elements into the words in `words` (loop angles, roll amounts with their stops and directions, spins, lines, entry attitude) and matched to the rulebook text by the figure's words: same kind and order of elements, same loop angles and signs, same roll amounts and stops, same entry attitude. The known schedule's heights, padding, K and line lengths were not part of the match; they are compared by the test and any difference is recorded. Candidates were found with a script comparing element sequences, then each match was confirmed against the rulebook text.",
+ "decisions": {
+  "intended": "the catalogue behaviour is deliberate and documented",
+  "schedule-specific": "the known schedule sets this for its own figure (K, heights, padding); no catalogue change",
+  "bug-suspect": "the catalogue is probably wrong",
+  "open": "needs a decision from the owner"
+ },
+ "pairs": [
+  {
+   "id": "p25-2-hSqL",
+   "schedule": "p25",
+   "index": 2,
+   "short_name": "hSqL",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "half square",
+     "short_name": "hSqL",
+     "k": 2.0,
+     "position": "END",
+     "start": {
+      "height": "TOP",
+      "direction": "UPWIND",
+      "orientation": "INVERTED"
+     },
+     "end": {
+      "height": "BTM"
+     }
+    },
+    "elements": [
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       6.283185307179586
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     }
+    ],
+    "ndmps": {}
+   },
+   "catalogue": {
+    "number": "A.20",
+    "member": 0
+   },
+   "rulebook": "Half square loop from top, full roll down, inverted entry (K2)",
+   "words": "Half square loop from the top, inverted entry: 1/4 loop, one full roll on the vertical line down, 1/4 loop (ends at the bottom).",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/3bb7beff4a79480eab85e54b6e688397.json",
+    "path": "manoeuvres[1].aresti",
+    "also": null
+   },
+   "differences": []
+  },
+  {
+   "id": "p25-3-sqL",
+   "schedule": "p25",
+   "index": 3,
+   "short_name": "sqL",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Square on Corner",
+     "short_name": "sqL",
+     "k": 5.0,
+     "position": "CENTRE",
+     "start": {
+      "height": "BTM",
+      "direction": "DOWNWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "BTM"
+     },
+     "centre_points": [
+      1,
+      18
+     ],
+     "centred_els": [
+      [
+       9,
+       0.5
+      ]
+     ]
+    },
+    "elements": [
+     0,
+     {
+      "kind": "loop",
+      "args": [
+       0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       3.141592653589793
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       3.141592653589793
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {},
+      "centred": true
+     },
+     {
+      "kind": "roll",
+      "args": [
+       3.141592653589793
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       3.141592653589793
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     0
+    ],
+    "ndmps": {
+     "line_length": 80
+    }
+   },
+   "catalogue": {
+    "number": "06.7",
+    "member": 0
+   },
+   "rulebook": "Square loop on corner with four half rolls (K5)",
+   "words": "Square loop on corner from the bottom with four half rolls: 1/8 loop, half roll, 1/4 loop, half roll, 1/4 loop, half roll, 1/4 loop, half roll, 1/8 loop.",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/3bb7beff4a79480eab85e54b6e688397.json",
+    "path": "manoeuvres[2].aresti",
+    "also": null
+   },
+   "differences": []
+  },
+  {
+   "id": "p25-5-rollC",
+   "schedule": "p25",
+   "index": 5,
+   "short_name": "rollC",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Roll Combo",
+     "short_name": "rollC",
+     "k": 4.0,
+     "position": "CENTRE",
+     "start": {
+      "height": "MID",
+      "direction": "UPWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "MID"
+     },
+     "centre_points": [
+      6
+     ]
+    },
+    "elements": [
+     {
+      "kind": "roll",
+      "args": [
+       [
+        1.5707963267948966,
+        1.5707963267948966,
+        1.5707963267948966,
+        -1.5707963267948966,
+        -1.5707963267948966,
+        -1.5707963267948966
+       ]
+      ],
+      "kwargs": {
+       "padded": false
+      },
+      "centred": true
+     }
+    ],
+    "ndmps": {}
+   },
+   "catalogue": {
+    "number": "23.9",
+    "member": 0
+   },
+   "rulebook": "Two 3/4 pt. rolls reversed (K4)",
+   "words": "Two 3/4 pt. rolls reversed: three quarter-roll stops one way, then three the other way (upright).",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/3bb7beff4a79480eab85e54b6e688397.json",
+    "path": "manoeuvres[4].aresti",
+    "also": null
+   },
+   "differences": [
+    {
+     "path": "centre_points",
+     "known": [
+      6
+     ],
+     "catalogue": [
+      7
+     ],
+     "decision": "schedule-specific",
+     "reason": "same middle roll marked: a consequence of the pad lines (the boundary index moves from 6 to 7)."
+    },
+    {
+     "path": "elements",
+     "known": [
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line"
+     ],
+     "catalogue": [
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line",
+      "Line"
+     ],
+     "decision": "schedule-specific",
+     "reason": "the known P25 roll combination sets padded=False (no pad lines either side of the roll); the catalogue entry has the default pad lines, as the A27 four point roll does."
+    },
+    {
+     "path": "info.end_height",
+     "known": "MID",
+     "catalogue": "BTM",
+     "decision": "schedule-specific",
+     "reason": "the P25 layout flies this roll at mid height; the catalogue entry has no stated height so it takes the bottom default."
+    },
+    {
+     "path": "info.start",
+     "known": "UPRIGHT MID",
+     "catalogue": "UPRIGHT BTM",
+     "decision": "schedule-specific",
+     "reason": "the P25 layout flies this roll at mid height; the catalogue entry has no stated height so it takes the bottom default."
+    }
+   ]
+  },
+  {
+   "id": "p25-14-tHat-m1",
+   "schedule": "p25",
+   "index": 14,
+   "short_name": "tHat",
+   "member": 1,
+   "known": {
+    "info": {
+     "name": "Top Hat Option",
+     "short_name": "tHat",
+     "k": 3.0,
+     "position": "END",
+     "start": {
+      "height": "BTM",
+      "direction": "UPWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "BTM"
+     }
+    },
+    "elements": [
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "opt[0]"
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {
+       "length": 50
+      }
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "opt[1]"
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     }
+    ],
+    "ndmps": {
+     "opt": [
+      [
+       1.5707963267948966,
+       -1.5707963267948966
+      ],
+      [
+       -1.5707963267948966,
+       1.5707963267948966
+      ]
+     ]
+    }
+   },
+   "catalogue": {
+    "number": "J.7",
+    "member": 1
+   },
+   "rulebook": "Top hat, 1/4 roll up, 1/4 roll down (K2)",
+   "words": "Top hat from the bottom, 1/4 roll up, 1/4 roll down (rolls in opposite directions, direction an option); loops are not knife-edge, so the top line is flown cross-box.",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/3bb7beff4a79480eab85e54b6e688397.json",
+    "path": "manoeuvres[13].aresti.figures[1]",
+    "also": null
+   },
+   "differences": [
+    {
+     "path": "el.#6.length",
+     "known": 50.0,
+     "catalogue": "ManParm:line_length",
+     "decision": "open",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+    },
+    {
+     "path": "info.k",
+     "known": 3.0,
+     "catalogue": 2.0,
+     "decision": "schedule-specific",
+     "reason": "K comes from the schedule for the known figure and from the rulebook unknown list for the catalogue entry; they are different documents."
+    },
+    {
+     "path": "mp.line_length.collectors",
+     "known": [
+      "#2.#4.length.0",
+      "#8.#10.length.0"
+     ],
+     "catalogue": [
+      "#2.#4.length.0",
+      "#6.#6.length.0",
+      "#8.#10.length.0"
+     ],
+     "decision": "open",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+    }
+   ]
+  },
+  {
+   "id": "p27-6-hSqL",
+   "schedule": "p27",
+   "index": 6,
+   "short_name": "hSqL",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "half square",
+     "short_name": "hSqL",
+     "k": 3.0,
+     "position": "END",
+     "start": {
+      "height": "BTM",
+      "direction": "UPWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "TOP"
+     }
+    },
+    "elements": [
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       6.283185307179586
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     }
+    ],
+    "ndmps": {}
+   },
+   "catalogue": {
+    "number": "A.9",
+    "member": 0
+   },
+   "rulebook": "Half square loop with full roll up (K2)",
+   "words": "Half square loop from the bottom with a full roll up: 1/4 loop, full roll on the vertical line, 1/4 loop (ends at the top).",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/fcb80b65853b4803a869f0f07f8342a4.json",
+    "path": "manoeuvres[5].aresti",
+    "also": "packages/FCScoreServer/tests/data/p27.sdef.json"
+   },
+   "differences": [
+    {
+     "path": "info.k",
+     "known": 3.0,
+     "catalogue": 2.0,
+     "decision": "schedule-specific",
+     "reason": "K comes from the schedule for the known figure and from the rulebook unknown list for the catalogue entry; they are different documents."
+    }
+   ]
+  },
+  {
+   "id": "p27-7-sqL",
+   "schedule": "p27",
+   "index": 7,
+   "short_name": "sqL",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Square Loop",
+     "short_name": "sqL",
+     "k": 4.0,
+     "position": "CENTRE",
+     "start": {
+      "height": "TOP",
+      "direction": "DOWNWIND",
+      "orientation": "INVERTED"
+     },
+     "end": {
+      "height": "TOP"
+     },
+     "centre_points": [
+      1,
+      14
+     ],
+     "centred_els": [
+      [
+       7,
+       0.5
+      ]
+     ]
+    },
+    "elements": [
+     0,
+     {
+      "kind": "loop",
+      "args": [
+       0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       3.141592653589793
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -1.5707963267948966
+      ],
+      "kwargs": {},
+      "centred": true
+     },
+     {
+      "kind": "roll",
+      "args": [
+       3.141592653589793
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     0
+    ],
+    "ndmps": {
+     "line_length": 90,
+     "partial_roll_rate": 2.356194490192345
+    }
+   },
+   "catalogue": {
+    "number": "06.12",
+    "member": 0
+   },
+   "rulebook": "Square loop on corner from top with half rolls in legs 1 & 3, inverted entry (K4)",
+   "words": "Square loop on corner from the top with half rolls in legs 1 and 3, inverted entry: 1/8 loop, half roll, 1/4 loop, line, 1/4 loop, half roll, 1/4 loop, line, 1/8 loop.",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/fcb80b65853b4803a869f0f07f8342a4.json",
+    "path": "manoeuvres[6].aresti",
+    "also": "packages/FCScoreServer/tests/data/p27.sdef.json"
+   },
+   "differences": []
+  },
+  {
+   "id": "p27-9-spin",
+   "schedule": "p27",
+   "index": 9,
+   "short_name": "spin",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Spin",
+     "short_name": "spin",
+     "k": 4.0,
+     "position": "CENTRE",
+     "start": {
+      "height": "TOP",
+      "direction": "UPWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "BTM"
+     },
+     "centre_points": [
+      1
+     ]
+    },
+    "elements": [
+     0,
+     {
+      "kind": "spin",
+      "args": [
+       "rspin[0]"
+      ],
+      "kwargs": {
+       "recovery_turns": 0
+      }
+     },
+     {
+      "kind": "spin",
+      "args": [
+       "rspin[1]"
+      ],
+      "kwargs": {
+       "nd_turns": 0
+      }
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     }
+    ],
+    "ndmps": {
+     "rspin": [
+      [
+       12.566370614359172,
+       -12.566370614359172
+      ],
+      [
+       -12.566370614359172,
+       12.566370614359172
+      ]
+     ]
+    }
+   },
+   "catalogue": {
+    "number": "19.3",
+    "member": 0
+   },
+   "rulebook": "2 turn opposite spin (K4)",
+   "words": "2 turn opposite spin: a two turn spin one way, then a two turn spin the other way, line, 1/4 loop (from the top, upright).",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/fcb80b65853b4803a869f0f07f8342a4.json",
+    "path": "manoeuvres[8].aresti",
+    "also": "packages/FCScoreServer/tests/data/p27.sdef.json"
+   },
+   "differences": []
+  },
+  {
+   "id": "p27-10-tHat-m1",
+   "schedule": "p27",
+   "index": 10,
+   "short_name": "tHat",
+   "member": 1,
+   "known": {
+    "info": {
+     "name": "Top Hat",
+     "short_name": "tHat",
+     "k": 3.0,
+     "position": "END",
+     "start": {
+      "height": "BTM",
+      "direction": "UPWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "BTM"
+     }
+    },
+    "elements": [
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "cross_option[0]"
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {
+       "length": 50
+      }
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "cross_option[1]"
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -1.5707963267948966
+      ],
+      "kwargs": {}
+     }
+    ],
+    "ndmps": {
+     "cross_option": [
+      [
+       4.71238898038469,
+       -1.5707963267948966
+      ],
+      [
+       -4.71238898038469,
+       1.5707963267948966
+      ]
+     ]
+    }
+   },
+   "catalogue": {
+    "number": "J.1",
+    "member": 1
+   },
+   "rulebook": "Top hat, 3/4 roll up, 1/4 roll down (K2)",
+   "words": "Top hat from the bottom, 3/4 roll up, 1/4 roll down; loops are not knife-edge, so the top line is flown cross-box.",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/fcb80b65853b4803a869f0f07f8342a4.json",
+    "path": "manoeuvres[9].aresti.figures[1]",
+    "also": "packages/FCScoreServer/tests/data/p27.sdef.json"
+   },
+   "differences": [
+    {
+     "path": "el.#11.angle",
+     "known": -1.5708,
+     "catalogue": 1.5708,
+     "decision": "open",
+     "reason": "the known P27 figure ends with a -90 degree final loop and opposite roll directions up and down; the catalogue J.1 uses +90 and the same direction. The rulebook words do not give the relation; check which exit attitude J.1 means."
+    },
+    {
+     "path": "el.#6.length",
+     "known": 50.0,
+     "catalogue": "ManParm:line_length",
+     "decision": "open",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+    },
+    {
+     "path": "info.k",
+     "known": 3.0,
+     "catalogue": 2.0,
+     "decision": "schedule-specific",
+     "reason": "K comes from the schedule for the known figure and from the rulebook unknown list for the catalogue entry; they are different documents."
+    },
+    {
+     "path": "mp.combination@#3.#3.roll.0.options",
+     "known": [
+      [
+       -4.7124,
+       1.5708
+      ],
+      [
+       4.7124,
+       -1.5708
+      ]
+     ],
+     "catalogue": [
+      [
+       -4.7124,
+       -1.5708
+      ],
+      [
+       4.7124,
+       1.5708
+      ]
+     ],
+     "decision": "open",
+     "reason": "the known P27 figure takes 3/4 and 1/4 in opposite directions, the catalogue J.1 in the same direction (see el.#11.angle)."
+    },
+    {
+     "path": "mp.line_length.collectors",
+     "known": [
+      "#2.#4.length.0",
+      "#8.#10.length.0"
+     ],
+     "catalogue": [
+      "#2.#4.length.0",
+      "#6.#6.length.0",
+      "#8.#10.length.0"
+     ],
+     "decision": "open",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+    }
+   ]
+  },
+  {
+   "id": "f27-14-hSqL2",
+   "schedule": "f27",
+   "index": 14,
+   "short_name": "hSqL2",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Half Square Loop 2",
+     "short_name": "hSqL2",
+     "k": 3.0,
+     "position": "END",
+     "start": {
+      "height": "TOP",
+      "direction": "UPWIND",
+      "orientation": "INVERTED"
+     },
+     "end": {
+      "height": "BTM"
+     }
+    },
+    "elements": [
+     {
+      "kind": "loop",
+      "args": [
+       0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "roll_option[0]"
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       "roll_option[1]"
+      ],
+      "kwargs": {
+       "ke": true
+      }
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "roll_option[2]"
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -0.7853981633974483
+      ],
+      "kwargs": {}
+     }
+    ],
+    "ndmps": {
+     "roll_option": [
+      [
+       -1.5707963267948966,
+       1.5707963267948966,
+       -1.5707963267948966
+      ],
+      [
+       1.5707963267948966,
+       -1.5707963267948966,
+       1.5707963267948966
+      ]
+     ],
+     "line_length": 91.92388155425118
+    }
+   },
+   "catalogue": {
+    "number": "N.8",
+    "member": 0
+   },
+   "rulebook": "Half Square Loop on Corner from inverted down with 1/4 roll on first leg, 1/4 roll on second leg, exit inverted (K3)",
+   "words": "Half square loop on corner from inverted, down, with a 1/4 roll on the first leg and a 1/4 roll on the second leg, exit inverted: 1/8 loop, 1/4 roll, 1/4 loop (knife-edge), 1/4 roll, 1/8 loop.",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/709112dd69804005bb08a5d552e2ff9f.json",
+    "path": "manoeuvres[13].aresti",
+    "also": null
+   },
+   "differences": []
+  },
+  {
+   "id": "a27-3-trgle",
+   "schedule": "a27",
+   "index": 3,
+   "short_name": "trgle",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Triangle",
+     "short_name": "trgle",
+     "k": 3.0,
+     "position": "CENTRE",
+     "start": {
+      "height": "BTM",
+      "direction": "DOWNWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "BTM"
+     },
+     "centre_points": [
+      1,
+      12
+     ],
+     "centred_els": [
+      [
+       6,
+       0.5
+      ]
+     ]
+    },
+    "elements": [
+     0,
+     {
+      "kind": "loop",
+      "args": [
+       0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       2.356194490192345
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "2x4"
+      ],
+      "kwargs": {
+       "line_length": "((line_length*0.7071067811865476)*2)"
+      },
+      "centred": true
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -2.356194490192345
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     0
+    ],
+    "ndmps": {}
+   },
+   "catalogue": {
+    "number": "04.5",
+    "member": 0
+   },
+   "rulebook": "Triangular loop with 2/4pt roll (from bottom) (K4)",
+   "words": "Triangular loop from the bottom with a 2/4pt roll (on the base): 1/8 loop, line, 3/8 loop, 2/4pt roll, 3/8 loop, line, 1/8 loop.",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/47270015027f40df8bf047867a408357.json",
+    "path": "manoeuvres[2].aresti",
+    "also": null
+   },
+   "differences": [
+    {
+     "path": "info.k",
+     "known": 3.0,
+     "catalogue": 4.0,
+     "decision": "schedule-specific",
+     "reason": "K comes from the schedule for the known figure and from the rulebook unknown list for the catalogue entry; they are different documents."
+    },
+    {
+     "path": "mp.line_length.collectors",
+     "known": [
+      "#2.#2.length.0",
+      "#10.#10.length.0"
+     ],
+     "catalogue": [
+      "#2.#2.length.0",
+      "#4.#8.length.0",
+      "#10.#10.length.0"
+     ],
+     "decision": "open",
+     "reason": "the catalogue triangle base roll has pad lines that line_length compares; the known base is a single roll line whose length is computed from line_length. Same figure, different set of lines compared."
+    }
+   ]
+  },
+  {
+   "id": "a27-5-rollC",
+   "schedule": "a27",
+   "index": 5,
+   "short_name": "rollC",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Roll Combo",
+     "short_name": "rollC",
+     "k": 4.0,
+     "position": "CENTRE",
+     "start": {
+      "height": "BTM",
+      "direction": "UPWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "BTM"
+     },
+     "centred_els": [
+      [
+       5,
+       0.5
+      ]
+     ]
+    },
+    "elements": [
+     {
+      "kind": "roll",
+      "args": [
+       "4x4"
+      ],
+      "kwargs": {},
+      "centred": true
+     }
+    ],
+    "ndmps": {}
+   },
+   "catalogue": {
+    "number": "23.5",
+    "member": 0
+   },
+   "rulebook": "Four point roll (K4)",
+   "words": "Four point roll (upright, from the bottom).",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/47270015027f40df8bf047867a408357.json",
+    "path": "manoeuvres[4].aresti",
+    "also": null
+   },
+   "differences": []
+  },
+  {
+   "id": "a27-7-sqL",
+   "schedule": "a27",
+   "index": 7,
+   "short_name": "sqL",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Square Loop",
+     "short_name": "sqL",
+     "k": 4.0,
+     "position": "CENTRE",
+     "start": {
+      "height": "TOP",
+      "direction": "DOWNWIND",
+      "orientation": "INVERTED"
+     },
+     "end": {
+      "height": "TOP"
+     },
+     "centre_points": [
+      1,
+      14
+     ],
+     "centred_els": [
+      [
+       7,
+       0.5
+      ]
+     ]
+    },
+    "elements": [
+     0,
+     {
+      "kind": "loop",
+      "args": [
+       0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       3.141592653589793
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       -1.5707963267948966
+      ],
+      "kwargs": {},
+      "centred": true
+     },
+     {
+      "kind": "roll",
+      "args": [
+       3.141592653589793
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       0.7853981633974483
+      ],
+      "kwargs": {}
+     },
+     0
+    ],
+    "ndmps": {
+     "line_length": 90,
+     "partial_roll_rate": 2.356194490192345
+    }
+   },
+   "catalogue": {
+    "number": "06.12",
+    "member": 0
+   },
+   "rulebook": "Square loop on corner from top with half rolls in legs 1 & 3, inverted entry (K4)",
+   "words": "Square loop on corner from the top with half rolls in legs 1 and 3, inverted entry (as P27).",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/47270015027f40df8bf047867a408357.json",
+    "path": "manoeuvres[6].aresti",
+    "also": null
+   },
+   "differences": []
+  },
+  {
+   "id": "a27-9-spin",
+   "schedule": "a27",
+   "index": 9,
+   "short_name": "spin",
+   "member": 0,
+   "known": {
+    "info": {
+     "name": "Spin",
+     "short_name": "spin",
+     "k": 4.0,
+     "position": "CENTRE",
+     "start": {
+      "height": "TOP",
+      "direction": "UPWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "BTM"
+     },
+     "centre_points": [
+      1
+     ]
+    },
+    "elements": [
+     0,
+     {
+      "kind": "spin",
+      "args": [
+       18.84955592153876
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     }
+    ],
+    "ndmps": {}
+   },
+   "catalogue": {
+    "number": "19.5",
+    "member": 0
+   },
+   "rulebook": "Three turn spin (K3)",
+   "words": "Three turn spin, line, 1/4 loop (from the top, upright).",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/47270015027f40df8bf047867a408357.json",
+    "path": "manoeuvres[8].aresti",
+    "also": null
+   },
+   "differences": [
+    {
+     "path": "info.k",
+     "known": 4.0,
+     "catalogue": 3.0,
+     "decision": "schedule-specific",
+     "reason": "K comes from the schedule for the known figure and from the rulebook unknown list for the catalogue entry; they are different documents."
+    }
+   ]
+  },
+  {
+   "id": "a27-10-tHat-m1",
+   "schedule": "a27",
+   "index": 10,
+   "short_name": "tHat",
+   "member": 1,
+   "known": {
+    "info": {
+     "name": "Top Hat",
+     "short_name": "tHat",
+     "k": 3.0,
+     "position": "END",
+     "start": {
+      "height": "BTM",
+      "direction": "UPWIND",
+      "orientation": "UPRIGHT"
+     },
+     "end": {
+      "height": "BTM"
+     }
+    },
+    "elements": [
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "cross_option[0]"
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "line",
+      "args": [],
+      "kwargs": {
+       "length": 50
+      }
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "roll",
+      "args": [
+       "cross_option[1]"
+      ],
+      "kwargs": {}
+     },
+     {
+      "kind": "loop",
+      "args": [
+       1.5707963267948966
+      ],
+      "kwargs": {}
+     }
+    ],
+    "ndmps": {
+     "cross_option": [
+      [
+       1.5707963267948966,
+       -1.5707963267948966
+      ],
+      [
+       -1.5707963267948966,
+       1.5707963267948966
+      ]
+     ]
+    }
+   },
+   "catalogue": {
+    "number": "J.7",
+    "member": 1
+   },
+   "rulebook": "Top hat, 1/4 roll up, 1/4 roll down (K2)",
+   "words": "Top hat from the bottom, 1/4 roll up, 1/4 roll down (rolls in opposite directions, direction an option); loops are not knife-edge, so the top line is flown cross-box.",
+   "match_basis": "same elements in the same order, same loop angles, same roll amounts and stops (point rolls, reversals), same entry attitude; ignoring the known schedule's heights and padding",
+   "source": {
+    "file": "data/release_comparison/dataset/schedules/47270015027f40df8bf047867a408357.json",
+    "path": "manoeuvres[9].aresti.figures[1]",
+    "also": null
+   },
+   "differences": [
+    {
+     "path": "el.#6.length",
+     "known": 50.0,
+     "catalogue": "ManParm:line_length",
+     "decision": "open",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+    },
+    {
+     "path": "info.k",
+     "known": 3.0,
+     "catalogue": 2.0,
+     "decision": "schedule-specific",
+     "reason": "K comes from the schedule for the known figure and from the rulebook unknown list for the catalogue entry; they are different documents."
+    },
+    {
+     "path": "mp.line_length.collectors",
+     "known": [
+      "#2.#4.length.0",
+      "#8.#10.length.0"
+     ],
+     "catalogue": [
+      "#2.#4.length.0",
+      "#6.#6.length.0",
+      "#8.#10.length.0"
+     ],
+     "decision": "open",
+     "reason": "the known top line is a fixed 50 m with no comparison; the catalogue top line uses the line_length ManParm, so it is compared with the vertical lines. Likely unintended for a free horizontal line (compare the P, stall turn and K free-line decisions); check the judging guide."
+    }
+   ]
+  }
+ ],
+ "unmatched": [
+  {
+   "schedule": "p25",
+   "index": 1,
+   "member": 0,
+   "short_name": "trgle",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 4,
+   "member": 0,
+   "short_name": "fig9",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest E.5 has a 2/4pt roll up; the schedule figure has a half roll"
+  },
+  {
+   "schedule": "p25",
+   "index": 6,
+   "member": 0,
+   "short_name": "stall",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 7,
+   "member": 0,
+   "short_name": "dImm",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 8,
+   "member": 0,
+   "short_name": "hB",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest 18.1 has a half roll up; the schedule figure has two reversed half rolls up"
+  },
+  {
+   "schedule": "p25",
+   "index": 9,
+   "member": 0,
+   "short_name": "loop",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 10,
+   "member": 0,
+   "short_name": "hSqL2",
+   "k": 2.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest are the cobra rolls 08.3 (2/2pt rolls, from the bottom) and 08.5 (half rolls, from the top); none has half rolls from the bottom"
+  },
+  {
+   "schedule": "p25",
+   "index": 11,
+   "member": 0,
+   "short_name": "hClov",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 12,
+   "member": 0,
+   "short_name": "rEt",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 13,
+   "member": 0,
+   "short_name": "iSpin",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 14,
+   "member": 0,
+   "short_name": "tHat",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 15,
+   "member": 0,
+   "short_name": "Z",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 16,
+   "member": 0,
+   "short_name": "Com",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p25",
+   "index": 17,
+   "member": 0,
+   "short_name": "figS",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 1,
+   "member": 0,
+   "short_name": "sLoop",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 2,
+   "member": 0,
+   "short_name": "fig9",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest E.6 has a 2/4pt roll up; the schedule figure has a full roll then a half roll reversed"
+  },
+  {
+   "schedule": "f25",
+   "index": 3,
+   "member": 0,
+   "short_name": "rollC",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 4,
+   "member": 0,
+   "short_name": "hLoop",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 5,
+   "member": 0,
+   "short_name": "hB",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 6,
+   "member": 0,
+   "short_name": "spin",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 7,
+   "member": 0,
+   "short_name": "hCirc",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 8,
+   "member": 0,
+   "short_name": "sFin",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 9,
+   "member": 0,
+   "short_name": "sV8",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 10,
+   "member": 0,
+   "short_name": "hB2",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 11,
+   "member": 0,
+   "short_name": "keTrg",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 12,
+   "member": 0,
+   "short_name": "h8L",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 13,
+   "member": 0,
+   "short_name": "dl45",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 14,
+   "member": 0,
+   "short_name": "hSLoop",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 15,
+   "member": 0,
+   "short_name": "Aval",
+   "k": 6.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f25",
+   "index": 16,
+   "member": 0,
+   "short_name": "keS",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest D.11 has a 3/4 roll after the knife-edge half loop; the schedule figure a 1/4 roll"
+  },
+  {
+   "schedule": "f25",
+   "index": 17,
+   "member": 0,
+   "short_name": "stall",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p27",
+   "index": 1,
+   "member": 0,
+   "short_name": "hB",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest 18.1 and L.1 have a half roll up; the schedule figure has two reversed half rolls up"
+  },
+  {
+   "schedule": "p27",
+   "index": 2,
+   "member": 0,
+   "short_name": "trmb",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest K.15 and K.31 differ in the rolls after the knife-edge half loop"
+  },
+  {
+   "schedule": "p27",
+   "index": 3,
+   "member": 0,
+   "short_name": "trgle",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest 04.11 has half rolls on all three sides; the schedule figure has a 2/4pt roll on the base"
+  },
+  {
+   "schedule": "p27",
+   "index": 4,
+   "member": 0,
+   "short_name": "rSFin",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p27",
+   "index": 5,
+   "member": 0,
+   "short_name": "rollC",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p27",
+   "index": 8,
+   "member": 0,
+   "short_name": "hC8",
+   "k": 2.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest F.18 has a 2/2pt roll; the schedule figure has two reversed half rolls"
+  },
+  {
+   "schedule": "p27",
+   "index": 10,
+   "member": 0,
+   "short_name": "tHat",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p27",
+   "index": 11,
+   "member": 0,
+   "short_name": "rollC2",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p27",
+   "index": 12,
+   "member": 0,
+   "short_name": "hB2",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest L.6 (push, push, pull) and L.10; the schedule figure is push, pull, pull with 2/4pt roll up and half roll down, which no L entry gives"
+  },
+  {
+   "schedule": "p27",
+   "index": 13,
+   "member": 0,
+   "short_name": "m",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest 16.5 has 3/4pt rolls up and 1/4 rolls down; the schedule figure has a 3/4 and a 1/4 roll on each side of the stall turn in opposite directions"
+  },
+  {
+   "schedule": "p27",
+   "index": 14,
+   "member": 0,
+   "short_name": "hSqL2",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest are the cobra rolls 08.3 (2/2pt rolls, from the bottom) and 08.5 (half rolls, from the top); none has half rolls from the bottom"
+  },
+  {
+   "schedule": "p27",
+   "index": 15,
+   "member": 0,
+   "short_name": "square",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p27",
+   "index": 16,
+   "member": 0,
+   "short_name": "rEt",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "p27",
+   "index": 17,
+   "member": 0,
+   "short_name": "loop",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 1,
+   "member": 0,
+   "short_name": "sLoop",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 2,
+   "member": 0,
+   "short_name": "rSFin",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 3,
+   "member": 0,
+   "short_name": "rollC",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 4,
+   "member": 0,
+   "short_name": "ET",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 5,
+   "member": 0,
+   "short_name": "trgle",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 6,
+   "member": 0,
+   "short_name": "hC8",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 7,
+   "member": 0,
+   "short_name": "loop",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 8,
+   "member": 0,
+   "short_name": "hSqL",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 9,
+   "member": 0,
+   "short_name": "spin",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 10,
+   "member": 0,
+   "short_name": "trmb",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest K.31 has a 3/4 snap roll down; the schedule figure has a 3/4 roll"
+  },
+  {
+   "schedule": "f27",
+   "index": 10,
+   "member": 1,
+   "short_name": "trmb",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest K.31 has a 3/4 snap roll down; the schedule figure has a 3/4 roll"
+  },
+  {
+   "schedule": "f27",
+   "index": 11,
+   "member": 0,
+   "short_name": "hCirl",
+   "k": 6.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 12,
+   "member": 0,
+   "short_name": "iET",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 13,
+   "member": 0,
+   "short_name": "iGB",
+   "k": 6.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 15,
+   "member": 0,
+   "short_name": "rollC2",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 16,
+   "member": 0,
+   "short_name": "hSqL3",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "f27",
+   "index": 17,
+   "member": 0,
+   "short_name": "hB2",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 1,
+   "member": 0,
+   "short_name": "hB",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude: nearest L.11 is a turnaround humpty with pull, pull, pull loops; the schedule figure is a centre humpty with a half roll up and none down"
+  },
+  {
+   "schedule": "a27",
+   "index": 2,
+   "member": 0,
+   "short_name": "trmb",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 4,
+   "member": 0,
+   "short_name": "rSFin",
+   "k": 2.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 6,
+   "member": 0,
+   "short_name": "hSqL",
+   "k": 2.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 8,
+   "member": 0,
+   "short_name": "hC8",
+   "k": 2.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 10,
+   "member": 0,
+   "short_name": "tHat",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 11,
+   "member": 0,
+   "short_name": "rollC2",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 12,
+   "member": 0,
+   "short_name": "hB2",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 13,
+   "member": 0,
+   "short_name": "m",
+   "k": 5.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 14,
+   "member": 0,
+   "short_name": "hSqL2",
+   "k": 2.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 15,
+   "member": 0,
+   "short_name": "square",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 16,
+   "member": 0,
+   "short_name": "rEt",
+   "k": 3.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  },
+  {
+   "schedule": "a27",
+   "index": 17,
+   "member": 0,
+   "short_name": "loop",
+   "k": 4.0,
+   "reason": "no catalogue entry has the same element sequence, loop angles, roll amounts and entry attitude"
+  }
+ ]
+}
