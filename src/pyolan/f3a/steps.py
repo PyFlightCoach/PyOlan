@@ -81,6 +81,8 @@ class Roll:
     # the roll's line, if it is vertical, has a length of its own for the layout to
     # choose (see FREE_VERTICAL), not compared with the figure's other lines
     free_vertical: bool = False
+    # as free_vertical, for a line at any angle (K's 45 degree down line)
+    free_line: bool = False
     # the roll is flown straight out of the loop before it (an Immelmann), and the rest
     # of its line follows it: not centred on the line, and no line before a roll that
     # ends the figure
@@ -459,7 +461,7 @@ def _fly(
                         f"{'' if flight.knife_edge() else 'not '}in knife-edge"
                     )
             case Roll(
-                roll=roll, group=group, alone=alone, free_vertical=free_vertical,
+                roll=roll, group=group, alone=alone, free_vertical=free_vertical, free_line=free_line,
                 after_loop=after_loop, before_loop=before_loop,
             ):
                 if alone and (len(items) > 1 or items[-1].rolls):
@@ -475,7 +477,7 @@ def _fly(
                 line.after_loop = line.after_loop or after_loop
                 line.before_loop = before_loop
                 line.closed = alone
-                line.free = line.free or (free_vertical and flight.theta in VERTICAL)
+                line.free = line.free or free_line or (free_vertical and flight.theta in VERTICAL)
                 sign = signs.get(i, 1)
                 roll = signed(roll, sign)
                 line.rolls.append(roll)

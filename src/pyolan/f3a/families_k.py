@@ -5,18 +5,11 @@ Conventions decided per family (checked against the USG drawings):
 - turnarounds: a 1/8 loop onto a 45 degree line up, a half loop that turns the
   flight round onto a 45 degree line down (heading back), and a 1/8 loop to
   level.
-- closure (decided 2026-11-20, A4 review: "close at the same height; the line lengths
-  need not match"): the figure finishes at its entry height. The half loop shifts the
-  down line by 2 radii perpendicular to the lines, which is 1.41 radii of height, so
-  with the up line as ``line_length`` the down line is ``line_length + 2*loop_radius``
-  after a pulled half loop (up) and ``line_length - 2*loop_radius`` after a pushed one
-  (down); each Option figure has its own (the loop's sense is the same for a plane and
-  a knife-edge loop: it only turns the path through 180 degrees one way or the other).
-  The expression is the padded roll's ``line_length``. A padded roll is never shorter
-  than its roll plus two pads of at least 20 m, so the shorter down line cannot go
-  negative; when the roll sets the length the figure no longer closes, and the layout
-  has to raise ``line_length`` (or lower the radius). Before this decision both lines
-  shared ``line_length`` and the exit was 1.41 radii off the entry, so BB never closed.
+- down line (decided 2026-11-22, K1: free the down line like P's vertical): the down
+  line's roll has a length of its own (``Roll.free_line``), a layout variable, so BM and
+  MB are ordinary height pairs. The template no longer closes at the entry height at
+  other sizes (accepted). Earlier (2026-11-20) the down line was an expression that closed
+  the figure at its entry height; the free length replaces it.
 - the half loop's direction is the pilot's choice ("inside or outside", "up or
   down"): an Option with one figure per direction, as for any loop whose sense
   the words leave open. The first is the one the drawing shows: K.1-K.8 "down"
@@ -63,14 +56,6 @@ def _down_roll(name: str, phrase: str) -> OlanRoll:
     return require_roll(match.group("roll"))
 
 
-# the down line's length by the sense of the half loop before it (+1: the path turns
-# up and over, a pulled loop of an upright pilot; -1 the other way) and the same in the
-# line units steps.py uses for heights (a loop radius is 0.5; the up line is two units,
-# so the shorter down line stays positive)
-CLOSING_LENGTH = {1: "(line_length+(2*loop_radius))", -1: "(line_length-(2*loop_radius))"}
-UP_UNITS = 2.0
-CLOSING_UNITS = {1: UP_UNITS + 1.0, -1: UP_UNITS - 1.0}
-
 
 def _turnaround(
     entry, roll_up: OlanRoll, ke: bool, roll_down: OlanRoll, exit_attitude, first: int
@@ -78,11 +63,11 @@ def _turnaround(
     """Both lines carry a roll; the half loop's sense is left open."""
     return [
         Entry(entry),
-        Line(_UP, label="line up", units=UP_UNITS),
+        Line(_UP, label="line up"),
         Roll(roll_up),
         Loop(Fraction(1, 2), knife_edge=True if ke else None, first=first),
-        Line(_DOWN, label="line down", length=CLOSING_LENGTH, units=CLOSING_UNITS),
-        Roll(roll_down),
+        Line(_DOWN, label="line down"),
+        Roll(roll_down, free_line=True),
         Exit(exit_attitude),
     ]
 

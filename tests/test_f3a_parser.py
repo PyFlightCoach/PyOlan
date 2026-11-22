@@ -86,8 +86,8 @@ HALF_CUBAN_LAYOUT_RADIUS = {
 }
 
 
-# Group K (45 degree lines either side of a half loop): the figure now finishes at its
-# entry height (decided 2026-11-20, see the K tests below), but the template measures
+# Group K (45 degree lines either side of a half loop): the down line is free (decided
+# 2026-11-22, see the K tests below), so the figure does not close at its entry height, and the template measures
 # heights against its own range, with roll lines that grow with their rolls and
 # knife-edge options whose loop leaves the figure's range either side, so the USG
 # "low->low" is not compared against the template's height words for these.
@@ -2616,23 +2616,6 @@ def test_slow_roll_is_one_centred_roll():
 # ---------------------------------------------------------------- group K
 
 
-def _k_exit_minus_entry(fig, radius=20.0, line=1000.0, option=0):
-    """The template's exit height minus its entry height in metres, with lines long
-    enough that no roll lengthens its line."""
-    mdef = mb_for_k().create_mdef(fig)
-    mdef.mps.data["loop_radius"].defaul = radius
-    mdef.mps.data["line_length"].defaul = line
-    for name in mdef.mps.data:
-        if name.startswith("roll_option"):
-            mdef.mps.data[name].defaul = option
-    entry = fig.info.start.orientation
-    templates = mdef.create().create_template(
-        g.Transformation(g.Euler(entry, 0, p.Heading.RTOL), g.P0())
-    )
-    tp = State.stack(templates, "element")
-    return float(tp.pos.z[-1] - tp.pos.z[0])
-
-
 def mb_for_k():
     from tuning.builders import load_builder
 
@@ -2658,51 +2641,34 @@ def test_k_half_loop_direction_is_an_option_one_figure_per_direction():
     assert [e.kind for e in ke.figures[0].elements] == ["loop", "roll", "loop", "roll", "loop"]
 
 
-K_PUSHED = "(line_length-(2*loop_radius))"
-K_PULLED = "(line_length+(2*loop_radius))"
-
-
-def test_k_down_line_closes_the_figure_with_a_length_of_its_own():
-    # decided 2026-11-20 (A4 review): the figure finishes at its entry height, the
-    # lines need not match. The half loop shifts the down line by 2 radii, so the down
-    # line is 2 radii longer after the loop that goes up and 2 shorter after the one
-    # that goes down. Only the padded roll on the down line carries the expression.
+def test_k_down_line_has_a_length_of_its_own_for_the_layout():
+    # decided 2026-11-22 (K1): the down line is free, as P's vertical, so BM and MB are
+    # ordinary pairs. The padded roll on the down line has a numeric line_length (a layout
+    # variable of its own); the up line's roll keeps the figure's line_length. The template
+    # no longer closes at the entry height at other sizes (accepted).
     plain = parse_f3a_description("K.1 45 degree up, 2/4pt roll, half loop (inside or outside), full roll down (K3)")
-    down, up = plain.figures  # K.1 draws the loop down first
-    assert _down_line_length(down) == [None, K_PUSHED]
-    assert _down_line_length(up) == [None, K_PULLED]
     ke = parse_f3a_description(
         "K.9 45 degree up-line from upright, 1/4 roll, knife-edge half loop (up or down), "
         "three consecutive 1/4 rolls down, exit upright (K4)"
     )
-    # K.9 draws the loop up first (a knife-edge loop's size is a roll_option value)
-    assert [_down_line_length(f) for f in ke.figures] == [[None, K_PULLED], [None, K_PUSHED]]
-    # the lengths agree in the units used for the heights, so entry and exit are one level
     for fig in (*plain.figures, *ke.figures):
-        assert fig.info.start.height == fig.info.end.height == p.Height.BTM
+        assert _down_line_length(fig) == [None, 130.0]
+        assert "line_length" not in fig.ndmps
 
 
-@pytest.mark.parametrize("number", ["K.1", "K.3", "K.5", "K.9", "K.10", "K.12", "K.17", "K.24"])
-def test_k_figures_finish_at_their_entry_height(number):
-    entry = FIXTURE_BY_NUMBER[number]
-    parsed = parse_f3a_description(entry["description"], number, entry["k"])
-    for fig in parsed.figures:
-        for option in (0, 1):
-            for radius in (20.0, 55.0, 90.0):
-                assert _k_exit_minus_entry(fig, radius, 1000.0, option) == pytest.approx(0, abs=1e-6)
+def test_k_entry_heights_give_bottom_to_middle_and_back_as_pairs():
+    # K1: the free down line makes BM and MB present pairs. K.1 draws the loop down first
+    # (a descent: MB is natural), the other figure's loop goes up (BM is natural).
+    pytest.importorskip("flightanalysis")
+    from flightanalysis.layout.heights import figure_heights
+    from tuning.builders import load_layout
 
-
-@pytest.mark.parametrize("number", ["K.7", "K.8", "K.26", "K.31"])
-def test_k_snap_on_the_down_line_leaves_a_size_independent_residual(number):
-    # a snap's path is not exactly its length in the builder's padding, so the closure is
-    # off by a couple of metres that do not change with the radius or the line length;
-    # the layout takes them up with the snap rate
-    entry = FIXTURE_BY_NUMBER[number]
-    parsed = parse_f3a_description(entry["description"], number, entry["k"])
-    for fig in parsed.figures:
-        residuals = [_k_exit_minus_entry(fig, r, line) for r, line in ((20.0, 1000.0), (55.0, 400.0), (90.0, 1000.0))]
-        assert residuals == pytest.approx([residuals[0]] * 3, abs=1e-6)
-        assert abs(residuals[0]) < 2.5
+    entry = FIXTURE_BY_NUMBER["K.1"]
+    parsed = parse_f3a_description(entry["description"], "K.1", entry["k"])
+    for fig, natural in zip(parsed.figures, ("MB", "BM")):
+        pairs = {pr.entry.name[0] + pr.exit.name[0]: pr for pr in figure_heights(fig, load_builder("f3a"), load_layout("f3a"))}
+        assert {"BM", "MB"} <= set(pairs)
+        assert not pairs[natural].awkward
 
 
 def test_k_figures_have_a_roll_on_each_45_degree_line_and_no_extra_lines():
