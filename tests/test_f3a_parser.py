@@ -19,9 +19,21 @@ from flightdata import State
 from schemas import aresti as a
 from tuning.builders import load_builder
 
-from pyolan.f3a import F3AParseError, parse_f3a_description
+from pyolan.f3a import F3AParseError
+from pyolan.f3a import parse_f3a_description as _parse_f3a_description
 from pyolan.f3a.normalise import normalise, normalise_number, split_description
 from pyolan.f3a.rolls import parse_roll
+
+
+
+def parse_f3a_description(*args, **kwargs):
+    """The parsed figure without its centre marks (see tests/test_f3a_centre.py): these
+    tests describe the elements, which the markers between them are not."""
+    parsed = _parse_f3a_description(*args, **kwargs)
+    for fig in parsed.figures if isinstance(parsed, a.Option) else [parsed]:
+        fig.elements = [e for e in fig.elements if not isinstance(e, int)]
+    return parsed
+
 
 FIXTURE = json.loads(
     (Path(__file__).parent / "data" / "f3a" / "usg_drawings.json").read_text()

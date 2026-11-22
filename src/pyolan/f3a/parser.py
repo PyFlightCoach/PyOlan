@@ -27,6 +27,7 @@ import schemas.positioning as p
 from schemas import aresti as a
 from schemas.maninfo import ManInfo
 
+from .centre import centre_marks
 from .errors import F3AParseError
 from .families import Modifiers, find_family
 from .families_27_30 import named_step_clauses
@@ -204,13 +205,13 @@ def _figure(desc: Description, resolved: Resolved) -> a.Figure:
     if mirror:
         return a.Figure(
             info=info,
-            elements=create_elements(resolved.items, linked=True),
+            elements=centre_marks(create_elements(resolved.items, linked=True), desc.group),
             ndmps={option_name(group): [values, [-v for v in values]] for group, values in mirror.items()}
             | figure_ndmps(resolved.items),
         )
     return a.Figure(
         info=info,
-        elements=create_elements(resolved.items, linked=False),
+        elements=centre_marks(create_elements(resolved.items, linked=False), desc.group),
         ndmps=figure_ndmps(resolved.items),
     )
 
