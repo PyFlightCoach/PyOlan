@@ -62,26 +62,9 @@ def test_the_layout_marks_the_cross_box_member_as_a_depth_correction(f3a, number
     assert not is_depth_correction(problems[1], 0, builder.box)  # a single figure is never one
 
 
-# The planar member flies its top line forward (J.1-J.10) or back (the other entries). The
-# cross-box member has no net travel along the box, so after the planar exit is shared its entry
-# is 2r+L ahead of the planar entry (forward shape: a longer connecting line, fine) or behind it
-# (back shape: the connecting line shortens by 2r+L, about 240 m at the default sizes, and the
-# layout, which sizes the connecting line for the planar member only, reports "connecting line
-# is too short" unless the planar line is already that long). Open: see the J1 report.
-BACK_AFTER_A_FIGURE = pytest.mark.xfail(
-    strict=True, reason="a back-shape correction enters behind the planar entry: connecting line too short"
-)
-
-
-def layout_cases():
-    for number in ENTRIES:
-        for order in ("first", "last"):
-            marks = [BACK_AFTER_A_FIGURE] if order == "last" and number != "J.1" else []
-            yield pytest.param(number, order, marks=marks, id=f"{number}-{order}")
-
-
 @pytest.mark.parametrize("wind", [p.Heading.LTOR, p.Heading.RTOL])
-@pytest.mark.parametrize("number, order", list(layout_cases()))
+@pytest.mark.parametrize("order", ["first", "last"])
+@pytest.mark.parametrize("number", ENTRIES)
 def test_a_sequence_with_a_j_entry_lays_out_and_the_correction_shares_the_exit(f3a, number, order, wind):
     builder, settings = f3a
     option = parse_f3a_description(RULEBOOK[number])
