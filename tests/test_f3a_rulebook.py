@@ -123,7 +123,7 @@ def test_reviewed_groups_and_numbers():
     groups = {entry["number"].split(".")[0] for entry in RULEBOOK}
     assert REVIEWED_GROUPS <= groups
     # every group but J (the 2026-11-21 catalogue review; J waits on its cross-box layout)
-    assert REVIEWED_GROUPS == groups - {"J"}
+    assert REVIEWED_GROUPS == groups
     assert {entry["number"] for entry in RULEBOOK} >= REVIEWED_NUMBERS == {"23.15", "23.16"}
 
 
