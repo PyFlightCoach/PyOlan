@@ -12,7 +12,7 @@ from tuning.builders import load_builder
 @pytest.fixture(scope="module")
 def probe_builder():
     """IMAC builder with probe downgrades that only look at the sequence ends."""
-    b = load_builder("IMAC")
+    b = load_builder("IMAC", category="unlimited")
     base = b.dgs["track_z"]
     return replace(
         b,

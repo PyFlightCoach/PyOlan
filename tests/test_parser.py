@@ -340,7 +340,7 @@ ELEMENT_NAMES = json.loads(
 
 @pytest.mark.parametrize(
     "rules, options",
-    [("IAC", {"category": "unlimited"}), ("IMAC", {})],
+    [("IAC", {"category": "unlimited"}), ("IMAC", {"category": "unlimited"})],
 )
 def test_element_names_match_snapshot(rules: str, options: dict):
     builder = load_builder(rules, **options)
