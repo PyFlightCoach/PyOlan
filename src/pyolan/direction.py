@@ -53,6 +53,24 @@ def _figure_table() -> dict[str, list[list[str]]]:
     return json.loads(files("pyolan.data").joinpath("openaero_figures.json").read_text())
 
 
+@lru_cache
+def _k_table() -> dict:
+    """OpenAero's K tables (data/openaero_k.json, written by tools/openaero/export.py):
+    bases[base][variant] = [pattern, aresti, k powered, k glider] in the order of
+    _figure_table(), and rolls[attitude prefix + roll pattern] = [aresti, k powered,
+    k glider]."""
+    return json.loads(files("pyolan.data").joinpath("openaero_k.json").read_text())
+
+
+# rollAttitudes (js/config.js): the roll K table prefix for each attitude
+ROLL_ATTITUDES = {0: "", 45: "d", 90: "v", 135: "d", 180: "", 225: "id", 270: "iv", 315: "id"}
+
+
+def _glider_k(powered: int, glider: int | None) -> int:
+    """OpenAero uses the glider K when it is set, and the powered K otherwise."""
+    return glider if glider else powered
+
+
 def _js_mod(a: float, b: float) -> float:
     """JavaScript's % (the sign follows the dividend)."""
     return math.fmod(a, b)
@@ -75,6 +93,10 @@ class FigureDirection:
     token: str = ""
     switch_x: bool = False
     switch_y: bool = False
+    # OpenAero's aresti numbers and K (base plus rolls, rule-free); None unresolved
+    aresti: list[str] = field(default_factory=list)
+    k_powered: int | None = None
+    k_glider: int | None = None
 
     @staticmethod
     def _physical(direction: int, attitude: int) -> int:
@@ -121,9 +143,26 @@ def heading_to_physical(heading: p.Heading, wind: p.Heading = p.Heading.LTOR) ->
 
 @dataclass
 class _Roll:
-    """One rolling element of a roll slot (OpenAero roll[i][j] of type != line)."""
+    """One rolling element of a roll slot (OpenAero roll[i][j] of type != line).
+
+    kind is OpenAero's type (roll, possnap, negsnap, posspin, negspin, slowroll or
+    other for the non-Aresti shoulder roll, ruade and lomcevak) and pattern the roll
+    text OpenAero looks its K up with ("24", "3if", "1f" for a bare "f").
+    """
 
     extent: float
+    kind: str = "roll"
+    pattern: str = ""
+
+
+_SUFFIX_KINDS = {"f": "snap", "s": "spin", "e": "other", "u": "other", "l": "other"}
+
+
+def _suffix_kind(letter: str, negative: bool) -> str:
+    kind = _SUFFIX_KINDS[letter]
+    if kind == "other":
+        return kind
+    return ("neg" if negative else "pos") + kind
 
 
 def parse_rolls(pattern: str) -> tuple[list[_Roll], int]:
@@ -149,13 +188,14 @@ def parse_rolls(pattern: str) -> tuple[list[_Roll], int]:
         elif ch == ",":
             sign = -sign
         elif ch in "fsleu":
-            rolls.append(_Roll(sign * 360))
+            rolls.append(_Roll(sign * 360, _suffix_kind(ch, False), "1" + ch))
             total += sign * 360
         elif ch == "i" and j + 1 < len(pattern) and pattern[j + 1] in "fseul":
             j += 1
-            rolls.append(_Roll(sign * 360))
+            rolls.append(_Roll(sign * 360, _suffix_kind(pattern[j], True), "1i" + pattern[j]))
             total += sign * 360
         elif ch in "123456789":
+            start = j
             nxt = pattern[j + 1] if j + 1 < len(pattern) else ""
             nxt2 = pattern[j + 2] if j + 2 < len(pattern) else ""
             stops = 0
@@ -184,23 +224,26 @@ def parse_rolls(pattern: str) -> tuple[list[_Roll], int]:
             # an optional i/f/s/e/u/l after the roll (snap, spin ...)
             nxt = pattern[j + 1] if j + 1 < len(pattern) else ""
             suffix = False
+            kind = "roll"
             if nxt == "i" and j + 2 < len(pattern) and pattern[j + 2] in "fseul":
+                kind = _suffix_kind(pattern[j + 2], True)
                 j += 2
                 suffix = True
             elif nxt and nxt in "fseul":
+                kind = _suffix_kind(nxt, False)
                 j += 1
                 suffix = True
             if suffix and stops:
                 extent = 0.0  # OpenAero rejects snaps and spins with stops
             if extent:
-                rolls.append(_Roll(sign * extent))
+                rolls.append(_Roll(sign * extent, kind, pattern[start : j + 1]))
                 total += sign * extent
         elif ch == "0":
             nxt = pattern[j + 1] if j + 1 < len(pattern) else ""
             extent = {"2": 180, "1": 360, "6": 540}.get(nxt, 0)
             j += 1
             if extent:
-                rolls.append(_Roll(sign * extent))
+                rolls.append(_Roll(sign * extent, "slowroll", "0" + nxt))
                 total += sign * extent
         j += 1
     return rolls, total
@@ -405,7 +448,24 @@ class DirectionState:
 
         rollnr = 0 if _ROLL_BEFORE_BASE.match(pattern) else 1
         ctx = _FigureContext(figure, pattern, draw, roll, roll_sums, types)
+        # buildFigure, "assign Aresti Nr and K Factor": the chosen variant's K
+        k_variants = _k_table()["bases"].get(base)
+        if k_variants is not None and k_variants[fig_idx][0] == pattern:
+            _, aresti, k_powered, k_glider = k_variants[fig_idx]
+            ctx.aresti.append(aresti)
+            ctx.k_powered += k_powered
+            ctx.k_glider += _glider_k(k_powered, k_glider)
+        else:
+            ctx.k_known = False
+        ctx.neg_load = 1 if 90 < self.attitude < 270 else 0
         if "j" in draw.lower():
+            if "_" in draw:
+                # jw: the rolls' K come from the plain walk (it skips the turn);
+                # the direction from the turn walk, on the state as it was
+                saved = (self.direction, self.attitude, self.go_right, self.go_front, self.update_axis_dir)
+                self._walk(ctx, rollnr)
+                self.direction, self.attitude, self.go_right, self.go_front, self.update_axis_dir = saved
+                ctx.figure = figure
             self._walk_turns(ctx)
         else:
             self._walk(ctx, rollnr)
@@ -419,6 +479,9 @@ class DirectionState:
             token,
             ctx.switch_x,
             ctx.switch_y,
+            ctx.aresti,
+            ctx.k_powered if ctx.k_known else None,
+            ctx.k_glider if ctx.k_known else None,
         )
 
     def _walk(self, ctx: "_FigureContext", rollnr: int) -> None:
@@ -429,13 +492,26 @@ class DirectionState:
         while i < len(draw):
             c = draw[i]
             nxt = draw[i + 1] if i + 1 < len(draw) else ""
+            if c in "'~" and self.attitude not in (90, 270):
+                # buildFigure: a line sets the load from the attitude
+                ctx.neg_load = 1 if 90 < self.attitude < 270 else 0
+            if c in "jJ":
+                # a turn inside a figure with rolls (jw): makeTurn
+                m = re.match(r"[jJ][ioIO\d]+", draw[i:])
+                if m:
+                    self._make_turn(m.group(0))
+                    i += len(m.group(0))
+                    continue
             if c in "hH":
                 # makeHammer (js/main/03-base-shapes.js)
                 self.attitude = 270
                 self.change_dir(180)
+                ctx.neg_load = 0
+                ctx.low_k_flick = True
             elif c in "tT":
                 # makeTailslide
                 self.attitude = 270
+                ctx.low_k_flick = True
             elif c in "uU":
                 # makePointTip
                 self.change_att(180)
@@ -467,6 +543,9 @@ class DirectionState:
                         roll_top_after = angle - angle_top
                     else:
                         self.change_att(angle)  # full loops, drawn in parts
+                # after every curve (buildFigure)
+                ctx.neg_load = 1 if angle < 0 else 0
+                ctx.low_k_flick = False
             i += 1
 
     def _roll(
@@ -482,6 +561,8 @@ class DirectionState:
             att_changed = 0
             roll_sum = 0
             for r in ctx.roll[rollnr]:
+                self._roll_k(ctx, r, roll_sum)
+                ctx.low_k_flick = True
                 roll_sum += r.extent
                 if (roll_sum + 180) % 360 == 0:
                     self.attitude = 180 - self.attitude
@@ -490,9 +571,16 @@ class DirectionState:
                     self.change_dir(abs(roll_sum))
                     roll_sum = 0
                     att_changed = 180 - att_changed
+                    if roll_top:
+                        ctx.neg_load = 1 - ctx.neg_load
+                if self.attitude not in (90, 270) and not roll_top:
+                    ctx.neg_load = 1 if 90 < self.attitude < 270 else 0
+            ctx.low_k_flick = False
             roll_sum = ctx.roll_sums[rollnr]
             kind = ctx.types[rollnr] if rollnr < len(ctx.types) else 0
+            correction = 0
             if kind == 1:
+                correction = -_js_mod(roll_sum, 360)
                 if att_changed == 180:
                     self.attitude = 180 - self.attitude
                     if self.attitude < 0:
@@ -500,11 +588,18 @@ class DirectionState:
                     self.change_dir(180)
             elif kind == 2:
                 # half rolls change direction and attitude
+                correction = -_js_mod(roll_sum + 180, 360)
                 if att_changed == 0:
                     self.attitude = 180 - self.attitude
                     if self.attitude < 0:
                         self.attitude += 360
                     self.change_dir(180)
+            if correction:
+                # the correction roll OpenAero inserts has its own K
+                code = {90: "4", 180: "2", 270: "3"}.get(abs(int(correction)))
+                prefix = ROLL_ATTITUDES.get(int(self.attitude) % 360)
+                if code and prefix is not None:
+                    self._add_roll_k(ctx, prefix + code)
             if roll_top:
                 if kind == 2:
                     roll_top_after = -roll_top_after
@@ -514,6 +609,38 @@ class DirectionState:
             else:
                 ctx.figure = self._check_q_roll_switch(ctx, roll_sum, i, rollnr)
         return rollnr + 1, False, roll_top_after
+
+    def _roll_k(self, ctx: "_FigureContext", r: _Roll, roll_sum: float) -> None:
+        """The roll's aresti number and K (buildFigure, "Find which roll in
+        figures.js matches"). roll_sum is the roll on this line before r."""
+        att = int(round(self.attitude)) % 360
+        prefix = ROLL_ATTITUDES.get(att)
+        if prefix is None or not r.pattern:
+            return
+        if r.kind in ("possnap", "negsnap"):
+            vertical = att in (90, 270)
+            if vertical and ctx.low_k_flick:
+                load = "+" if r.kind == "possnap" else "-"
+            elif _js_mod(roll_sum, 180) == 0 or vertical:
+                load = "+" if ctx.neg_load == 0 else "-"
+            else:
+                # snaps from knife edge: the load the previous roll implies
+                inv = 90 < att < 270
+                inv = inv == (_js_mod(abs(roll_sum) - 90, 360) == 0)
+                inv = inv == (roll_sum * r.extent > 0)
+                load = "+" if inv else "-"
+            prefix = load + prefix
+        self._add_roll_k(ctx, prefix + r.pattern)
+
+    @staticmethod
+    def _add_roll_k(ctx: "_FigureContext", key: str) -> None:
+        entry = _k_table()["rolls"].get(key)
+        if entry is None:
+            return  # a non-Aresti roll has no K
+        aresti, k_powered, k_glider = entry
+        ctx.aresti.append(aresti)
+        ctx.k_powered += k_powered
+        ctx.k_glider += _glider_k(k_powered, k_glider)
 
     def _check_q_roll_switch(
         self, ctx: "_FigureContext", roll_sum: float, fd_index: int, rollnr: int
@@ -676,6 +803,12 @@ class _FigureContext:
     types: list[int]
     switch_x: bool = False
     switch_y: bool = False
+    aresti: list[str] = field(default_factory=list)
+    k_powered: int = 0
+    k_glider: int = 0
+    k_known: bool = True
+    neg_load: int = 0  # OA.negLoad
+    low_k_flick: bool = False  # buildFigure's lowKFlick
 
 
 def walk_olan(tokens: list[str]) -> list[FigureDirection]:

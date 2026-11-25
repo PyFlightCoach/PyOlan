@@ -46,7 +46,9 @@ EMBEDDED_ROLL_FIGURES = {
     "oj": "1oj",
     "ioj": "1ioj",
 }
-EXTRA_FIGURES = ["p(2,f)", "o(2,f)", "hp1", "ph1", "pbh1"]
+# "ph" and "pbh" (PyOlan aliases of "hp", the same figure) were here too: OpenAero
+# has no such figure, so since C3 parse_olan refuses them (no K). "hp1" covers it.
+EXTRA_FIGURES = ["p(2,f)", "o(2,f)", "hp1"]
 
 
 @fixture(scope="session")

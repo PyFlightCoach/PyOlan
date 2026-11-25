@@ -11,6 +11,7 @@ from schemas.positioning import Direction, Heading
 from tuning.builders import load_builder
 
 from pyolan.figure_parser import OlanFig
+from pyolan.errors import OlanParseError
 from pyolan.parser import ParsedOlanFig, parse_olan
 
 
@@ -307,6 +308,11 @@ def test_pn(mb: ManBuilder):
     assert fig.short_name == "pushN"
 
 
+def test_a_figure_openaero_does_not_have_is_refused(mb: ManBuilder):
+    with pytest.raises(OlanParseError, match="no catalogue figure"):
+        parse_olan("o 1jo", mb)
+
+
 def test_three_figures_with_the_same_short_name_get_unique_names(mb: ManBuilder):
     figs = parse_olan("j 2j 4j", mb)
 
@@ -318,8 +324,11 @@ def test_three_figures_with_the_same_short_name_get_unique_names(mb: ManBuilder)
 # generated before turn options were linked through roll_option (PyOlan 501b3f1).
 ELEMENT_NAME_SEQUENCES = {
     **{
-        f"turn_{code}": code
-        for code in "j 2j 3j 4j 1jo 2jo1 3jo3 4joi4 2jio2 1j5".split()
+        f"turn_{code.rstrip('-')}": code
+        # "1jo" was here too, and "1j5" without its exit marker: they are not
+        # OpenAero figures, so since C3 they have no K and parse_olan raises for
+        # them. "1j5-" has the element names "1j5" had.
+        for code in "j 2j 3j 4j 2jo1 3jo3 4joi4 2jio2 1j5-".split()
     },
     "iac_unl_2026": (
         Path(__file__).parent / "test_data" / "iac_unl_2026"

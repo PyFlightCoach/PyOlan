@@ -1,11 +1,13 @@
 """Refresh PyOlan's OpenAero expectations from the pinned OpenAero commit.
 
-    python tools/openaero/export.py [all | figures | library | catalogue | syntax | regressions ...]
+    python tools/openaero/export.py [all | tables | figures | library | catalogue | syntax | regressions ...]
 
 Run from the PyOlan package directory with the workspace venv. It fetches the
 commit in OPENAERO_SHA (fetch_openaero.sh), runs the trace harness (oa-trace.js,
 needs node and `npm ci` in this directory) and writes:
 
+* src/pyolan/data/openaero_k.json: OpenAero's base and roll K tables (C3, D8),
+  checked against the figure table direction.py uses (openaero_figures.json);
 * tests/data/openaero/figures.json: the figure catalogue, with provenance;
 * tests/data/openaero/sequence_directions.json: entry and exit directions of the
   sequences in tests/data/openaero/regressions.txt marked "[directions]";
@@ -352,7 +354,44 @@ def export_regressions(oa: Path) -> None:
     print(f"sequence_directions: {len(directions)} sequences", file=sys.stderr)
 
 
+def export_tables(oa: Path) -> None:
+    """src/pyolan/data/openaero_k.json: OpenAero's K tables, from the loaded OA.fig
+    and OA.rollFig.
+
+    For each base, the variants in file order (as in openaero_figures.json) with
+    their aresti number and powered and glider K (OpenAero's calculated K where
+    figures.js has none), and the roll K table keyed as OpenAero looks it up
+    (attitude prefix + roll pattern).
+    """
+    res = trace(oa, "--tables", cache="tables")
+    figures: dict[str, list] = {}
+    k_bases: dict[str, list] = {}
+    for f in res["figures"]:
+        if not f["base"] or f["draw"] is None:
+            continue
+        figures.setdefault(f["base"], []).append([f["pattern"], f["draw"]])
+        k_bases.setdefault(f["base"], []).append(
+            [f["pattern"], f["aresti"], f["k_powered"], f["k_glider"]]
+        )
+    data = PACKAGE / "src" / "pyolan" / "data"
+    # openaero_figures.json (scripts/generate_openaero_figures.py) is read from the
+    # text of figures.js and also holds 36 bases OpenAero does not load (e.g.
+    # "+j1j+", "+vc+"). Every base OpenAero loads must list the same variants.
+    table = json.loads((data / "openaero_figures.json").read_text())
+    for base, variants in figures.items():
+        if table.get(base) != variants:
+            raise SystemExit(f"openaero_figures.json differs from OpenAero for {base}")
+    rolls = {k: [r["aresti"], r["k_powered"], r["k_glider"]] for k, r in res["rolls"].items()}
+    (data / "openaero_k.json").write_text(json.dumps({
+        "source": provenance(None, res, file="data/figures/figures.js"),
+        "bases": k_bases,
+        "rolls": rolls,
+    }, ensure_ascii=False, separators=(",", ":")) + "\n")
+    print(f"tables: {len(figures)} bases, {len(rolls)} rolls", file=sys.stderr)
+
+
 STEPS = {
+    "tables": export_tables,
     "figures": export_figures,
     "library": export_library,
     "catalogue": export_catalogue,
