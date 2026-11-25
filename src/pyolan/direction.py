@@ -225,6 +225,10 @@ def oa_base(figure: str) -> tuple[str, str]:
         figure = re.sub(r"-(?=--)", "+", figure)
     else:
         figure = re.sub(r"-(?=-)", "+", figure)
+    # parseSequence (js/main.js, "replace longforward by 3x forward"): every '+' is
+    # then a long forward line, three '~'. Without this a turn written with line
+    # extensions ("+++2j+++") keeps them in its base and has no figure (F1).
+    figure = figure.replace("+", "~~~")
     base = re.sub(r"[^a-zA-Z\-]+", "", figure)
     if re.fullmatch(r"-?i?s-?", base):
         figure = re.sub(r"(\d*i?s)", r"iv\1", figure, count=1)

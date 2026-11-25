@@ -229,8 +229,10 @@ def main() -> None:
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--show", type=int, default=200)
     ap.add_argument("--verbose", action="store_true", help="print every new difference")
-    ap.add_argument("--templates", action="store_true",
-                    help="also compare every library template (about four minutes)")
+    ap.add_argument("--relabel", action="store_true",
+                    help="re-attribute listed template differences to their current cause")
+    ap.add_argument("--templates", choices=["subset", "all"],
+                    help="also compare library templates: the test subset, or all (about four minutes)")
     args = ap.parse_args()
     known = D.load_known()
     entries = D.known_entries(known)
@@ -244,7 +246,7 @@ def main() -> None:
             for f in s["figures"]:
                 figs.setdefault(f["s"], f)
         seqs = {s["id"]: s for s in data["sequences"]}
-        listed = {k for k in entries if k[0] == corpus}
+        listed = {k for k in entries if k[0] == corpus and k[2] not in TEMPLATE_CHECKS}
         gone = listed - res.diffs
         if gone:
             print(f"{corpus}: {len(gone)} listed differences no longer occur")
@@ -264,15 +266,28 @@ def main() -> None:
     if args.templates:
         from openaero import templates as T
 
-        res = T.differences("library")
+        ids = None
+        if args.templates == "subset":
+            ids = json.loads((D.DATA / "template_subset.json").read_text())["sequences"]
+        res = T.differences("library", ids)
         seqs = {s["id"]: s for s in D.load_corpus("library")["sequences"]}
-        listed = {k for k in entries if k[0] == "library" and k[2] in TEMPLATE_CHECKS}
+        listed = {
+            k for k in entries
+            if k[0] == "library" and k[2] in TEMPLATE_CHECKS
+            and (ids is None or k[1].split("#")[0] in ids)
+        }
         gone = listed - res.diffs
         if gone:
             print(f"templates: {len(gone)} listed differences no longer occur")
             for k in gone:
                 del entries[k]
         proposals = propose_templates(res, entries, seqs)
+        if args.relabel:
+            # a fix can leave a cascade whose first cause is gone: re-attribute
+            for k in sorted(listed & res.diffs):
+                if entries[k] != proposals[k]:
+                    print(f"relabel {k} {entries[k]} -> {proposals[k]}")
+                    entries[k] = proposals[k]
         for k in sorted(res.diffs - listed):
             finding = proposals[k]
             counts[("library", k[2], finding)] += 1

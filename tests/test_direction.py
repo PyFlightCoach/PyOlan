@@ -112,3 +112,20 @@ def test_parsed_exit_matches_open_aero(request, mb, seq, n):
         assert abs(body_z) > 0.5
         assert (body_z < 0) == (fig.olan.exit == p.Orientation.UPRIGHT)
         assert p.Heading.infer(fig.template.att.bearing()[-1]) == heading
+
+
+@pytest.mark.parametrize("token", ["+++2j+++~", "~~+2j++", "`+2j+`", "-+++2j-+"])
+def test_line_extensions_are_long_forward_lines(token):
+    """F1: OpenAero reads '+' as three '~' before it finds the base, so a turn with
+    line extensions is still a turn (parseSequence, "replace longforward")."""
+    from pyolan.direction import oa_base
+
+    base, _ = oa_base(token)
+    assert base in ("+2j+", "-2j-", "-2j+", "+2j-")
+
+
+def test_turn_with_line_extensions_turns_the_direction_state():
+    """F1 example from the 2026-11-25 investigation: the h exits right to left."""
+    figs = walk_olan("ed +++2j+++~ ~~+iv.s.'++~ ~.'h.''~".split())
+    assert [(f.entry_direction, f.exit_direction) for f in figs] == [(180, 0), (0, 0), (0, 180)]
+    assert all(f.resolved for f in figs)
