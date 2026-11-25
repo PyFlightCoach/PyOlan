@@ -1,0 +1,9 @@
+{
+  "name": "pyolan-openaero-harness",
+  "private": true,
+  "description": "Headless OpenAero trace harness used to refresh PyOlan's OpenAero expectations",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "jsdom": "26.1.0"
+  }
+}

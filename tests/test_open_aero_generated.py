@@ -62,8 +62,11 @@ def pyolan_semantic(code):
 def test_fixture_has_open_aero_provenance():
     source = FIXTURE["source"]
 
-    assert source["repository"] == "PyFlightCoach/OpenAero"
-    assert len(source["revision"]) == 40
+    sha = (Path(__file__).parents[1] / "tools/openaero/OPENAERO_SHA").read_text().strip()
+    assert source["repository"] == "OpenAero/main"
+    assert source["revision"] == sha
+    assert source["dirty"] is False
+    assert source["harness_version"]
     assert source["file"] == "data/figures/figures.js"
     assert FIGURES
 

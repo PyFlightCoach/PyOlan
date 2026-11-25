@@ -3,8 +3,9 @@
 tests/data/openaero/sequence_directions.json holds OLAN sequences with the entry and
 exit direction and attitude of each figure as OpenAero reports them (direction 0 =
 left to right, 90 = front to back, 180 = right to left, 270 = back to front; the
-physical heading is reversed when the attitude is 180). It was generated with a
-headless OpenAero harness; see docs/plans/olan-roll-options.md in the workspace.
+physical heading is reversed when the attitude is 180). It is written by
+tools/openaero/export.py from the "[directions]" lines of
+tests/data/openaero/regressions.txt, using the pinned OpenAero commit.
 """
 
 import json
@@ -19,9 +20,10 @@ from tuning.builders import load_builder
 from pyolan.direction import physical_to_heading, walk_olan
 from pyolan.parser import parse_olan
 
-SEQUENCES = json.loads(
+FIXTURE = json.loads(
     (Path(__file__).parent / "data/openaero/sequence_directions.json").read_text()
 )
+SEQUENCES = FIXTURE["sequences"]
 CASES = [
     pytest.param(seq, id=seq["input"].strip()[:50] or str(i))
     for i, seq in enumerate(SEQUENCES)
@@ -35,6 +37,15 @@ def mb():
 
 def _physical(direction: int, attitude: int) -> int:
     return (direction + (180 if attitude == 180 else 0)) % 360
+
+
+def test_fixture_has_open_aero_provenance():
+    source = FIXTURE["source"]
+    sha = (Path(__file__).parents[1] / "tools/openaero/OPENAERO_SHA").read_text().strip()
+    assert source["repository"] == "OpenAero/main"
+    assert source["revision"] == sha
+    assert source["harness_version"]
+    assert SEQUENCES
 
 
 @pytest.mark.parametrize("seq", CASES)

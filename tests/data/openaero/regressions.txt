@@ -1,0 +1,76 @@
+# OLAN sequences checked against OpenAero (corpus 'regressions').
+# One sequence per line. Lines starting '[directions] ' are also written to
+# sequence_directions.json for test_direction.py. Add a sequence with
+#   .venv/bin/python packages/PyOlan/tools/openaero/add_regression.py 'OLAN ...'
+
+# Sequences checked for exit directions since 0.2 (were sequence_directions.json)
+[directions] 3% /+`,2ifpbb(````````,34...)'22`-~~ (-2,-1) 4% ``-````,5is,2ib````,24'-```` 
+[directions] -5isiBb(1.)8
+[directions] ed -5isiBb(1.)8
+[directions] >(-2,0) ``-5is...''iBb(``````)......'8'
+[directions] /d'1 5% 2a,f (-3,6) 4h4^> p(2)...' dq 4% 2b.''1.''+``` (-13,0) 3% ~2g~ (2,0) 3% iv```6s.....'' 22y````1.. (-3,0) 8% `24'zt`8''
+[directions] 4b4
+[directions] 4b4>
+[directions] 4b4^>
+[directions] 4v4
+[directions] 4v4^
+[directions] 4h4
+[directions] 4h4^>
+[directions] -4h4^>-
+[directions] ej 4b4
+[directions] eja 4b4
+[directions] eja 4h4^>
+[directions] ej d
+[directions] ej 4bb4
+[directions] ej 4n4
+[directions] eja 4n4^
+[directions] ej 4y4
+[directions] 4v4 4bb(2)4
+[directions] 4b4 ;>4bb4
+[directions] 4h4^> 4v4 4b4 4h4
+[directions] ej 4v4 4h4 4v4 4b4
+[directions] ej 1j 4j
+[directions] 1jo1> 1j
+[directions] p(2)
+[directions] p(2)-
+[directions] -p(2)
+[directions] -p(2)-
+[directions] rp(2)
+[directions] -rp(2)-
+[directions] o(2)-
+[directions] -o(2)
+[directions] p(1)
+[directions] p(22)
+[directions] pp
+[directions] rpp
+[directions] q(1)
+[directions] -q(1)-
+[directions] q2-
+[directions] pp(1)
+[directions] rpp(1)
+[directions] o2-
+[directions] -o2
+[directions] o1
+
+# IAC Unlimited 2026 known (tests/test_data/iac_unl_2026)
+3% /++,2if'pbb(``````,34...'')'22'-~~ (-2,0) 4% ~-````5is,2.''ib``,24-` 7% ``-if....'in(.,3,34...'').....''-~~ 2% 2> -'2ac(.....'',"|"32......)-- 3% -```5..,"|"34``p(,22)..'',24....++++ (3,0) "@C" 5% '9m6f,48---~~ [9,0] 6% /-''ita''3if. ~++22b..''3f.''+~~ 3% ....'22m2if~~ /3joi3
+
+# User report, 0.2.1 (2026-11-25): bare spins and snaps, inverted figures without a vertical
+ic -ivis dif ivf -iv1is ,6fic2- +d2if
+
+# Findings of the 2026-11-25 differential investigation
+ed +++2j+++~ ~~+iv.s.'++~ ~.'h.''~
+24- -1- -,2 2f- -.22--
+"@A" m1- "@B" 4h4 o
+1j1 // 3j // 3jio15- // oj
+o ,2f-
+5s,24..';>iBpb o
+6s // 5s // +5s // 6s-
+-24ipp8 // -kz- // -dhd- // -hd- // -qo- // ibh- // vv // pp // ipp // hp // iph
+d- // id // d
+c // ic // o- // -o // ao // m // q- // g
+mm3,4- // 6oo- // 6ao(1)1f // 24iao+
+oj // jw // itri // co // tri
+iv.s. // 1 // +++2j+++~
+24 // 4;4
+-iv2s
