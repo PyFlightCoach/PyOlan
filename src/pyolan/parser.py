@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import itertools
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 
 import geometry as g
 import numpy as np
@@ -26,6 +26,7 @@ class ParsedOlanFig:
     manoeuvre: Manoeuvre
     template: State
     next_itrans: g.Transformation | None = None  # where the next figure starts
+    warnings: list[str] = field(default_factory=list)  # for the pilot (D1)
 
     @property
     def short_name(self):
@@ -166,6 +167,9 @@ def parse_olan(
         index = total - len(data) - 1
         try:
             figs.append(_parse_figure(olanfig, state, figs, itrans, mb, wind))
+            figs[-1].warnings = [
+                f'Figure {len(figs)} "{olanfig.token}": {w}' for w in olanfig.warnings
+            ]
         except OlanParseError as ex:
             raise ex.at(token=olanfig.token, index=index, figure=len(figs) + 1) from None
         except Exception as ex:

@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 import json
 import itertools
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from functools import lru_cache
 from importlib.resources import files
 from typing import Tuple
@@ -44,6 +44,14 @@ def _unreadable(token: str) -> str:
     if letters:
         return f'"{letters[0]}" is not an OLAN figure or roll that PyOlan can build'
     return "not an OLAN figure, roll or drawing command"
+
+
+def _with_roll(roll: OlanRoll | None, degrees: int) -> OlanRoll:
+    """roll with a correction roll of degrees added after the rolls written."""
+    arr = list(roll.roll_arr) if roll else []
+    piece = max((r.piece for r in arr), default=-1) + 1
+    added = replace(ro(degrees / 360), piece=piece)
+    return OlanRoll(roll.rawroll if roll else "", arr + [added])
 
 
 def horizontal_fractions(start: float, amount: float, tol: float = 1e-9) -> list[float]:
@@ -80,6 +88,7 @@ class OlanFig:
     entry_direction: p.Direction = p.Direction.UPWIND
     source_pattern: str = ""
     token: str = ""  ## the whole OLAN token, including drawing characters
+    warnings: list[str] = field(default_factory=list)  # for the pilot (D1)
 
     def __len__(self):
         return len(self.fig.oels)
@@ -261,7 +270,38 @@ class OlanFig:
             entry_direction,
             d if d.startswith(("-", "+")) else "",
             d,
-        )
+        )._with_corrections()
+
+    ROLL_WORDS = {90: "a quarter roll", 180: "a half roll", 270: "a three quarter roll"}
+
+    def _with_corrections(self) -> OlanFig:
+        """Insert the rolls OpenAero inserts where the OLAN leaves out a roll the
+        figure needs (D1), and say so in warnings.
+
+        OpenAero's roll slots are, in order, the roll before the base, the rolls in
+        brackets and the roll after (a roll-only figure has one): PyOlan's prefix,
+        suffix and final. The roll goes after the rolls written in that slot.
+        """
+        if self.fig.chars in self.TURN_CHARS:
+            return self
+        oa = self.openaero()
+        if not oa.corrections:
+            return self
+        n = len(oa.roll_slots)
+        for slot, degrees in oa.corrections:
+            if n == 1 or slot == n - 1:
+                self.final = _with_roll(self.final, degrees)
+            elif slot == 0:
+                self.prefix = _with_roll(self.prefix, degrees)
+            else:
+                suffix = list(self.suffix) + [None] * (slot - len(self.suffix))
+                suffix[slot - 1] = _with_roll(suffix[slot - 1], degrees)
+                self.suffix = suffix
+            self.warnings.append(
+                f"OpenAero adds {self.ROLL_WORDS.get(abs(degrees), f'a {abs(degrees)} degree roll')} "
+                "that the OLAN leaves out; the figure is built with it"
+            )
+        return self
 
     def create_info(self):
         return ManInfo.build(

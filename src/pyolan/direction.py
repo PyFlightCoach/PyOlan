@@ -97,6 +97,11 @@ class FigureDirection:
     aresti: list[str] = field(default_factory=list)
     k_powered: int | None = None
     k_glider: int | None = None
+    # the roll slots of the figure (OpenAero fig.rolls: 0 none, 1 full, 2 half,
+    # 3 any, 4 any or spin, 9 line) and the correction rolls OpenAero inserts, as
+    # (slot, signed degrees) (D1)
+    roll_slots: list[int] = field(default_factory=list)
+    corrections: list[tuple[int, int]] = field(default_factory=list)
 
     @staticmethod
     def _physical(direction: int, attitude: int) -> int:
@@ -482,6 +487,8 @@ class DirectionState:
             ctx.aresti,
             ctx.k_powered if ctx.k_known else None,
             ctx.k_glider if ctx.k_known else None,
+            list(types),
+            ctx.corrections,
         )
 
     def _walk(self, ctx: "_FigureContext", rollnr: int) -> None:
@@ -595,6 +602,7 @@ class DirectionState:
                         self.attitude += 360
                     self.change_dir(180)
             if correction:
+                ctx.corrections.append((rollnr, int(correction)))
                 # the correction roll OpenAero inserts has its own K
                 code = {90: "4", 180: "2", 270: "3"}.get(abs(int(correction)))
                 prefix = ROLL_ATTITUDES.get(int(self.attitude) % 360)
@@ -809,6 +817,7 @@ class _FigureContext:
     k_known: bool = True
     neg_load: int = 0  # OA.negLoad
     low_k_flick: bool = False  # buildFigure's lowKFlick
+    corrections: list[tuple[int, int]] = field(default_factory=list)
 
 
 def walk_olan(tokens: list[str]) -> list[FigureDirection]:
