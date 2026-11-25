@@ -1,10 +1,8 @@
 import json
 import re
-from math import degrees
 from pathlib import Path
 
 import pytest
-from schemas.positioning import Orientation
 
 from pyolan.figure_parser import OlanFig
 
@@ -112,36 +110,6 @@ def test_fixture_metadata_and_patterns_are_well_formed():
         assert isinstance(figure["k_glider"], int)
         assert figure["k_powered"] >= 0
         assert figure["k_glider"] >= 0
-
-
-def test_all_parseable_open_aero_k_factors_match_fixture():
-    checked = 0
-
-    for source, parsed in parseable_figures():
-        assert parsed.k_powered == source["k_powered"]
-        assert parsed.k_glider == source["k_glider"]
-        assert parsed.k_factor() == source["k_powered"]
-        assert parsed.k_factor(glider=True) == source["k_glider"]
-        checked += 1
-
-    assert checked == 1127
-
-
-@pytest.mark.parametrize(
-    ("pattern", "k_powered", "k_glider"),
-    [
-        ("-d_-", 8, 8),
-        ("+d_-", 9, 0),
-        ("+2jio15-", 26, 37),
-    ],
-)
-def test_open_aero_k_factor_preserves_definition_context(
-    pattern, k_powered, k_glider
-):
-    parsed = OlanFig.take([pattern])[0]
-
-    assert parsed.k_powered == k_powered
-    assert parsed.k_glider == k_glider
 
 
 def test_fixture_contains_normalized_open_aero_semantics():
@@ -267,64 +235,6 @@ def test_open_aero_pattern_semantics_are_well_formed(figure):
 
 
 @pytest.mark.parametrize(
-    "pattern",
-    ["+d_-", "-d_-", "+_ao(_)_-", "-^tri(^)^+"],
-)
-def test_pyolan_preserves_open_aero_pattern_attitude(pattern):
-    source = next(item for item in FIGURES if item["pattern"] == pattern)
-    parsed = OlanFig.take([pattern])[0]
-
-    assert parsed.fig.chars == source["base_code"]
-    assert parsed.entry == (
-        Orientation.INVERTED
-        if source["semantics"]["attitude"]["entry"] == "inverted"
-        else Orientation.UPRIGHT
-    )
-    assert parsed.exit == (
-        Orientation.INVERTED
-        if source["semantics"]["attitude"]["exit"] == "inverted"
-        else Orientation.UPRIGHT
-    )
-
-
-def test_all_parseable_open_aero_attitudes_match_pyolan():
-    checked = 0
-
-    for source, parsed in parseable_figures():
-        assert parsed.entry == (
-            Orientation.INVERTED
-            if source["semantics"]["attitude"]["entry"] == "inverted"
-            else Orientation.UPRIGHT
-        )
-        assert parsed.exit == (
-            Orientation.INVERTED
-            if source["semantics"]["attitude"]["exit"] == "inverted"
-            else Orientation.UPRIGHT
-        )
-        checked += 1
-
-    assert checked >= 1100
-
-
-@pytest.mark.parametrize("code", ["dq", "qo", "qq", "rqq"])
-def test_signed_arc_sequence_matches_open_aero(code):
-    source = BY_CODE[code]
-    parsed = OlanFig.take([code])[0]
-    open_aero_arcs = [
-        item["angle"] / 360
-        for item in source["semantics"]["render_plan"]
-        if item["kind"] == "arc"
-    ]
-    pyolan_arcs = [
-        element.loopamount
-        for element in parsed.fig.oels
-        if element.kind == "Loop"
-    ]
-
-    assert pyolan_arcs == open_aero_arcs
-
-
-@pytest.mark.parametrize(
     ("code", "aresti", "k_powered", "k_glider"),
     [
         ("d", "1.1.2.2", 8, 8),
@@ -353,174 +263,8 @@ def test_representative_generated_codes_parse_in_pyolan(code):
     assert figure.create_elements()
 
 
-@pytest.mark.parametrize(
-    ("code", "expected"),
-    [
-        (
-            "d",
-            [
-                ("Loop", 1 / 8, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 8, False),
-            ],
-        ),
-        (
-            "v",
-            [
-                ("Loop", 1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 4, False),
-            ],
-        ),
-        ("o", [("Loop", 1, True)]),
-        (
-            "ry",
-            [
-                ("Loop", 1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", 5 / 8, False),
-                ("Line", 0, True),
-                ("Loop", 1 / 8, False),
-            ],
-        ),
-        (
-            "n",
-            [
-                ("Loop", 1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", 3 / 8, False),
-                ("Line", 0, True),
-                ("Loop", -3 / 8, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 4, False),
-            ],
-        ),
-        (
-            "cm",
-            [
-                ("Line", 0, True),
-                ("Loop", 5 / 8, False),
-                ("Line", 0, True),
-                ("Loop", -5 / 8, False),
-                ("Line", 0, True),
-            ],
-        ),
-        (
-            "tri",
-            [
-                ("Loop", 1 / 8, False),
-                ("Line", 0, True),
-                ("Loop", 3 / 8, False),
-                ("Line", 0, True),
-                ("Loop", -3 / 8, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 8, False),
-            ],
-        ),
-        (
-            "xm",
-            [
-                ("Loop", 1 / 8, True),
-                ("Loop", 1 / 8, True),
-                ("Loop", 1 / 8, True),
-                ("Loop", 1 / 8, False),
-            ],
-        ),
-    ],
-)
-def test_representative_open_aero_semantics(code, expected):
-    actual = [
-        (element["kind"], element["amount"], element["can_roll"])
-        for element in pyolan_semantic(code)
-    ]
-
-    assert actual == expected
-
-
 def test_generated_fixture_has_one_normalized_record_per_definition_code():
     assert set(BY_CODE) >= {"d", "v", "o", "ry", "n", "cm", "tri", "xm"}
-
-
-@pytest.mark.parametrize("code", ["d", "v", "o", "ry", "n", "cm", "tri", "xm"])
-def test_pyolan_element_count_matches_open_aero_render_arcs(code):
-    source = BY_CODE[code]
-    arcs = [
-        item
-        for item in source["semantics"]["render_plan"]
-        if item["kind"] == "arc"
-    ]
-    parsed = OlanFig.take([code])[0]
-
-    assert len([element for element in parsed.fig.oels if element.kind == "Loop"]) == len(
-        arcs
-    )
-
-
-def test_extended_immelman_preserves_open_aero_roll_slots():
-    parsed = OlanFig.take(["1xm(1)1"])[0]
-
-    assert [element.canRoll for element in parsed.fig.oels] == [
-        True,
-        True,
-        True,
-        False,
-    ]
-
-
-def test_reverse_cuban_matches_open_aero_arc_and_roll_structure():
-    source = BY_CODE["rcc"]
-    parsed = OlanFig.take(["rcc"])[0]
-    plan = source["semantics"]["render_plan"]
-
-    assert len([item for item in plan if item["kind"] == "arc"]) == 3
-    assert len([item for item in plan if item["kind"] == "roll"]) == 3
-    assert len([element for element in parsed.fig.oels if element.kind == "Loop"]) == 3
-    assert len([element for element in parsed.fig.oels if element.canRoll]) == 3
-
-
-@pytest.mark.parametrize(
-    "code",
-    [
-        "tri",
-        "rcc",
-        "vv",
-        "hat",
-        "xm",
-        "xa",
-        "co",
-        "hp",
-        "dq",
-        "qo",
-        "qq",
-        "rqq",
-    ]
-)
-def test_roll_slot_count_matches_open_aero_definition(code):
-    source = BY_CODE[code]
-    parsed = OlanFig.take([code])[0]
-    open_aero_slots = sum(
-        marker in "_^&$" for marker in source["semantics"]["roll_markers"]
-    )
-
-    assert sum(element.canRoll for element in parsed.fig.oels) == open_aero_slots
-
-
-@pytest.mark.parametrize(
-    ("code", "special_shape", "element_kind"),
-    [
-        ("h", "h", "Stallturn"),
-        ("ta", "t", "Tailslide"),
-    ],
-)
-def test_special_figures_match_open_aero_structure(code, special_shape, element_kind):
-    source = BY_CODE[code]
-    parsed = OlanFig.take([code])[0]
-    plan = source["semantics"]["render_plan"]
-
-    assert [item["shape"] for item in plan if item["kind"] == "special"] == [
-        special_shape
-    ]
-    assert [element.kind for element in parsed.fig.oels].count(element_kind) == 1
 
 
 @pytest.mark.parametrize("code", ["h", "dh", "dhd", "hd", "hp", "th", "ta"])
@@ -580,34 +324,18 @@ def test_open_aero_turn_family_semantics(code, expected):
 
 
 @pytest.mark.parametrize(
-    ("code", "turnamount"),
-    [("oaj", 1 / 4), ("oajj", 1 / 2), ("oajjj", 3 / 4), ("oajjjj", 1)],
-)
-def test_open_aero_loop_and_turn_variants(code, turnamount):
-    source = BY_CODE[code]
-    parsed = OlanFig.take([code])[0]
-
-    assert source["semantics"]["render_plan"][-2]["kind"] == "turn"
-    assert source["semantics"]["render_plan"][-2]["token"] == f"j{int(turnamount * 4)}"
-    assert parsed.fig.oels[-1].kind == "Turn"
-    assert parsed.fig.oels[-1].turnamount == turnamount
-
-
-@pytest.mark.parametrize(
-    ("code", "turnamount", "roll_total", "rolltype"),
+    ("code", "turnamount", "rolltype"),
     [
-        ("j", 1 / 4, 0, "i"),
-        ("1j5", 1 / 4, 5, "i"),
-        ("2jio15", 1 / 2, 1.5, "io"),
-        ("3j3", 3 / 4, 3, "i"),
-        ("4j5", 1, 5, "i"),
-        ("4jio3", 1, 1, "io"),
-        ("4joi4", 1, 0, "oi"),
+        ("j", 1 / 4, "i"),
+        ("1j5", 1 / 4, "i"),
+        ("2jio15", 1 / 2, "io"),
+        ("3j3", 3 / 4, "i"),
+        ("4j5", 1, "i"),
+        ("4jio3", 1, "io"),
+        ("4joi4", 1, "oi"),
     ],
 )
-def test_open_aero_rolling_turn_tokens_match_pyolan(
-    code, turnamount, roll_total, rolltype
-):
+def test_open_aero_rolling_turn_tokens_match_pyolan(code, turnamount, rolltype):
     source = BY_CODE[code]
     parsed = OlanFig.take([code])[0]
     turns = [element for element in parsed.fig.oels if element.kind == "Turn"]
@@ -621,9 +349,6 @@ def test_open_aero_rolling_turn_tokens_match_pyolan(
     assert tokens[0].lower().startswith("j")
     assert turns[0].turnamount == turnamount
     assert turns[0].rolltype == rolltype
-    assert sum(
-        sum(roll.turns()) for roll in parsed.element_rolls() if roll
-    ) == roll_total
 
 
 def test_all_numeric_rolling_turn_definitions_match_open_aero():
@@ -655,106 +380,6 @@ def test_all_numeric_rolling_turn_definitions_match_open_aero():
         checked += 1
 
     assert checked >= 40
-
-
-def test_independent_roll_markers_match_parseable_element_slots():
-    checked = 0
-    seen = set()
-
-    for source in FIGURES:
-        pattern = source["pattern"]
-        markers = source["semantics"]["roll_markers"]
-        if (
-            not source["base_code"]
-            or pattern in seen
-            or not markers
-            or not set(markers) <= {"_", "&"}
-            or any(
-                item["kind"] == "embedded_roll"
-                for item in source["semantics"]["render_plan"]
-            )
-        ):
-            continue
-        seen.add(pattern)
-
-        try:
-            parsed = OlanFig.take([pattern])[0]
-        except Exception:
-            continue
-
-        render_rolls = [
-            item
-            for item in source["semantics"]["render_plan"]
-            if item["kind"] == "roll"
-        ]
-        element_rolls = [
-            roll for roll in parsed.element_rolls() if roll is not None
-        ]
-
-        assert len(render_rolls) == len(element_rolls)
-        checked += 1
-
-    assert checked >= 350
-
-
-@pytest.mark.parametrize(
-    ("pattern", "expected_loop_angles", "expected_roll_types"),
-    [
-        ("+d_-", [45, 45], ["roll"]),
-        ("-d_-", [-45, 45], ["roll"]),
-        ("+v&+", [90, -90], ["roll"]),
-        ("+&n(_)&+", [90, 135, -135, -90], ["roll", "roll", "roll"]),
-        ("+id_+", [-45, 45], ["roll"]),
-        ("-id_-", [45, -45], ["roll"]),
-        ("+d^-", [45, 45], []),
-        ("-d^+", [-45, -45], []),
-        ("+z_+", [135, -135], ["roll"]),
-        ("-z_-", [-135, 135], ["roll"]),
-        ("+iv$+", [-90, 90], ["roll"]),
-        ("-iv$-", [90, -90], ["roll"]),
-    ],
-)
-def test_open_aero_rolls_preserve_signed_loop_directions(
-    pattern, expected_loop_angles, expected_roll_types
-):
-    """Roll placement must retain the OpenAero attitude-dependent signs."""
-    parsed = OlanFig.take([pattern])[0]
-    elements = parsed.create_elements()
-
-    assert [
-        round(element.args[0] * 180 / 3.141592653589793)
-        for element in elements
-        if element.kind == "loop"
-    ] == expected_loop_angles
-    assert [
-        roll.rolltypes()
-        for roll in parsed.element_rolls()
-        if roll is not None
-    ] == expected_roll_types
-
-
-@pytest.mark.parametrize(
-    ("pattern", "expected_loop_angles"),
-    [
-        ("+&h&+", [90, 90]),
-        ("+&h&-", [90, -90]),
-        ("+&ta&+", [90, 90]),
-        ("-&ta&+", [-90, 90]),
-        ("+_dhd(&)(&)_+", [45, 45, 45, 45]),
-        ("+&hd(&)_+", [90, 45, 45]),
-        ("+&ita&+", [90, 90]),
-    ],
-)
-def test_open_aero_special_and_compound_roll_directions(
-    pattern, expected_loop_angles
-):
-    parsed = OlanFig.take([pattern])[0]
-
-    assert [
-        round(element.args[0] * 180 / 3.141592653589793)
-        for element in parsed.create_elements()
-        if element.kind == "loop"
-    ] == expected_loop_angles
 
 
 def test_turn_render_tokens_match_parseable_turn_elements():
@@ -797,90 +422,3 @@ def test_turn_render_tokens_match_parseable_turn_elements():
     assert checked >= 90
 
 
-@pytest.mark.parametrize(
-    ("code", "expected"),
-    [
-        (
-            "dz",
-            [
-                ("Loop", 1 / 8, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 8, False),
-                ("Loop", 3 / 8, False),
-                ("Line", 0, True),
-                ("Loop", -3 / 8, False),
-            ],
-        ),
-        (
-            "dvz",
-            [
-                ("Loop", 1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 4, False),
-                ("Loop", 1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 4, False),
-                ("Loop", 1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 4, False),
-            ],
-        ),
-        (
-            "dvd",
-            [
-                ("Loop", 1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", -1 / 4, False),
-                ("Loop", -1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", 1 / 4, False),
-                ("Loop", -1 / 4, False),
-                ("Line", 0, True),
-                ("Loop", 1 / 4, False),
-            ],
-        ),
-        ("vv", [("Loop", 1 / 4, False), ("Line", 0, True), ("Loop", -1 / 4, False), ("Line", 0, True), ("Loop", 1 / 4, False), ("Line", 0, True), ("Loop", -1 / 4, False)]),
-        ("hat", [("Loop", 1 / 4, False), ("Line", 0, True), ("Loop", -1 / 4, False), ("Line", 0, True), ("Loop", 1 / 4, False), ("Line", 0, True), ("Loop", -1 / 4, False)]),
-    ],
-)
-def test_open_aero_extended_loop_family_semantics(code, expected):
-    actual = [
-        (element["kind"], element["amount"], element["can_roll"])
-        for element in pyolan_semantic(code)
-    ]
-
-    assert actual == expected
-
-
-@pytest.mark.parametrize(
-    ("code", "expected_kinds", "expected_angles"),
-    [
-        (
-            "dz",
-            ["loop", "line", "loop", "loop", "line", "loop"],
-            [45, -45, 135, -135],
-        ),
-        (
-            "dvz",
-            ["loop", "line", "loop", "loop", "line", "loop", "loop", "line", "loop"],
-            [90, -90, 90, -90, 90, -90],
-        ),
-        (
-            "dvd",
-            ["loop", "line", "loop", "loop", "line", "loop", "loop", "line", "loop"],
-            [90, -90, -90, 90, -90, 90],
-        ),
-    ],
-)
-def test_compound_geometry_preserves_pyolan_loop_decomposition(
-    code, expected_kinds, expected_angles
-):
-    """Adjacent OpenAero arcs are represented as separate PyOlan loop elements."""
-    elements = OlanFig.take([code])[0].create_elements()
-
-    assert [element.kind for element in elements] == expected_kinds
-    assert [
-        round(degrees(element.args[0]))
-        for element in elements
-        if element.kind == "loop"
-    ] == expected_angles

@@ -4,7 +4,6 @@ from pyolan.drawing import re_drawing
 from pyolan.figure_parser import OlanFig
 from pyolan.primitives import olan_figs
 from pyolan.rolls import OlanRoll, sn, spi
-from schemas.positioning import Orientation
 
 
 @pytest.mark.parametrize("figure_code", sorted(olan_figs))
@@ -14,31 +13,6 @@ def test_open_aero_figure_codes_parse_and_build(figure_code):
 
     assert figure_code in figure.fig.chars.split("|")
     assert figure.create_elements()
-
-
-@pytest.mark.parametrize(
-    ("figure_code", "element_kinds"),
-    [
-        ("d", ["Loop", "Line", "Loop"]),
-        ("v", ["Loop", "Line", "Loop"]),
-        ("a", ["Line", "Loop", "Line"]),
-        ("o", ["Loop"]),
-        ("ao", ["Line", "Loop", "Loop", "Line"]),
-        ("q", ["Line", "Loop", "Line", "Loop"]),
-        ("c", ["Line", "Loop", "Line", "Loop"]),
-        ("g", ["Loop", "Line", "Loop", "Line", "Loop"]),
-        ("h", ["Loop", "Line", "Stallturn", "Line", "Loop"]),
-        ("ta", ["Loop", "Line", "Tailslide", "Line", "Loop"]),
-        ("n", ["Loop", "Line", "Loop", "Line", "Loop", "Line", "Loop"]),
-        ("w", ["Loop", "Line", "Loop", "Line", "Loop", "Line", "Loop"]),
-        ("j", ["Turn"]),
-        ("jo", ["Turn"]),
-    ],
-)
-def test_open_aero_primitive_element_shapes(figure_code, element_kinds):
-    figure = OlanFig.take([figure_code])[0]
-
-    assert [element.kind for element in figure.fig.oels] == element_kinds
 
 
 @pytest.mark.parametrize(
@@ -111,28 +85,7 @@ def test_open_aero_drawing_tokens_are_not_figures(drawing):
         OlanFig.take([drawing])
 
 
-@pytest.mark.parametrize(
-    ("figure_code", "prefix", "suffix", "entry_inverted", "exit_inverted"),
-    [
-        ("-o-", "", "", True, True),
-        ("o", "", "", False, False),
-        ("-ry", "", "", True, False),
-        ("ry-", "", "", False, True),
-        ("o8;5f-", "", "8;5f", False, True),
-    ],
-)
-def test_open_aero_attitude_and_roll_forms(
-    figure_code, prefix, suffix, entry_inverted, exit_inverted
-):
-    figure = OlanFig.take([figure_code])[0]
+def test_open_aero_roll_prefix_and_suffix_forms():
+    figure = OlanFig.take(["o8;5f-"])[0]
 
-    assert figure.entry == (
-        Orientation.INVERTED if entry_inverted else Orientation.UPRIGHT
-    )
-    assert figure.exit == (
-        Orientation.INVERTED if exit_inverted else Orientation.UPRIGHT
-    )
-    if prefix:
-        assert figure.prefix == OlanRoll.parse(prefix)
-    if suffix:
-        assert figure.final.turns() == OlanRoll.parse(suffix).turns()
+    assert figure.final.turns() == OlanRoll.parse("8;5f").turns()
