@@ -160,8 +160,9 @@ def test_olan_take_turn():
 
 def test_create_rolling_turn_preserves_angles_and_ke():
     for code, expected_rolls in [
-        ("1j5", [np.radians(1800)]),
-        ("1jo5", [np.radians(-1800)]),
+        # "5" is a half roll, as OpenAero reads it (F17; was five rolls)
+        ("1j5", [np.radians(180)]),
+        ("1jo5", [np.radians(-180)]),
     ]:
         element = OlanFig.take([code])[0].create_elements()[0]
 
@@ -179,12 +180,15 @@ def test_olan_take_turn_2():
 
 def test_olan_take_compound_rolling_turn_variants():
     cases = [
-        ("1j5", "i", 1 / 4, [ro(5)]),
-        ("1jo5", "o", 1 / 4, [ro(-5)]),
-        ("2j15", "i", 1 / 2, [ro(1.5), ro(0.5)]),
-        ("2jo15", "o", 1 / 2, [ro(-1.5), ro(0.5)]),
-        ("2jio15", "io", 1 / 2, [ro(1), ro(0.5)]),
+        # each digit is rolls, "5" a half roll; io and oi alternate every roll
+        # (F17: these were 5, -5, [1.5, 0.5], [-1.5, 0.5], [1, 0.5], [-1, 0.5])
+        ("1j5", "i", 1 / 4, [ro(0.5)]),
+        ("1jo5", "o", 1 / 4, [ro(-0.5)]),
+        ("2j15", "i", 1 / 2, [ro(1.5)]),
+        ("2jo15", "o", 1 / 2, [ro(-1.5)]),
+        ("2jio15", "io", 1 / 2, [ro(1), ro(-0.5)]),
         ("2joi15", "oi", 1 / 2, [ro(-1), ro(0.5)]),
+        ("2jio51", "io", 1 / 2, [ro(0.5), ro(-1)]),
         ("3jio3", "io", 3 / 4, [ro(1), ro(-1), ro(1)]),
         ("4jio3", "io", 1, [ro(1), ro(-1), ro(1)]),
         ("4joi4", "oi", 1, [ro(-1), ro(1), ro(-1), ro(1)]),
@@ -312,3 +316,12 @@ def test_half_cuban_from_the_top_after_an_entry_snap():
         ("roll", [pytest.approx(np.pi)]),
         ("loop", [pytest.approx(np.pi / 4)]),
     ]
+
+
+@pytest.mark.parametrize("code, turns, negative", [("6s", 1.5, False), ("+5s", 1.25, False), ("-5is", 1.25, True), ("s", 1, False)])
+def test_spin_with_no_figure_is_a_spin(code, turns, negative):
+    """F7: OpenAero's iv downline with the spin; the turns are a spin roll."""
+    fig = OlanFig.take([code])[0]
+    roll = fig.element_rolls()[0].roll_arr
+    assert [(r.kind, r.turns, r.negative) for r in roll] == [("spin", turns, negative)]
+    assert fig.create_elements()[0].kind == "spin"

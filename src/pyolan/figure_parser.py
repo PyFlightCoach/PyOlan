@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 import json
 import itertools
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from importlib.resources import files
 from typing import Tuple
@@ -206,31 +206,38 @@ class OlanFig:
             prefix = None
             suffix = []
 
-            rolls = int(_suffix.strip("-")) if _suffix.strip("-") else 0
-
+            # The digits after j are rolls, one digit at a time as OpenAero reads
+            # them (makeTurn): "5" is a half roll, any other digit that many full
+            # rolls ("15": a roll then a half roll). The first roll goes inwards
+            # for j, ji and jio and outwards for jo and joi; jio and joi alternate
+            # every roll. Consecutive rolls the same way are one roll (F17).
+            digits = _suffix.strip("-")
+            if not re.fullmatch(r"\d*", digits):
+                raise OlanParseError(f'"{digits}" is not a rolling turn roll count')
+            sign = 1 if ofig.chars in ["j", "ji", "jio"] else -1
+            alternate = ofig.chars in ["joi", "jio"]
             suff_rolls = []
-            if rolls > 0:
-                rolls = (rolls * 10 if rolls < 10 else rolls) / 10
-
-                sign = 1 if ofig.chars in ["j", "ji", "jio"] else -1
-
-                if ofig.chars in ["joi", "jio"]:
-                    swapper = -1
-                    for _ in range(int(rolls // 1)):
-                        suff_rolls.append(ro(sign))
-                        sign = sign * swapper
-                else:
-                    suff_rolls = [ro(sign * rolls)]
-                if rolls % 1:
-                    suff_rolls.append(ro(rolls % 1))
-                final = OlanRoll(_suffix, suff_rolls)
-            else:
-                final = None
+            for digit in digits:
+                for amount in [0.5] if digit == "5" else [1] * int(digit):
+                    if suff_rolls and not alternate and np.sign(suff_rolls[-1].turns) == sign:
+                        suff_rolls[-1] = ro(suff_rolls[-1].turns + sign * amount)
+                    else:
+                        suff_rolls.append(ro(sign * amount))
+                    if alternate:
+                        sign = -sign
+            final = OlanRoll(_suffix, suff_rolls) if suff_rolls else None
 
         else:
             prefix = OlanRoll.parse(_prefix.lstrip("-").split(")")[-1])
             suffix = [OlanRoll.parse(r) for r in re.findall(r"\((.*?)\)", _suffix)]
             final = OlanRoll.parse(_suffix.split(")")[-1].rstrip("-"))
+            if ofig.name == "Spin" and prefix is not None:
+                # a spin with no figure ("6s", "-5is") is OpenAero's iv downline
+                # with that spin: the turns before the s are the spin (F7)
+                prefix = OlanRoll(
+                    prefix.rawroll + fig_chars,
+                    [replace(r, kind="spin", negative=fig_chars == "is") for r in prefix.roll_arr],
+                )
 
         entry_direction = p.Direction.UPWIND
         for dr in draw:

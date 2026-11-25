@@ -149,8 +149,6 @@
      "-4hat4-",
      "-4hp(4)",
      "-4hp(9)22-",
-     "-4j5",
-     "-4jo5",
      "-4th4",
      "-4th4-",
      "-4vv4-",
@@ -378,8 +376,6 @@
      "48xa(1if)2,2",
      "4hat4",
      "4hp(4)",
-     "4j5-",
-     "4jo5-",
      "4th4",
      "4th4-",
      "4vv4",
@@ -757,32 +753,6 @@
      "ooo2f-",
      "ooo6-",
      "ooo6if-"
-    ],
-    "F17": [
-     "-1j5",
-     "-1jo5",
-     "-2j15",
-     "-2jio15",
-     "-2jio51",
-     "-2jo15",
-     "-2joi51",
-     "-3j15",
-     "-3jio15",
-     "-3jio51",
-     "-3jo15",
-     "-3joi51",
-     "1j5-",
-     "1jo5-",
-     "2j15-",
-     "2jio15-",
-     "2jio51-",
-     "2jo15-",
-     "2joi51-",
-     "3j15-",
-     "3jio15-",
-     "3jio51-",
-     "3jo15-",
-     "3joi51-"
     ],
     "F10": [
      "-a-",
@@ -1206,43 +1176,9 @@
      "~~+oj+",
      "~~oj++~~"
     ],
-    "F17": [
-     "++3jo15------~",
-     "-1jo5",
-     "-1jo5+",
-     "-2j15",
-     "-2jio15",
-     "-2jo15",
-     "-3jio15>",
-     "-3jo15",
-     "/-3jio15+~~",
-     "/``+3j15-",
-     "/``-3jo15",
-     "/```+3jio15--",
-     "/~3jio15-``",
-     "1j5-",
-     "2j15-",
-     "2jio15-",
-     "3jio51-",
-     "3joi51-",
-     "``+3j15-",
-     "``+3jio15-",
-     "``-2jio15",
-     "``-2jio15+``",
-     "``-2joi51+``",
-     "``-3jio15",
-     "```-2j15",
-     "````+3jio15->",
-     "~-2jo15+```",
-     "~~-2j15"
-    ],
     "F8": [
      "-24ipp8",
      "````7s',3....'ikz.',2`,24.~~"
-    ],
-    "F6": [
-     "-5is'',2f..'';>ibpb(``````3).',1''",
-     "/``+```5s,24..';>iBpb(````````,3if').',8',4"
     ],
     "F11": [
      "24iao+`",
@@ -1511,8 +1447,7 @@
     ],
     "F7": [
      "2014 CIVA Int Known#6",
-     "2014 CIVA Yak 52 Known#6",
-     "2024 CIVA-Glider Unl Free Known#7"
+     "2014 CIVA Yak 52 Known#6"
     ],
     "F4": [
      "2014 France Doret Connu1#7",
@@ -1566,6 +1501,8 @@
      "2024 IMAC Intermediate Known#19",
      "2024 NZAC Advanced Known#17",
      "2025 AAC Int Free Known#7",
+     "2025 BAeA Unl Free Known#8",
+     "2025 CIVA Unl Free Known#8",
      "2025 IMAC Advanced Known#7",
      "2026 IAC Intermediate Known#16",
      "2027 NZAC Intermediate Known#16"
@@ -1574,16 +1511,9 @@
      "2014 France Doret Connu2#11",
      "2015 CIVA Int Known#13",
      "2015 CIVA Yak 52 Known#13",
-     "2015 CIVA-Glider Unl Known#7",
-     "2015 CIVA-Glider Unl Known#9",
      "2015 France Doret Connu1#7",
      "2016 CIVA Unl Free Known#7",
      "2016 CIVA Unl Free Known#9",
-     "2016 France Doret/excellence Connu1#10",
-     "2016 France Doret/excellence Connu1#11",
-     "2016 France Doret/excellence Connu1#12",
-     "2016 France Doret/excellence Connu1#7",
-     "2016 France Doret/excellence Connu1#9",
      "2017 France Doret/excellence connu 2#12",
      "2017 IAC Unlimited Known#11",
      "2017 IAC Unlimited Known#12",
@@ -1615,10 +1545,6 @@
      "2020 CIVA Yak52 Free Known#9",
      "2020 France Doret/excellence connu 1#11",
      "2020 France Doret/excellence connu 1#9",
-     "2020 IAC Advanced Known#13",
-     "2021 France Doret/excellence connu 2#10",
-     "2021 France Doret/excellence connu 2#11",
-     "2021 France Doret/excellence connu 2#9",
      "2021 IAC Unlimited Known#10",
      "2021 IAC Unlimited Known#6",
      "2021 IAC Unlimited Known#7",
@@ -1644,16 +1570,6 @@
      "2023 France National_2 connu 2#8",
      "2023 France National_2 connu 2#9",
      "2023 IAC Unlimited Known#5",
-     "2024 CIVA Adv Free Known#3",
-     "2024 CIVA Adv Free Known#5",
-     "2024 CIVA Adv Free Known#7",
-     "2024 NZAC Unlimited Known#10",
-     "2024 NZAC Unlimited Known#5",
-     "2024 NZAC Unlimited Known#6",
-     "2024 NZAC Unlimited Known#7",
-     "2024 NZAC Unlimited Known#8",
-     "2025 BAeA Unl Free Known#8",
-     "2025 CIVA Unl Free Known#8",
      "2025 IAC Unlimited Known#10",
      "2026 NZAC Unlimited Known#10"
     ],
@@ -1679,6 +1595,7 @@
     ],
     "F3": [
      "2016 CIVA Adv Free Known#3",
+     "2016 CIVA Adv Free Known#9",
      "2016 CIVA-Glider Unl Free Known#3",
      "2016 CIVA-Glider Unl Free Known#5",
      "2016 CIVA-Glider Unl Free Known#9",
@@ -1733,6 +1650,7 @@
      "2024 CIVA-Glider Adv Free Known#7",
      "2024 CIVA-Glider Adv Free Known#9",
      "2024 CIVA-Glider Unl Free Known#5",
+     "2024 CIVA-Glider Unl Free Known#7",
      "2024 CIVA-Glider Unl Free Known#9",
      "2025 AAC Int Free Known#10",
      "2025 AAC Int Free Known#13",
@@ -1770,24 +1688,9 @@
      "2023 IMAC Unlimited Alt-Known#8",
      "2023 IMAC Unlimited Known#5"
     ]
-   },
-   "negative": {
-    "F7": [
-     "6s",
-     "6s-",
-     "``+5s....++"
-    ]
    }
   },
   "regressions": {
-   "negative": {
-    "F7": [
-     "+5s",
-     "5s",
-     "6s",
-     "6s-"
-    ]
-   },
    "elements": {
     "F9": [
      "+d2if",
@@ -1820,12 +1723,6 @@
      "6ao(1)1f",
      "6oo-",
      "mm3,4-"
-    ],
-    "F17": [
-     "3jio15-"
-    ],
-    "F6": [
-     "5s,24..';>iBpb"
     ],
     "F12": [
      "co",
@@ -1870,21 +1767,6 @@
      ";24",
      "ao()",
      "~~2f~"
-    ],
-    "F6": [
-     "4,h4",
-     "4;h4",
-     "4h4,",
-     "4h4;",
-     "5s,",
-     "5s;",
-     "iv2s;"
-    ]
-   },
-   "negative": {
-    "F7": [
-     "5s,",
-     "5s;"
     ]
    },
    "extra": {

@@ -47,3 +47,17 @@ def test_oroll_pfc_roll():
     assert OlanRoll.parse("88").pfc_roll() == "8x8"
 
     assert OlanRoll.parse("2,2f").pfc_roll() == pos.r([0.5, -0.5])
+
+
+def test_point_roll_and_separate_rolls_stay_distinct():
+    """F14: "24" is one two point roll, "4;4" two quarter rolls; same geometry."""
+    points, separate = OlanRoll.parse("24").roll_arr, OlanRoll.parse("4;4").roll_arr
+    assert points == separate
+    assert [r.piece for r in points] == [0, 0]
+    assert [r.piece for r in separate] == [0, 1]
+
+
+def test_separator_with_no_roll_adds_none():
+    """F6: OpenAero reads a trailing ";" or "," as nothing."""
+    assert OlanRoll.parse("4,").roll_arr == [ro(0.25)]
+    assert OlanRoll.parse("5s;").turns() == [1.25]

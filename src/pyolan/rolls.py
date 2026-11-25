@@ -6,7 +6,7 @@ The OlanRoll class handles the entire combination, so all the points of a point 
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 from typing import Literal
 
 import numpy as np
@@ -67,6 +67,10 @@ class ORoll:
     kind: Literal["roll", "snap", "spin"]
     turns: float
     negative: bool = False
+    # which written roll it comes from: the points of "24" share one piece, the
+    # two quarter rolls of "4;4" have two (F14). The geometry is the same, so it
+    # is not compared; the Aresti numbers and K are not the same.
+    piece: int = field(default=0, compare=False)
 
     def __repr__(self):
         return f"{self.turns}{'i' if self.negative else ''}{dict(roll='', snap='f', spin='s')[self.kind]}"
@@ -150,13 +154,16 @@ class OlanRoll:
         rolls = []
         rollarr = [";"] + re.split(r"(;|,)", re.sub(r"^(;|,)", "", data))
         last_direction = 1
+        piece = 0
         for direction, roll in zip(rollarr[::2], rollarr[1::2]):
-            # a separator with nothing after it is a full roll (F6, see C6)
-            pieces = _roll_pieces(roll) if roll else [(None, None)]
+            # a separator with nothing after it adds no roll, as in OpenAero (F6)
+            pieces = _roll_pieces(roll) if roll else []
             last_direction = last_direction if direction == ";" else -last_direction
             for num, roll_chars in pieces:
                 new_rolls = olan_rolls[num] if num else [1]
                 rolls = rolls + [
-                    create_roll(roll_chars, r * last_direction) for r in new_rolls
+                    replace(create_roll(roll_chars, r * last_direction), piece=piece)
+                    for r in new_rolls
                 ]
+                piece += 1
         return OlanRoll(data, rolls)
