@@ -17,6 +17,8 @@ import pytest
 import schemas.positioning as p
 from flightdata import State
 from schemas import aresti as a
+from dataclasses import replace
+
 from tuning.builders import load_builder
 
 from pyolan.f3a import F3AParseError
@@ -24,6 +26,15 @@ from pyolan.f3a import parse_f3a_description as _parse_f3a_description
 from pyolan.f3a.normalise import normalise, normalise_number, split_description
 from pyolan.f3a.rolls import parse_roll
 from pyolan.f3a.steps import FREE_VERTICAL
+
+
+def _f3a_builder():
+    """f3a pinned to its pre-calibration default sizes (30 m/s, 55 m loops, 130 m lines), the
+    template the closure and height expectations here were written against; the 2026-11-24
+    calibration (Tuning 741437d) shortened the lines so some rolls outgrow their padded lines.
+    """
+    builder = load_builder("f3a")
+    return replace(builder, mps=builder.mps.set_values(speed=30.0, loop_radius=55.0, line_length=130.0))
 
 
 
@@ -462,7 +473,7 @@ def test_triangle_starting_at_the_apex_closes(entry):
     # figure starts and finishes at the same point, so it is sqrt(2)*line_length long and
     # has no line_length comparison. A triangle that starts on its base has no horizontal
     # side in the figure (the base is the entry and exit line).
-    builder = load_builder("f3a")
+    builder = _f3a_builder()
     fig = parse_f3a_description(entry["description"], entry["number"], entry["k"])
     mdef = builder.create_mdef(fig)
     base = [n for n, ed in mdef.eds.data.items() if "line_length*1.41" in str(ed)]
@@ -574,7 +585,7 @@ def test_text_only_gives_position_from_the_shape():
 
 @pytest.fixture(scope="module")
 def mb():
-    return load_builder("f3a")
+    return _f3a_builder()
 
 
 def _height(z: float, zs: np.ndarray) -> str:
