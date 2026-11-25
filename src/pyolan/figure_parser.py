@@ -28,7 +28,22 @@ from schemas import aresti as a, ManInfo
 from .primitives import OFig, sp, li, lo, tu, ofig_re, olan_figs
 from .rolls import OlanRoll, ro
 
-from .drawing import re_drawing, re_draw
+from .drawing import re_drawing, re_draw, strip_comments
+from .errors import NoFigureLeft, OlanParseError
+
+
+_OLAN_CHARACTERS = re.compile(r"[0-9a-zA-Z_&$;,()\-+~`'.>^/%\[\]\"|]")
+
+
+def _unreadable(token: str) -> str:
+    """Why a token is neither a figure nor a drawing command, for a pilot."""
+    bad = [c for c in strip_comments(token) if not _OLAN_CHARACTERS.fullmatch(c)]
+    if bad:
+        return f'"{bad[0]}" is not an OLAN character'
+    letters = re.sub(r"[^a-zA-Z]", " ", re_draw.sub("", strip_comments(token))).split()
+    if letters:
+        return f'"{letters[0]}" is not an OLAN figure or roll that PyOlan can build'
+    return "not an OLAN figure, roll or drawing command"
 
 
 @lru_cache
@@ -256,57 +271,85 @@ class OlanFig:
 
     @staticmethod
     def take(data: list[str]) -> Tuple[OlanFig, list[str]]:
-        """read one olan figure from an array of strings, return figure and the remaining array"""
+        """read one olan figure from an array of strings, return figure and the remaining array
+
+        Raises NoFigureLeft when only drawing commands are left, and OlanParseError
+        (with the token and its index in data) for an item that is neither a drawing
+        command nor a figure.
+        """
         draw = []
         for i, d in enumerate(data):
             if re_drawing.match(d):
                 draw.append(d)
-            else:
-                rawfig = re_draw.sub("", d)
-                fig_chars = None
-
-                # check if it is a figure
-                res = ofig_re.search(d)
-                if res and res.group(2):
-                    fig_chars = res.group(2)
-                    ofig = olan_figs[res.group(2).lstrip("i")]
-                    if res.group(2).startswith("i") and not ofig.invertable:
-                        ofig = olan_figs[res.group(2)]
-                if not fig_chars:
-                    # check if it is a spin
-                    res = re.search(r"([^a-z]|^)(s|is)([^a-z]|$)", rawfig)
-                    if res and res.group(2):
-                        fig_chars = res.group(2)
-                        ofig = OFig(
-                            "Spin", "sp", "", [sp(), li(), lo(1 / 4)], False, -1
-                        )
-                        # a bare spin ("s", "-is") is one turn, as in OpenAero
-                        spin_prefix = rawfig[: res.start(2)]
-                        if not re.search(r"\d", spin_prefix):
-                            rawfig = f"{spin_prefix}1{rawfig[res.start(2):]}"
-
-                if fig_chars:
-                    _prefix, _suffix = rawfig.split(fig_chars)
-
-                if not fig_chars:
-                    # check if its a roll
-                    roll = OlanRoll.parse(rawfig)
-                    if roll and len(roll.roll_arr):
-                        fig_chars = "r"
-                        ofig = OFig("Roll", "roll", "r", [li()])
-                        _prefix = ""
-                        _suffix = rawfig
-
-                if fig_chars:
-                    break
-                else:
-                    logger.warning(
-                        "Unknown olan entry, assuming it is a drawing command", d
-                    )
-                    draw.append(d)
+                continue
+            bad = [c for c in strip_comments(d) if not _OLAN_CHARACTERS.fullmatch(c)]
+            if bad:
+                raise OlanParseError(f'"{bad[0]}" is not an OLAN character', d, i)
+            try:
+                found = OlanFig._read_token(d)
+            except OlanParseError as ex:
+                raise ex.at(token=d, index=i) from None
+            if found is None:
+                raise OlanParseError(_unreadable(d), d, i)
+            rawfig, fig_chars, ofig, _prefix, _suffix = found
+            break
         else:
-            raise Exception("No olan figure found in data")
+            raise NoFigureLeft("No olan figure found in data")
+        try:
+            return OlanFig._build(d, draw, rawfig, fig_chars, ofig, _prefix, _suffix), data[i + 1 :]
+        except OlanParseError as ex:
+            raise ex.at(token=d, index=i) from None
+        except (ValueError, KeyError, IndexError) as ex:
+            raise OlanParseError(f"cannot be read ({ex})", d, i) from ex
 
+    @staticmethod
+    def _read_token(d: str):
+        """(rawfig, fig_chars, ofig, prefix, suffix) for a figure token, else None."""
+        rawfig = re_draw.sub("", d)
+        fig_chars = None
+
+        # check if it is a figure
+        res = ofig_re.search(strip_comments(d))
+        if res and res.group(2):
+            fig_chars = res.group(2)
+            ofig = olan_figs[res.group(2).lstrip("i")]
+            if res.group(2).startswith("i") and not ofig.invertable:
+                ofig = olan_figs[res.group(2)]
+        if not fig_chars:
+            # check if it is a spin
+            res = re.search(r"([^a-z]|^)(s|is)([^a-z]|$)", strip_comments(rawfig))
+            if res and res.group(2):
+                rawfig = strip_comments(rawfig)
+                fig_chars = res.group(2)
+                ofig = OFig(
+                    "Spin", "sp", "", [sp(), li(), lo(1 / 4)], False, -1
+                )
+                # a bare spin ("s", "-is") is one turn, as in OpenAero
+                spin_prefix = rawfig[: res.start(2)]
+                if not re.search(r"\d", spin_prefix):
+                    rawfig = f"{spin_prefix}1{rawfig[res.start(2):]}"
+
+        if fig_chars:
+            # the rolls are read without comments; rawfig keeps them, as before
+            _prefix, _suffix = strip_comments(rawfig).split(fig_chars, 1)
+            return rawfig, fig_chars, ofig, _prefix, _suffix
+
+        # check if it is a roll. A roll figure may carry attitude markers: "-" before
+        # it for an inverted entry, "-" after it for an inverted exit ("24-",
+        # "-,2", "-22--"; OpenAero reads the extra "-" as line extensions).
+        bare = strip_comments(rawfig)
+        core = re.sub(r"-+$", "", re.sub(r"^-", "", bare))
+        if core and not re.search(r"[a-eg-hj-rt-zA-Z]", core):
+            roll = OlanRoll.parse(core)
+            if roll and len(roll.roll_arr):
+                ofig = OFig("Roll", "roll", "r", [li()])
+                entry = "-" if bare.startswith("-") else ""
+                exit_ = "-" if bare.endswith("-") and len(bare) > 1 else ""
+                return entry + core + exit_, "r", ofig, "", core
+        return None
+
+    @staticmethod
+    def _build(d, draw, rawfig, fig_chars, ofig, _prefix, _suffix) -> OlanFig:
         # Special handling for rolling circles
         if fig_chars in ("j", "ji", "jo", "jio", "joi"):
             ofig = OFig(
@@ -366,7 +409,7 @@ class OlanFig:
             entry_direction,
             d if d.startswith(("-", "+")) else "",
             d,
-        ), data[i + 1 :]
+        )
 
     def create_info(self):
         return ManInfo.build(

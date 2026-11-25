@@ -61,7 +61,7 @@ def test_known_differences_name_a_finding_with_a_reason():
     for corpus, checks in known["known"].items():
         assert corpus in D.CORPORA
         for check, by_finding in checks.items():
-            assert check in B1 + B2 + B3 + ("template", "template_count"), f"{check} is not a listed check"
+            assert check in B1 + B2 + B3 + ("missing", "template", "template_count"), f"{check} is not a listed check"
             for finding, keys in by_finding.items():
                 assert finding in findings and findings[finding].strip(), finding
                 assert keys == sorted(set(keys)), f"{corpus}/{check}/{finding} keys not sorted or repeated"

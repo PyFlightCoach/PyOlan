@@ -29,6 +29,8 @@ from functools import lru_cache
 from pathlib import Path
 
 from pyolan.direction import DirectionState
+from pyolan.drawing import olan_items
+from pyolan.errors import NoFigureLeft, OlanParseError
 from pyolan.figure_parser import OlanFig
 import schemas.positioning as p
 
@@ -90,20 +92,27 @@ class PyFigure:
 
 def take_all(text: str) -> tuple[list[PyFigure], str | None]:
     """Read every figure the way parse_olan does: OlanFig.take, then the
-    direction state. Returns the figures and the error that stopped reading."""
-    data = text.split()
+    direction state. An item that raises OlanParseError is skipped. Returns the
+    figures and the errors."""
+    data = olan_items(text)
     state = DirectionState()
     out: list[PyFigure] = []
+    errors = []
     while data:
         try:
             ofig, data = OlanFig.take(data)
-        except Exception as e:  # noqa: BLE001 - parse_olan stops here too
-            return out, f"{type(e).__name__}: {e}"
+        except NoFigureLeft:
+            break
+        except OlanParseError as e:
+            # parse_olan raises here; skip the item so the rest is still compared
+            errors.append(f"OlanParseError: {e}")
+            data = data[e.index + 1:]
+            continue
         try:
             out.append(PyFigure(ofig, state.apply(ofig)))
         except Exception as e:  # noqa: BLE001
             out.append(PyFigure(ofig, None, f"{type(e).__name__}: {e}"))
-    return out, None
+    return out, "; ".join(errors) or None
 
 
 def _token_matches(py_token: str, oa_string: str) -> bool:

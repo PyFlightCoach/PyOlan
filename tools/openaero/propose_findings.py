@@ -96,7 +96,13 @@ def propose(corpus: str, key: str, check: str, detail: str, figs: dict, seqs: di
     if check in ("k_powered", "k_glider"):
         return "F13"
     if check == "missing":
-        return "F2" if re.search(r"-['`.~+]*$|^[-'`.~+]*-", detail.split("'")[1] if "'" in detail else "") else "F5"
+        token = re.match(r"""^(['"])(.*?)\1 not built""", detail)
+        token = token.group(2) if token else ""
+        if re.fullmatch(r"[-'`.~+]*", token):
+            return "F21"
+        if letters(token).lstrip("f") in {"i" + b for b in F12_BASES | {"vv", "hat"}} or letters(token) in F12_BASES:
+            return "F12"
+        return "?"
     if check == "extra":
         if key.split("@", 1)[1].startswith('"'):
             return "F20"
@@ -255,8 +261,6 @@ def main() -> None:
             for k in gone:
                 del entries[k]
         for k in sorted(res.diffs - listed):
-            if k[2] == "missing":
-                continue  # B5 covers dropped figures (test_openaero_no_silent_drops.py)
             finding = propose(*k, res.details[k], figs, seqs)
             counts[(corpus, k[2], finding)] += 1
             if (finding == "?" or args.verbose) and shown < args.show:

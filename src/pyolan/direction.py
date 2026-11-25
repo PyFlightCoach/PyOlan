@@ -684,6 +684,7 @@ def walk_olan(tokens: list[str]) -> list[FigureDirection]:
     Used by the tests; parse_olan calls the state itself so it can interleave
     its own figure parsing.
     """
+    from .errors import NoFigureLeft
     from .figure_parser import OlanFig
 
     state = DirectionState()
@@ -692,7 +693,7 @@ def walk_olan(tokens: list[str]) -> list[FigureDirection]:
     while rest:
         try:
             ofig, rest = OlanFig.take(rest)
-        except Exception:
+        except NoFigureLeft:
             break
         out.append(state.apply(ofig))
     return out

@@ -1,8 +1,8 @@
 """No silent drops (plan B5, D7).
 
-Every figure that OpenAero builds must become a PyOlan figure, and anything PyOlan
-cannot read must raise an error that names the token, never be skipped. These are
-strict xfails until C2 (findings F2 and F5) lands.
+Every figure that OpenAero builds must become a PyOlan figure, unless it is listed
+as "missing" in known_differences.json (PyOlan raises for it), and anything PyOlan
+cannot read must raise OlanParseError naming the item, never be skipped.
 """
 
 import random
@@ -13,6 +13,7 @@ import pytest
 from loguru import logger
 
 from pyolan.direction import parse_rolls
+from pyolan.errors import OlanParseError
 from pyolan.parser import parse_olan
 from pyolan.rolls import OlanRoll
 
@@ -21,10 +22,6 @@ from openaero import differential as D  # noqa: E402
 
 pytestmark = pytest.mark.component
 
-C2 = pytest.mark.xfail(strict=True, reason="F2, F5: figures dropped silently until C2")
-
-
-@C2
 @pytest.mark.parametrize("corpus", D.CORPORA)
 def test_every_openaero_figure_is_built(corpus):
     logger.disable("pyolan")
@@ -36,13 +33,17 @@ def test_every_openaero_figure_is_built(corpus):
     assert res.diffs == expected, D.report(res, expected)
 
 
-@C2
-@pytest.mark.parametrize("text", ["o 2x o", "o 4h4 ?q o", "o qz o"])
-def test_parse_olan_raises_on_an_unreadable_token(text):
+@pytest.mark.parametrize(
+    "text, token, index, figure",
+    [("o 2x o", "2x", 1, 2), ("o 4h4 ?q o", "?q", 2, 3), ("ed o qz o", "qz", 2, 2)],
+)
+def test_parse_olan_raises_on_an_unreadable_token(text, token, index, figure):
     from tuning.builders import load_builder
 
-    with pytest.raises(ValueError):
+    with pytest.raises(OlanParseError) as info:
         parse_olan(text, load_builder("IAC", category="unlimited"))
+    assert (info.value.token, info.value.index, info.value.figure) == (token, index, figure)
+    assert info.value.message.startswith(f'Figure {figure} "{token}": ')
 
 
 # ---------------------------------------------------------------------------
@@ -72,8 +73,7 @@ def test_roll_parse_uses_every_piece(text):
     assert sum(abs(t) for t in roll.turns()) == pytest.approx(oa_total)
 
 
-@C2
 @pytest.mark.parametrize("text", ["1x", "2;q", "4,0", "22;?", "1;2z"])
 def test_roll_parse_rejects_an_unreadable_piece(text):
-    with pytest.raises(ValueError):
+    with pytest.raises(OlanParseError):
         OlanRoll.parse(text)

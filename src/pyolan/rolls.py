@@ -12,6 +12,8 @@ from typing import Literal
 import numpy as np
 import schemas.positioning as p
 
+from .errors import OlanParseError
+
 
 # Map olan roll strings onto
 olan_rolls = {k: np.array(v) for k, v in {
@@ -40,7 +42,24 @@ olan_rolls = {k: np.array(v) for k, v in {
 }.items()}
 
 
-oroll_re = re.compile(r"([1-9]|[1-9][2|4|8]|^)([fis]|$)([fs]|$)")
+# One roll: an optional OLAN roll number and an optional snap or spin letter
+# ("2", "24", "1f", "3if", "5s", "f"). Rolls are separated by ";" (same direction)
+# or "," (opposite direction); OpenAero also reads rolls written one after another
+# with no separator ("f2": a snap, then a half roll the same way).
+oroll_re = re.compile(r"(?P<num>[1-9][248]?)?(?P<kind>if|is|f|s)?")
+
+
+def _roll_pieces(piece: str) -> list[tuple[str | None, str | None]]:
+    """[(number, kind)] for a piece between separators; every character is used."""
+    out = []
+    pos = 0
+    while pos < len(piece):
+        res = oroll_re.match(piece, pos)
+        if res is None or res.end() == pos or (res["num"] and res["num"] not in olan_rolls):
+            raise OlanParseError(f'"{piece}" is not an OLAN roll')
+        out.append((res["num"], res["kind"]))
+        pos = res.end()
+    return out
 
 
 @dataclass
@@ -121,29 +140,23 @@ class OlanRoll:
             return rtypes
 
     def parse(data: str) -> OlanRoll | None:
+        """Read a roll string. Every piece is used; one that is not an OLAN roll
+        raises OlanParseError. Catalogue slot markers (_ & $) are empty slots."""
+        if not len(data):
+            return None
+        if not re.sub(r"[_&$]", "", data):
+            return OlanRoll(data, [])  # a marker-only slot is an empty slot
+        data = re.sub(r"[_&$]", "", data)
         rolls = []
         rollarr = [";"] + re.split(r"(;|,)", re.sub(r"^(;|,)", "", data))
         last_direction = 1
         for direction, roll in zip(rollarr[::2], rollarr[1::2]):
-            res = oroll_re.search(roll)
-            if not res:
-                break
-            else:
-                res = res.group()
-            olan_roll_str = re.search(r"\d+", res)
-            if olan_roll_str:
-                new_rolls = olan_rolls[olan_roll_str.group()]
-            else:
-                new_rolls = [1]
-
-            roll_chars = None
-            res = re.search(r"(f|if|s|is)", res)
-            if res:
-                roll_chars = res.group()
-
+            # a separator with nothing after it is a full roll (F6, see C6)
+            pieces = _roll_pieces(roll) if roll else [(None, None)]
             last_direction = last_direction if direction == ";" else -last_direction
-            rolls = rolls + [
-                create_roll(roll_chars, r * last_direction) for r in new_rolls
-            ]
-        if len(data):
-            return OlanRoll(data, rolls)
+            for num, roll_chars in pieces:
+                new_rolls = olan_rolls[num] if num else [1]
+                rolls = rolls + [
+                    create_roll(roll_chars, r * last_direction) for r in new_rolls
+                ]
+        return OlanRoll(data, rolls)
