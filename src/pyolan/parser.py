@@ -66,12 +66,30 @@ def _linked_figure(
     """
     lines = olanfig.direction_lines()
     if not lines:
+        ndmps = _turn_ndmps(olanfig)
         figure = a.Figure(
             info=info,
             elements=olanfig.create_elements(use_roll_options=True),
-            ndmps=_turn_ndmps(olanfig),
+            ndmps=ndmps,
         )
-        return figure, mb.create_mdef(figure)
+        mdef = mb.create_mdef(figure)
+        if ndmps and required is not None:
+            # A turn can be flown either way. Option 0 is the way OpenAero draws
+            # it (its exit heading), the other stays as option 1 (F4).
+            options = ndmps["roll_option"]
+            exits = [
+                p.Heading.infer(_template(mdef, itrans, i).att.bearing()[-1])
+                for i in range(len(options))
+            ]
+            if exits[0] != required and required in exits[1:]:
+                first = exits.index(required)
+                order = [first] + [i for i in range(len(options)) if i != first]
+                figure = figure.model_copy(
+                    update=dict(ndmps={"roll_option": [options[i] for i in order]})
+                )
+                mdef = mb.create_mdef(figure)
+            mdef.mps.data["roll_option"].defaul = 0
+        return figure, mdef
 
     vectors = olanfig.roll_option_vectors()
     figure = a.Figure(

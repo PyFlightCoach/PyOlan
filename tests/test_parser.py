@@ -120,12 +120,13 @@ def test_turn_options_build_mirrored_level_turns(
     mdef = parse_olan(code, mb)[0].definition
     itrans = g.Transformation(g.Euler(0, 0, 0), g.P0())
 
-    sides = []
-    for index, exit_bearing in enumerate(exit_bearings):
+    # option 0 is the way OpenAero draws the turn (C5), so the order is not fixed
+    sides, bearings = [], []
+    for index in range(len(exit_bearings)):
         mdef.mps.data["roll_option"].defaul = index
         tp = State.stack(mdef.create().create_template(itrans), "element")
 
-        assert abs(np.cos(tp.att.bearing()[-1] - exit_bearing) - 1) < 1e-9
+        bearings.append(tp.att.bearing()[-1])
         assert np.abs(tp.pos.z).max() == approx(0, abs=1e-6)
         # exits wings level with the same attitude as the entry
         assert tp.att[-1].transform_point(g.PZ()).z[0] == approx(
@@ -133,7 +134,20 @@ def test_turn_options_build_mirrored_level_turns(
         )
         sides.append(np.sign(tp.pos.y[len(tp) // 2]))
 
-    assert sides == [1, -1]
+    assert sorted(sides) == [-1, 1]
+    for exit_bearing in exit_bearings:
+        assert min(abs(np.cos(b - exit_bearing) - 1) for b in bearings) < 1e-9
+
+
+@pytest.mark.parametrize(
+    "olan, index, exit",
+    # F4: OpenAero draws these quarter turns out of the box (wind from the right)
+    [("1j1", 0, Heading.INTOOUT), ("eu 3j", 0, Heading.INTOOUT), ("o 1j1 o", 1, Heading.INTOOUT)],
+)
+def test_turn_option_0_is_openaero_direction(mb: ManBuilder, olan, index, exit):
+    fig = parse_olan(olan, mb, Heading.RTOL)[index]
+    assert Heading.infer(fig.template.att.bearing()[-1]) == exit
+    assert fig.definition.mps.data["roll_option"].defaul == 0
 
 
 def test_rolling_circle_preserves_turn_and_roll_constraints(mb: ManBuilder):

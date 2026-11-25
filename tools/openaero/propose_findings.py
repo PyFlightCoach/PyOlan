@@ -211,7 +211,10 @@ def propose_templates(res, entries: dict, seqs: dict) -> dict:
         for idx, k in sorted(items):
             f = figs[idx]
             cause = own.get(f["s"]) or own.get(f"{sid}#{idx}")
-            if cause is None and re.search(r"(^|[^0-9a-z])[13]?j", f["s"]):
+            detail = res.details[k]
+            heading_wrong = re.search(r"exits (\w+) .*template (\w+)", detail)
+            heading_wrong = heading_wrong and heading_wrong.group(1) != heading_wrong.group(2)
+            if cause is None and heading_wrong and re.search(r"(^|[^0-9a-z])[13]?j", f["s"]):
                 cause = "F4"
             if cause is None:
                 pos = order.index(idx)
