@@ -504,7 +504,6 @@ olan_figs.update(
             ),
             OFig("Tip Head Hammer", "tipHeadHammer", "th", [lo(1 / 4), li(), st(), li(), lo(-1 / 4)], True),
             OFig("Humpty Hammer", "humptyHammer", "bh", [lo(1 / 4), li(), lo(1 / 2), li(), st(), li(), lo(1 / 4)], True),
-            OFig("Vertical S", "verticalS", "vs|vis", [lo(1 / 2), li(), lo(-1 / 2)], True),
             OFig("Rolling Turnaround", "rollingTurnaround", "jw", [tu("o"), tu("i")]),
             OFig("Vertical Cuban", "verticalCuban", "vc|cv", [lo(1 / 4), li(), lo(5 / 8), li(), lo(-3 / 4), li(), lo(1 / 8)], True),
             OFig(
@@ -525,19 +524,13 @@ olan_figs.update(
     )
 )
 
-# OpenAero uses these forms for a roll or flick on a basic line.
-for _base, _code in (("d", "df"), ("d", "dif"), ("v", "vf"), ("v", "vif")):
-    _base_fig = olan_figs[_base]
-    olan_figs[_code] = OFig(
-        _base_fig.name,
-        _base_fig.short_name,
-        _code,
-        _base_fig.oels,
-        _base_fig.invertable,
-        _base_fig.turnable,
-    )
+# A figure can be followed (or preceded) directly by a bare snap or spin with no
+# turns digit: "ivis" is the iv downline with a one turn inverted spin, "dif" the
+# 45 degree line with a full inverted snap (OpenAero reads a bare f/s as 360
+# degrees). The roll characters are kept out of the figure code.
+_roll_chars = "if|f|is|s"
 
 
 ofig_re = re.compile(
-    rf"([^a-zA-Z]|if|f|s|^)({'|'.join(sorted((f.pattern() for f in olan_figs.values()), key=len, reverse=True))})([^a-zA-Z]|if|f|s|$)"
+    rf"([^a-zA-Z]|{_roll_chars}|^)({'|'.join(sorted((f.pattern() for f in olan_figs.values()), key=len, reverse=True))})([^a-zA-Z]|{_roll_chars}|$)"
 )

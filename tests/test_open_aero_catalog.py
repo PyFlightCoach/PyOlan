@@ -115,8 +115,10 @@ OPEN_AERO_BASE_CODES = {
     "zy",
 }
 
-# OpenAero's "f" entry is a roll-only field pattern, not a primitive figure.
-OPEN_AERO_ROLL_ONLY_CODES = {"f"}
+# Roll-only patterns, not primitive figures: OpenAero's "f" field entry and the
+# d/iv lines with a snap or spin (e.g. "+d2if", "iv1is"), which normalize to
+# d/v plus the roll letters. PyOlan reads those as the line figure and a roll.
+OPEN_AERO_ROLL_ONLY_CODES = {"f", "df", "dif", "vf", "vif", "vs", "vis"}
 
 
 def test_open_aero_catalog_gap_is_explicit():

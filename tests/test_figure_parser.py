@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 import schemas.aresti as a
 from schemas.positioning import Orientation
@@ -215,6 +216,27 @@ def test_create_spin_elements_preserves_spin_angle_and_following_geometry():
     ]
 
 
+@pytest.mark.parametrize("code", ["-ivis", "-iv1is", "-is", "-1is"])
+def test_bare_inverted_spin_is_one_turn(code):
+    # OpenAero reads a bare spin letter as one turn; "-ivis" is the iv downline
+    # with an inverted spin, not a figure of its own.
+    ofig = OlanFig.take([code])[0]
+    assert (ofig.entry, ofig.exit) == (Orientation.INVERTED, Orientation.UPRIGHT)
+    assert [(element.kind, element.args) for element in ofig.create_elements()] == [
+        ("spin", [pytest.approx(2 * np.pi)]),
+        ("line", []),
+        ("loop", [pytest.approx(np.pi / 2)]),
+    ]
+
+
+@pytest.mark.parametrize("code", ["df", "dif", "ivf", "ivif"])
+def test_bare_snap_on_line_is_kept(code):
+    elements = OlanFig.take([code])[0].create_elements()
+    assert [element.kind for element in elements] == ["loop", "roll", "loop"]
+    assert elements[1].args == [pytest.approx(2 * np.pi)]
+    assert elements[1].kwargs["rolltypes"] == "snap"
+
+
 def test_create_stallturn_and_tailslide_directions():
     stallturn = OlanFig.take(["h"])[0].create_elements()[2]
     tailslides = [
@@ -265,3 +287,28 @@ def test_path_angles_inverted_entry_descends_on_a_pull():
 
     np.testing.assert_allclose(angles, [0, 0, -0.75, -0.75, -0.5])
     np.testing.assert_array_equal(canopies, [1, 1, -1, -1, -1])
+
+
+@pytest.mark.parametrize(
+    "code", ["c", "-c", "rc", "g", "q", "mm", "dq", "db", "cc", "ac", "xa", "aj", "d", "o"]
+)
+def test_inverted_figure_without_a_vertical_is_mirrored(code):
+    # "i" mirrors the whole figure top to bottom when no vertical line resets it
+    plain = OlanFig.take([code])[0]
+    inverted = OlanFig.take([code.replace(code.lstrip("-"), "i" + code.lstrip("-"))])[0]
+    np.testing.assert_allclose(
+        inverted.loop_amounts(inverted.element_rolls()),
+        -plain.loop_amounts(plain.element_rolls()),
+    )
+
+
+def test_half_cuban_from_the_top_after_an_entry_snap():
+    # 1.5 snap leaves the aircraft inverted, so the "ic" 5/8 loop is pulled down,
+    # then a half roll on the 45 upline and a pull to level inverted.
+    ofig = OlanFig.take([",6fic2-"])[0]
+    assert [(e.kind, e.args) for e in ofig.create_elements()] == [
+        ("roll", [pytest.approx(3 * np.pi)]),
+        ("loop", [pytest.approx(5 * np.pi / 4)]),
+        ("roll", [pytest.approx(np.pi)]),
+        ("loop", [pytest.approx(np.pi / 4)]),
+    ]

@@ -280,8 +280,10 @@ class OlanFig:
                         ofig = OFig(
                             "Spin", "sp", "", [sp(), li(), lo(1 / 4)], False, -1
                         )
-                        if not rawfig.split(fig_chars)[0]:
-                            rawfig = "1s"
+                        # a bare spin ("s", "-is") is one turn, as in OpenAero
+                        spin_prefix = rawfig[: res.start(2)]
+                        if not re.search(r"\d", spin_prefix):
+                            rawfig = f"{spin_prefix}1{rawfig[res.start(2):]}"
 
                 if fig_chars:
                     _prefix, _suffix = rawfig.split(fig_chars)
@@ -511,9 +513,12 @@ class OlanFig:
         is_vertical = (direction == 0.25) | (direction == 0.75)
 
         if self.inverted:
-            # If figure is inverted loops before first vertical line are swapped
+            # If figure is inverted loops before first vertical line are swapped,
+            # all of them when it has no vertical line ("ic" is the c mirrored
+            # top to bottom: a 5/8 loop down then 1/8 up to the exit line).
+            last_swapped = is_vertical.argmax() if is_vertical.any() else len(self) - 1
             loops = loops * np.where(
-                np.arange(len(self)) <= is_vertical.argmax(),
+                np.arange(len(self)) <= last_swapped,
                 -1,
                 1,
             )
