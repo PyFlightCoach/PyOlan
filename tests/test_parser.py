@@ -479,3 +479,15 @@ def test_definition_info_matches_final_aresti_info(mb: ManBuilder):
             assert getattr(fig.definition.info, key) == getattr(fig.aresti.info, key)
     assert figs[1].definition.info.start.direction == Direction.CROSS
     assert figs[1].definition.info.end.direction != Direction.CROSS
+
+
+def test_a_figure_starts_in_its_written_attitude(mb: ManBuilder):
+    """F3 (D2): "4h4" is written upright after "m1-" exits inverted. OpenAero rolls
+    to the written attitude at the join, keeping the heading, so the h exits
+    upright the opposite way."""
+    figs = parse_olan('"@A" m1- "@B" 4h4', mb, Heading.RTOL)
+    m, h = (fig.template for fig in figs)
+    assert Heading.infer(h.att.bearing()[0]) == Heading.infer(m.att.bearing()[-1])
+    up = lambda att: float(att.transform_point(g.PZ(1)).z[0]) < 0
+    assert not up(m.att[-1]) and up(h.att[0]) and up(h.att[-1])
+    assert Heading.infer(h.att.bearing()[-1]) == Heading.infer(m.att.bearing()[-1]).reverse()

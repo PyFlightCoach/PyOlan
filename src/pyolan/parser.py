@@ -38,6 +38,11 @@ def _turn_ndmps(olanfig: OlanFig) -> dict[str, list[list[float]]]:
     return {"roll_option": turn_options} if turn_options is not None else {}
 
 
+def _inverted(att: g.Quaternion) -> bool:
+    """Level and inverted: the body z axis points up (world z is up)."""
+    return float(att.transform_point(g.PZ(1)).z[-1]) > 0
+
+
 def _along_box(heading: p.Heading) -> bool:
     return heading in (p.Heading.RTOL, p.Heading.LTOR)
 
@@ -222,6 +227,13 @@ def _parse_figure(
 
     # need to get the direction (upwind / downwind / cross) from the heading and the wind
     entry_direction = p.Direction.parse_heading(entry_heading, wind)
+
+    # The figure starts in its written entry attitude, with the heading the figure
+    # before left on: as OpenAero draws it, an implied half roll about the direction
+    # of flight where the attitudes differ (F3, D2; see
+    # docs/investigations/olan-entry-attitude-2026-11-26.md in the workspace).
+    if itrans and _inverted(itrans.att) != (olanfig.entry == p.Orientation.INVERTED):
+        itrans = g.Transformation(itrans.att * g.Euler(np.pi, 0, 0), itrans.pos)
 
     # if itrans cannot be picked up from the previous manouevre assume the olan figure is correct
     if not itrans:
