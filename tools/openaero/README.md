@@ -13,7 +13,7 @@ only to refresh them; the tests read the committed files and never run Node.
 | `export-figures.js` | Exports the figure catalogue (`tests/data/openaero/figures.json`). |
 | `export.py` | Generates the corpora, runs the harness and writes the expectations. |
 | `add_regression.py` | Adds a user-reported OLAN sequence to the `regressions` corpus. |
-| `propose_findings.py` | Triage report: groups the current failures of the `openaero` lane by finding (`findings.json`). |
+| `propose_findings.py` | Triage report: groups the current failures of `tests/test_openaero_strict.py` by finding (`findings.json`). |
 
 ## Refresh
 
@@ -63,12 +63,13 @@ The corpora:
 
 ```sh
 ../../.venv/bin/python tools/openaero/add_regression.py 'OLAN sequence' --comment 'user report, date'
-../../.venv/bin/python ../../scripts/test.py openaero --package PyOlan --timeout 900
+../../.venv/bin/python ../../scripts/test.py component --package PyOlan --timeout 900
 ../../.venv/bin/python tools/openaero/propose_findings.py   # failures grouped by finding
 ```
 
 There is no list of accepted differences: a new difference is a failing test in the
-`openaero` lane until it is fixed. `propose_findings.py` guesses a finding ID
+PyOlan component lane until it is fixed. A sequence that does not link and the point
+tip `th` are expected errors. `propose_findings.py` guesses a finding ID
 (`findings.json`) from simple rules, so a fix can record the counts before and after
 (`--json PATH`); review the guesses, and work out the cause of every one it marks `?`.
 

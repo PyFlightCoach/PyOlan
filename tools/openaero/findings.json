@@ -1,5 +1,5 @@
 {
- "description": "Finding IDs and their descriptions: the vocabulary for grouping failures of the openaero lane (tests/test_openaero_strict.py) in tools/openaero/propose_findings.py. No test reads this file. The findings follow docs/investigations/olan-openaero-differential-2026-11-25 in the FCScoreFuture workspace.",
+ "description": "Finding IDs and their descriptions: the vocabulary for grouping failures of tests/test_openaero_strict.py in tools/openaero/propose_findings.py. No test reads this file. The findings follow docs/investigations/olan-openaero-differential-2026-11-25 in the FCScoreFuture workspace.",
  "findings": {
   "F1": "oa_base misses OpenAero's long-forward step ('+' becomes '~~~' before the base is found, parseSequence). A turn written with '+' line extensions has no base, the direction state does not turn, and every later figure's direction follows it.",
   "F2": "A roll-only figure with an attitude marker ('24-', '-1-', '-,2', '2f-') is taken for a drawing command and dropped.",

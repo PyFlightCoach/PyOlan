@@ -1,8 +1,10 @@
-"""PyOlan against OpenAero, one test per item (the ``openaero`` lane).
+"""PyOlan against OpenAero, one test per item (PyOlan component lane).
 
 Each corpus in tests/data/openaero/expected holds OpenAero's own trace of every
 figure, reduced to the canonical form (tests/openaero/canonical.py). There is no
-list of accepted differences: every difference from OpenAero is a failing test.
+list of accepted differences: every difference from OpenAero is a failing test. The
+two deliberate exceptions are expected errors: a sequence that does not link (D2) and
+the point tip (D11).
 
 * ``test_figure[<corpus>:<figure string>]``: elements, negative flags, entry and
   exit attitude, errors, powered and glider K;
@@ -11,7 +13,7 @@ list of accepted differences: every difference from OpenAero is a failing test.
 * ``test_template[<sequence id>]``: parse_olan templates against OpenAero's figure
   exits, for the fixed subset in tests/data/openaero/template_subset.json;
 * ``test_template_library_all``: the same for every library sequence (about four
-  minutes). It is a diagnostic selection, not part of the openaero lane:
+  minutes). It is a diagnostic selection, not part of the component lane:
 
     .venv/bin/python scripts/test.py diagnostic --package PyOlan \\
         --select packages/PyOlan/tests/test_openaero_strict.py::test_template_library_all
@@ -115,6 +117,6 @@ def test_template(sequence):
 
 @pytest.mark.parametrize("sequence", [s["id"] for s in D.load_corpus("library")["sequences"]])
 def test_template_library_all(sequence):
-    """Diagnostic: not in the openaero lane (about four minutes in all)."""
+    """Diagnostic: not in the component lane (about four minutes in all)."""
     items = _template_differences(False).get(sequence, [])
     assert not items, _fail_message(f"library template {sequence}", items)

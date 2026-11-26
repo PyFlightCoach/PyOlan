@@ -4,7 +4,7 @@
 
 Appends the sequence to tests/data/openaero/regressions.txt and re-exports the
 regressions corpus (and sequence_directions.json) from the pinned OpenAero
-commit. Run the openaero lane afterwards: there is no list of accepted
+commit. Run the PyOlan component lane afterwards: there is no list of accepted
 differences, so a new difference is a failing test until it is fixed.
 """
 

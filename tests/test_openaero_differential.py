@@ -1,7 +1,7 @@
 """The OpenAero expectations record where they came from.
 
 The comparisons themselves are the strict tests in test_openaero_strict.py
-(the ``openaero`` lane).
+(component lane).
 """
 
 import sys

@@ -19,7 +19,7 @@ tools/openaero/export.py. Each difference is a (corpus, key, check) triple:
     (key ``<sequence id>@<token>``).
 
 There is no list of expected differences: every difference is a failing test in
-the ``openaero`` lane (tests/test_openaero_strict.py). tools/openaero/propose_findings.py
+the component lane (tests/test_openaero_strict.py). tools/openaero/propose_findings.py
 groups the current differences by finding (tools/openaero/findings.json).
 """
 

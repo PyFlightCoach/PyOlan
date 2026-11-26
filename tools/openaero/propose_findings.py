@@ -1,4 +1,4 @@
-"""Triage report for the strict OpenAero tests (the ``openaero`` lane).
+"""Triage report for the strict OpenAero tests (tests/test_openaero_strict.py).
 
     python tools/openaero/propose_findings.py [corpus ...] [--templates subset|all]
         [--show N] [--verbose] [--json PATH]
