@@ -30,6 +30,8 @@ def test_k_matches_openaero(token, aresti, powered, glider):
 
 
 def test_a_figure_openaero_does_not_have_has_no_k():
-    fig = OlanFig.take(["3jio15"])[0]  # one and a half rolls need an inverted exit
+    # vc is PyOlan's own code: OpenAero's figure table has it but no K (a rolling
+    # turn OpenAero rejects, such as 3jio15 with an upright exit, raises in take, F19)
+    fig = OlanFig.take(["vc"])[0]
     with pytest.raises(OlanParseError, match="no K"):
         fig.k_factor()

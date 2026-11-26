@@ -6,10 +6,14 @@ from pyolan.primitives import olan_figs
 from pyolan.rolls import OlanRoll, sn, spi
 
 
+# a rolling turn needs its rolls: "jo" alone is not an OpenAero figure (F19)
+WRITTEN = {"jo": "1jo1", "jio": "2jio2", "joi": "2joi2"}
+
+
 @pytest.mark.parametrize("figure_code", sorted(olan_figs))
 def test_open_aero_figure_codes_parse_and_build(figure_code):
     """Every figure code registered by OpenAero's primitive catalogue is usable."""
-    figure = OlanFig.take([figure_code])[0]
+    figure = OlanFig.take([WRITTEN.get(figure_code, figure_code)])[0]
 
     assert figure_code in figure.fig.chars.split("|")
     assert figure.create_elements()

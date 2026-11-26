@@ -284,7 +284,8 @@ def test_hammer_and_tailslide_plans_have_explicit_special_shapes(code):
                 ("Turn", 0, True, "i", 1 / 4),
             ],
         ),
-        ("jo", [("Turn", 0, True, "o", 1 / 4)]),
+        # an outside rolling turn needs a roll ("jo" alone is not an OpenAero figure)
+        ("1jo1", [("Turn", 0, True, "o", 1 / 4)]),
         (
             "jijo",
             [
@@ -324,20 +325,21 @@ def test_open_aero_turn_family_semantics(code, expected):
 
 
 @pytest.mark.parametrize(
-    ("code", "turnamount", "rolltype"),
+    ("code", "olan", "turnamount", "rolltype"),
     [
-        ("j", 1 / 4, "i"),
-        ("1j5", 1 / 4, "i"),
-        ("2jio15", 1 / 2, "io"),
-        ("3j3", 3 / 4, "i"),
-        ("4j5", 1, "i"),
-        ("4jio3", 1, "io"),
-        ("4joi4", 1, "oi"),
+        # rolls that end inverted are written with "-" after them (F19)
+        ("j", "j", 1 / 4, "i"),
+        ("1j5", "1j5-", 1 / 4, "i"),
+        ("2jio15", "2jio15-", 1 / 2, "io"),
+        ("3j3", "3j3", 3 / 4, "i"),
+        ("4j5", "4j5-", 1, "i"),
+        ("4jio3", "4jio3", 1, "io"),
+        ("4joi4", "4joi4", 1, "oi"),
     ],
 )
-def test_open_aero_rolling_turn_tokens_match_pyolan(code, turnamount, rolltype):
+def test_open_aero_rolling_turn_tokens_match_pyolan(code, olan, turnamount, rolltype):
     source = BY_CODE[code]
-    parsed = OlanFig.take([code])[0]
+    parsed = OlanFig.take([olan])[0]
     turns = [element for element in parsed.fig.oels if element.kind == "Turn"]
     tokens = [
         item["token"]

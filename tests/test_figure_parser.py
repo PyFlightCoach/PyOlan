@@ -3,6 +3,7 @@ import numpy as np
 import schemas.aresti as a
 from schemas.positioning import Orientation
 
+from pyolan.errors import OlanParseError
 from pyolan.figure_parser import OlanFig
 from pyolan.rolls import ro, sn, spi
 
@@ -161,8 +162,8 @@ def test_olan_take_turn():
 def test_create_rolling_turn_preserves_angles_and_ke():
     for code, expected_rolls in [
         # "5" is a half roll, as OpenAero reads it (F17; was five rolls)
-        ("1j5", [np.radians(180)]),
-        ("1jo5", [np.radians(-180)]),
+        ("1j5-", [np.radians(180)]),
+        ("1jo5-", [np.radians(-180)]),
     ]:
         element = OlanFig.take([code])[0].create_elements()[0]
 
@@ -180,15 +181,17 @@ def test_olan_take_turn_2():
 
 def test_olan_take_compound_rolling_turn_variants():
     cases = [
+        # rolls that end inverted are written with "-" after them (OpenAero has no
+        # figure otherwise, F19)
         # each digit is rolls, "5" a half roll; io and oi alternate every roll
         # (F17: these were 5, -5, [1.5, 0.5], [-1.5, 0.5], [1, 0.5], [-1, 0.5])
-        ("1j5", "i", 1 / 4, [ro(0.5)]),
-        ("1jo5", "o", 1 / 4, [ro(-0.5)]),
-        ("2j15", "i", 1 / 2, [ro(1.5)]),
-        ("2jo15", "o", 1 / 2, [ro(-1.5)]),
-        ("2jio15", "io", 1 / 2, [ro(1), ro(-0.5)]),
-        ("2joi15", "oi", 1 / 2, [ro(-1), ro(0.5)]),
-        ("2jio51", "io", 1 / 2, [ro(0.5), ro(-1)]),
+        ("1j5-", "i", 1 / 4, [ro(0.5)]),
+        ("1jo5-", "o", 1 / 4, [ro(-0.5)]),
+        ("2j15-", "i", 1 / 2, [ro(1.5)]),
+        ("2jo15-", "o", 1 / 2, [ro(-1.5)]),
+        ("2jio15-", "io", 1 / 2, [ro(1), ro(-0.5)]),
+        ("2joi15-", "oi", 1 / 2, [ro(-1), ro(0.5)]),
+        ("2jio51-", "io", 1 / 2, [ro(0.5), ro(-1)]),
         ("3jio3", "io", 3 / 4, [ro(1), ro(-1), ro(1)]),
         ("4jio3", "io", 1, [ro(1), ro(-1), ro(1)]),
         ("4joi4", "oi", 1, [ro(-1), ro(1), ro(-1), ro(1)]),
@@ -326,3 +329,28 @@ def test_spin_with_no_figure_is_a_spin(code, turns, negative):
     roll = fig.element_rolls()[0].roll_arr
     assert [(r.kind, r.turns, r.negative) for r in roll] == [("spin", turns, negative)]
     assert fig.create_elements()[0].kind == "spin"
+
+
+@pytest.mark.parametrize(
+    "code, entry, exit_, kinds, k",
+    [
+        ("--", "INVERTED", "INVERTED", ["line"], 3),  # 1.1.1.2
+        ("---", "INVERTED", "INVERTED", ["line"], 3),
+        ("-", "INVERTED", "UPRIGHT", ["roll"], 6),  # 1.1.1.4 with OpenAero's half roll
+        ("''-", "INVERTED", "UPRIGHT", ["roll"], 6),
+    ],
+)
+def test_a_line_with_attitude_markers_is_a_line_figure(code, entry, exit_, kinds, k):
+    """F21: OpenAero's horizontal line figures."""
+    fig = OlanFig.take([code])[0]
+    assert (fig.entry.name, fig.exit.name) == (entry, exit_)
+    assert [e.kind for e in fig.create_elements()] == kinds
+    assert fig.k_factor() == k
+    assert bool(fig.warnings) == (exit_ == "UPRIGHT")
+
+
+@pytest.mark.parametrize("code", ["+3jio15++", "3jio15", "1j5", "-2j"])
+def test_a_turn_openaero_rejects_raises(code):
+    """F19: no catalogue figure, so OpenAero builds nothing."""
+    with pytest.raises(OlanParseError, match="OpenAero has no turn or rolling turn like this"):
+        OlanFig.take([code])

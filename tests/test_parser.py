@@ -323,7 +323,7 @@ def test_pn(mb: ManBuilder):
 
 
 def test_a_figure_openaero_does_not_have_is_refused(mb: ManBuilder):
-    with pytest.raises(OlanParseError, match="no catalogue figure"):
+    with pytest.raises(OlanParseError, match="OpenAero has no turn or rolling turn like this"):
         parse_olan("o 1jo", mb)
 
 

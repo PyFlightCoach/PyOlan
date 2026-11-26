@@ -188,6 +188,19 @@ class OlanFig:
             _prefix, _suffix = strip_comments(rawfig).split(fig_chars, 1)
             return rawfig, fig_chars, ofig, _prefix, _suffix
 
+        # A line with attitude markers and nothing else is OpenAero's horizontal
+        # line figure (F21): "--" level inverted (1.1.1.2), and a single "-" an
+        # inverted entry to an upright exit (1.1.1.4), the half roll it needs being
+        # OpenAero's correction roll. OpenAero reads "+" as a long line and the rest
+        # as line lengths (oa_base).
+        bare = strip_comments(rawfig)
+        if "-" in bare and re.fullmatch(r"[-~+`'.]+", bare):
+            from .direction import oa_base
+
+            base = oa_base(bare)[0]
+            if base in ("-+", "--"):
+                return base, "r", OFig("Roll", "roll", "r", [li()]), "", ""
+
         # check if it is a roll. A roll figure may carry attitude markers: "-" before
         # it for an inverted entry, "-" after it for an inverted exit ("24-",
         # "-,2", "-22--"; OpenAero reads the extra "-" as line extensions).
@@ -283,6 +296,12 @@ class OlanFig:
         suffix and final. The roll goes after the rolls written in that slot.
         """
         if self.fig.chars in self.TURN_CHARS:
+            if not self.openaero().resolved:
+                # OpenAero rejects it, e.g. 3jio15 written with an upright exit (F19)
+                raise OlanParseError(
+                    "OpenAero has no turn or rolling turn like this. Check the attitude "
+                    'markers: rolls that end inverted need a "-" after the figure'
+                )
             return self
         oa = self.openaero()
         if not oa.corrections:
@@ -653,7 +672,8 @@ class OlanFig:
                                     padded=i > 0 and i < len(self.fig.oels) - 1,
                                 )
                             )
-                    elif i > 0 and i < len(self.fig.oels) - 1:
+                    elif (i > 0 and i < len(self.fig.oels) - 1) or len(self.fig.oels) == 1:
+                        # a figure that is only a line ("--") keeps it
                         pes.append(a.line())
                 case "Stallturn":
                     pes.append(a.stallturn())
