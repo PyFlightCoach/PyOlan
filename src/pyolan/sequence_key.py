@@ -15,7 +15,7 @@ import re
 from schemas import positioning as p
 
 from .drawing import olan_items, strip_comments
-from .errors import NoFigureLeft
+from .errors import NoFigureLeft, OlanParseError
 from .figure_parser import OlanFig
 
 _ATTITUDE = re.compile(r"^[-+]+|[-+]+$")
@@ -34,12 +34,17 @@ def figure_keys(olan: str) -> list[str]:
     """The key of each figure of an OLAN sequence, in order. Raises OlanParseError
     for an item that is neither a figure nor a drawing command."""
     items = olan_items(olan)
+    total = len(items)
     keys: list[str] = []
     while items:
+        offset = total - len(items)
         try:
             fig, items = OlanFig.take(items)
         except NoFigureLeft:
             break
+        except OlanParseError as ex:
+            # placed in the whole sequence, as parse_olan reports it
+            raise ex.at(index=offset + ex.index, figure=len(keys) + 1) from None
         keys.append(figure_key(fig))
     return keys
 

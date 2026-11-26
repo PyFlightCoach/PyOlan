@@ -63,3 +63,9 @@ def test_unreadable_olan_raises():
 
 def test_drawing_only_is_empty():
     assert sequence_key("2% (3,4) ~~ //") == ""
+
+
+def test_an_unreadable_figure_is_placed_in_the_sequence():
+    with pytest.raises(OlanParseError) as raised:
+        sequence_key('o "a comment" 4h4 2x')
+    assert (raised.value.token, raised.value.index, raised.value.figure) == ("2x", 3, 3)
