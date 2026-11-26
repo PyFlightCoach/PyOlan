@@ -102,6 +102,11 @@ class FigureDirection:
     # (slot, signed degrees) (D1)
     roll_slots: list[int] = field(default_factory=list)
     corrections: list[tuple[int, int]] = field(default_factory=list)
+    # the figure variant OpenAero chose: its pattern, its drawing string and the roll
+    # slot its first "_" fills (0, or 1 when the pattern has no roll before the base)
+    pattern: str = ""
+    draw: str = ""
+    first_slot: int = 0
     # the attitude (0 upright, 180 inverted) the figure before ended in, when this
     # figure is written to start in the other one; OpenAero autocorrects such a
     # join, parse_olan raises (D2)
@@ -500,6 +505,9 @@ class DirectionState:
             ctx.k_glider if ctx.k_known else None,
             list(types),
             ctx.corrections,
+            pattern,
+            draw,
+            0 if _ROLL_BEFORE_BASE.match(pattern) else 1,
         )
 
     def _walk(self, ctx: "_FigureContext", rollnr: int) -> None:

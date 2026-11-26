@@ -27,6 +27,7 @@ from schemas import aresti as a, ManInfo
 
 from .primitives import OFig, li, lo, tu, ofig_re, olan_figs
 from .rolls import OlanRoll, ro
+from .drawn import elements_from_draw
 
 from .drawing import re_drawing, re_draw, strip_comments
 from .errors import NoFigureLeft, OlanParseError
@@ -89,6 +90,12 @@ class OlanFig:
     source_pattern: str = ""
     token: str = ""  ## the whole OLAN token, including drawing characters
     warnings: list[str] = field(default_factory=list)  # for the pilot (D1)
+    # When the elements come from OpenAero's drawing string (drawn.py): the OpenAero
+    # roll slot each element holds (None for none), and the number of slots. The loop
+    # signs are then the ones drawn, and the rolls go by slot. None for a figure that
+    # keeps its hand-written primitive.
+    drawn_slots: list[int | None] | None = None
+    drawn_nslots: int = 0
 
     def __len__(self):
         return len(self.fig.oels)
@@ -275,7 +282,56 @@ class OlanFig:
             entry_direction,
             d if d.startswith(("-", "+")) else "",
             d,
-        )._with_corrections()
+        )._with_corrections()._drawn()
+
+    # PyOlan's own codes, whose letters OpenAero uses for another figure (F12): they
+    # keep the hand-written primitive until plan step 5
+    HANDWRITTEN = frozenset({"xm", "xa"})
+
+    def _drawn(self) -> OlanFig:
+        """Take the elements from the drawing string of the variant OpenAero
+        chooses (drawn.py), where it can be drawn."""
+        if self.fig.chars in self.TURN_CHARS or self.fig.chars == "r":
+            return self
+        if set(self.fig.chars.split("|")) & self.HANDWRITTEN:
+            return self
+        oa = self.openaero()
+        if not oa.resolved or not oa.draw:
+            return self
+        drawn = elements_from_draw(oa.draw)
+        if drawn is None:
+            return self
+        oels, slots = drawn
+        self.fig = replace(self.fig, oels=oels, turnable=None)
+        self.drawn_slots = [None if s is None else oa.first_slot + s for s in slots]
+        self.drawn_nslots = len(oa.roll_slots)
+        # OpenAero ignores a roll written where the figure has no roll ("o(2)": a
+        # loop has no roll in brackets); so does PyOlan, but it says so (D7)
+        used = set(self.drawn_slots) - {None}
+        n = self.drawn_nslots
+        written = [(0, self.prefix, "before the figure")]
+        # the bracketed slots are 1 to n - 2; a bracket beyond them has no slot
+        written += [
+            (k + 1 if k + 1 < n - 1 else None, r, "in brackets") for k, r in enumerate(self.suffix)
+        ]
+        written += [(n - 1, self.final, "after the figure")]
+        for slot, roll, where in written:
+            if roll is not None and roll.roll_arr and slot not in used:
+                self.warnings.append(
+                    f'OpenAero ignores the roll "{roll.rawroll}" written {where}: the '
+                    "figure has no roll there, so it is built without it"
+                )
+        return self
+
+    def _slot_roll(self, slot: int) -> OlanRoll | None:
+        """The roll written for an OpenAero roll slot: the roll before the base, the
+        rolls in brackets, the roll after (as _with_corrections places them)."""
+        n = self.drawn_nslots
+        if n == 1 or slot == n - 1:
+            return self.final
+        if slot == 0:
+            return self.prefix
+        return self.suffix[slot - 1] if slot - 1 < len(self.suffix) else None
 
     ROLL_WORDS = {90: "a quarter roll", 180: "a half roll", 270: "a three quarter roll"}
 
@@ -351,6 +407,8 @@ class OlanFig:
         return [option, [-v for v in option]]
 
     def element_rolls(self) -> list[OlanRoll | None]:
+        if self.drawn_slots is not None:
+            return [None if s is None else self._slot_roll(s) for s in self.drawn_slots]
         # n==4: p fig (s0) (s1) f
         # n==3: p fig (s0) f
         # n==2: p fig f
@@ -391,12 +449,19 @@ class OlanFig:
         """
         if all([el.loopamount == 0 for el in self.fig.oels]):
             return False
-        roll_totals = np.array([r.total() if r else 0 for r in self.element_rolls()])
+        rolls = self.element_rolls()
+        roll_totals = np.array([r.total() if r else 0 for r in rolls])
 
         loops = np.array([e.loopamount for e in self.fig.oels])
 
-        direction = np.concatenate((np.array([0]), (loops.cumsum() % 1)[:-1]))
-        is_vertical = (direction == 0.25) | (direction == 0.75)
+        if self.drawn_slots is not None:
+            # the drawn loops are signed by the pull, so the path angle comes
+            # from path_angles
+            angles = self.path_angles(loops, rolls)[0][:-1]
+            is_vertical = np.isclose(np.mod(angles, 0.5), 0.25)
+        else:
+            direction = np.concatenate((np.array([0]), (loops.cumsum() % 1)[:-1]))
+            is_vertical = (direction == 0.25) | (direction == 0.75)
         is_line = np.array([e.kind == "Line" for e in self.fig.oels])
 
         return (
@@ -444,6 +509,9 @@ class OlanFig:
         return vectors
 
     def loop_amounts(self, element_rolls: list[OlanRoll]) -> list[float]:
+        if self.drawn_slots is not None:
+            # drawn by OpenAero for the variant it chose: already signed by the pull
+            return np.array([e.loopamount for e in self.fig.oels], dtype=float)
         if all([el.loopamount == 0 for el in self.fig.oels]):
             return np.zeros(len(self.fig.oels))
 

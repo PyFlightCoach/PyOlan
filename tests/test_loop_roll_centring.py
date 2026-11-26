@@ -23,10 +23,12 @@ CATALOGUE = json.loads(
 )["figures"]
 
 # One OLAN figure with a roll in the loop for each catalogue code that has an
-# embedded ("!") roll, then the figures the plan names and the hammer P loops.
+# embedded ("!") roll, then the figures the plan names. A loop's roll is written
+# after it ("o1"): OpenAero ignores a roll in brackets where the figure has no
+# bracketed slot ("o(2)"), and PyOlan reads it the same way since Phase D.
 EMBEDDED_ROLL_FIGURES = {
-    "o": "o(2)",
-    "io": "io(2)",
+    "o": "o1",
+    "io": "io1",
     "ao": "ao(1)",
     "iao": "iao(1)",
     "rao": "rao(1)",
@@ -47,8 +49,9 @@ EMBEDDED_ROLL_FIGURES = {
     "ioj": "1ioj",
 }
 # "ph" and "pbh" (PyOlan aliases of "hp", the same figure) were here too: OpenAero
-# has no such figure, so since C3 parse_olan refuses them (no K). "hp1" covers it.
-EXTRA_FIGURES = ["p(2,f)", "o(2,f)", "hp1"]
+# has no such figure, so since C3 parse_olan refuses them (no K). "hp1" was here
+# too: OpenAero draws the roll of its hammer P loop on the exit line, after the loop.
+EXTRA_FIGURES = ["p(2,f)", "o2,f-"]
 
 
 @fixture(scope="session")
@@ -94,7 +97,7 @@ def test_rolling_section_is_centred_on_the_apex_or_nadir(olan, mb):
     assert abs(start) == pytest.approx(45, abs=1.5)
 
 
-@pytest.mark.parametrize("olan", ["p(f)", "o(f)", "p(2f)"])
+@pytest.mark.parametrize("olan", ["p(f)", "of", "p(2f)"])
 def test_snap_only_section_is_a_point_at_the_apex(olan, mb):
     (start, end), = rolling_sections(olan, mb)
 
@@ -133,16 +136,16 @@ def test_horizontal_fractions(start, amount, expected):
 
 
 def test_a_loop_that_is_level_twice_has_no_single_apex():
-    figure = OlanFig.take(["o(2)"])[0]
-    roll = figure.final or figure.suffix[0]
+    figure = OlanFig.take(["o1"])[0]
+    roll = figure.final
 
     with pytest.raises(ValueError, match="more than one"):
         figure._loop_roll_kwargs(roll, 0.0, 1.5)
 
 
 def test_a_loop_with_no_interior_level_point_caps_the_roll_width():
-    figure = OlanFig.take(["o(2)"])[0]
-    roll = figure.final or figure.suffix[0]
+    figure = OlanFig.take(["o1"])[0]
+    roll = figure.final
 
     kwargs = figure._loop_roll_kwargs(roll, 0.0, 0.125)
 
