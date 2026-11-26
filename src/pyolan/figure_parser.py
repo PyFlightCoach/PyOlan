@@ -25,7 +25,7 @@ import schemas.positioning as p
 from loguru import logger
 from schemas import aresti as a, ManInfo
 
-from .primitives import OFig, sp, li, lo, tu, ofig_re, olan_figs
+from .primitives import OFig, li, lo, tu, ofig_re, olan_figs
 from .rolls import OlanRoll, ro
 
 from .drawing import re_drawing, re_draw, strip_comments
@@ -173,15 +173,14 @@ class OlanFig:
             # check if it is a spin
             res = re.search(r"([^a-z]|^)(s|is)([^a-z]|$)", strip_comments(rawfig))
             if res and res.group(2):
-                rawfig = strip_comments(rawfig)
-                fig_chars = res.group(2)
-                ofig = OFig(
-                    "Spin", "sp", "", [sp(), li(), lo(1 / 4)], False, -1
-                )
-                # a bare spin ("s", "-is") is one turn, as in OpenAero
-                spin_prefix = rawfig[: res.start(2)]
-                if not re.search(r"\d", spin_prefix):
-                    rawfig = f"{spin_prefix}1{rawfig[res.start(2):]}"
+                # A spin with no figure ("s", "6s", "+5s", "-5is", "6s-") is
+                # OpenAero's iv downline with that spin on it: makeSequence writes
+                # "iv" before the spin (F7). Built that way the downline can swap
+                # the exit direction, as for any spin on a vertical line (F24). The
+                # figure keeps its name.
+                rawfig = re.sub(r"(\d*i?s)", r"iv\1", strip_comments(rawfig), count=1)
+                fig_chars = "iv"
+                ofig = replace(olan_figs["v"], name="Spin", short_name="sp")
 
         if fig_chars:
             # the rolls are read without comments; rawfig keeps them, as before
@@ -253,13 +252,6 @@ class OlanFig:
             prefix = OlanRoll.parse(_prefix.lstrip("-").split(")")[-1])
             suffix = [OlanRoll.parse(r) for r in re.findall(r"\((.*?)\)", _suffix)]
             final = OlanRoll.parse(_suffix.split(")")[-1].rstrip("-"))
-            if ofig.name == "Spin" and prefix is not None:
-                # a spin with no figure ("6s", "-5is") is OpenAero's iv downline
-                # with that spin: the turns before the s are the spin (F7)
-                prefix = OlanRoll(
-                    prefix.rawroll + fig_chars,
-                    [replace(r, kind="spin", negative=fig_chars == "is") for r in prefix.roll_arr],
-                )
 
         entry_direction = p.Direction.UPWIND
         for dr in draw:
@@ -343,16 +335,16 @@ class OlanFig:
         """Linked parameter options for a single turn, or None if not a turn.
 
         A turn can be flown either way, so two mirrored options are returned.
-        Plain turns link the entry roll, loop KE and exit roll. Rolling turns
-        with a single roll link the turn angle and the roll angle.
+        Plain turns link the entry roll, loop KE and exit roll. Rolling turns link
+        the turn angle and each roll angle; the mirrored option reverses all of
+        them, so a roll keeps its direction relative to the turn (inwards or
+        outwards, alternating for jio and joi; F4).
         """
         if self.fig.chars not in self.TURN_CHARS:
             return None
         if self.final:
             rolls = np.atleast_1d(self.final.angles()).astype(float)
-            if len(rolls) != 1:
-                return None
-            option = [self.fig.oels[0].turnamount * 2 * np.pi, rolls[0]]
+            option = [self.fig.oels[0].turnamount * 2 * np.pi, *rolls]
         else:
             option = list(self.TURN_BANK)
         option = [float(v) for v in option]
@@ -686,7 +678,12 @@ class OlanFig:
                         turn_rolls = self.final.angles()
                         if linked:
                             angle = "roll_option[0]"
-                            turn_rolls = "roll_option[1]"
+                            n = len(np.atleast_1d(turn_rolls))
+                            turn_rolls = (
+                                "roll_option[1]"
+                                if n == 1
+                                else [f"roll_option[{k}]" for k in range(1, n + 1)]
+                            )
                         pes.append(
                             a.loop(
                                 angle,

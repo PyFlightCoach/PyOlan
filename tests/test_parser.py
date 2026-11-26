@@ -154,16 +154,30 @@ def test_rolling_circle_preserves_turn_and_roll_constraints(mb: ManBuilder):
     fig: ParsedOlanFig = parse_olan("4joi4", mb)[0]
     element = fig.aresti.elements[0]
 
+    # The turn and its rolls are linked through roll_option, as for a single roll
+    # (F4): either direction, the rolls alternating from outwards.
     assert element.kind == "loop"
-    assert element.args == [approx(2 * np.pi)]
+    assert element.args == ["roll_option[0]"]
     assert element.kwargs["ke"] == approx(np.pi / 2)
-    assert element.kwargs["rolls"] == [
-        approx(-2 * np.pi),
-        approx(2 * np.pi),
-        approx(-2 * np.pi),
-        approx(2 * np.pi),
-    ]
+    assert element.kwargs["rolls"] == [f"roll_option[{k}]" for k in range(1, 5)]
+    first, second = fig.aresti.ndmps["roll_option"]
+    turn = np.sign(first[0])
+    assert first == approx([turn * v for v in [2 * np.pi, -2 * np.pi, 2 * np.pi, -2 * np.pi, 2 * np.pi]])
+    assert second == approx([-v for v in first])
     assert fig.aresti.info.k == 46
+
+
+@pytest.mark.parametrize(
+    "olan, figure, exit_heading",
+    [
+        # 270 degree alternating rolling turns: option 0 exits as OpenAero draws (F4)
+        ("/```````+3jio3+>", 0, "OUTTOIN"),
+        ("/~---3joi15+++~~", 0, "INTOOUT"),
+    ],
+)
+def test_alternating_rolling_turn_option_0_is_openaero_direction(olan, figure, exit_heading):
+    fig = parse_olan(olan, load_builder("IAC", category="unlimited"), Heading.RTOL)[figure]
+    assert Heading.infer(fig.template.att.bearing()[-1]).name == exit_heading
 
 
 def test_rolling_circle_exposes_both_turn_and_roll_options(mb: ManBuilder):

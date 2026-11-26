@@ -206,9 +206,10 @@ def test_olan_take_compound_rolling_turn_variants():
 
 
 def test_olan_take_spin():
+    # OpenAero's iv downline with the spin on it (F7, F24)
     ofig = OlanFig.take(["s"])[0]
     assert len(ofig.fig.oels) == 3
-    assert ofig.prefix.roll_arr[0].turns == 1
+    assert ofig.final.roll_arr[0].turns == 1
     loop_amounts = ofig.loop_amounts(ofig.element_rolls())
     np.testing.assert_array_equal(loop_amounts, [-0.25, 0, 0.25])
 
@@ -324,9 +325,10 @@ def test_half_cuban_from_the_top_after_an_entry_snap():
 
 @pytest.mark.parametrize("code, turns, negative", [("6s", 1.5, False), ("+5s", 1.25, False), ("-5is", 1.25, True), ("s", 1, False)])
 def test_spin_with_no_figure_is_a_spin(code, turns, negative):
-    """F7: OpenAero's iv downline with the spin; the turns are a spin roll."""
+    """F7: OpenAero's iv downline with the spin; the turns are a spin roll on it."""
     fig = OlanFig.take([code])[0]
-    roll = fig.element_rolls()[0].roll_arr
+    assert (fig.fig.name, fig.fig.short_name) == ("Spin", "sp")
+    roll = fig.element_rolls()[1].roll_arr
     assert [(r.kind, r.turns, r.negative) for r in roll] == [("spin", turns, negative)]
     assert fig.create_elements()[0].kind == "spin"
 
@@ -354,3 +356,14 @@ def test_a_turn_openaero_rejects_raises(code):
     """F19: no catalogue figure, so OpenAero builds nothing."""
     with pytest.raises(OlanParseError, match="OpenAero has no turn or rolling turn like this"):
         OlanFig.take([code])
+
+
+@pytest.mark.parametrize("olan, exit_heading", [("+5s", "INTOOUT"), ("ed +5s", "INTOOUT")])
+def test_a_bare_quarter_spin_exits_as_openaero_draws_it(olan, exit_heading):
+    """F24: a 1 1/4 spin with no figure turns the way OpenAero draws it."""
+    from pyolan.parser import parse_olan
+    from schemas.positioning import Heading
+    from tuning.builders import load_builder
+
+    fig = parse_olan(olan, load_builder("IAC", category="unlimited"), Heading.RTOL)[-1]
+    assert Heading.infer(fig.template.att.bearing()[-1]).name == exit_heading
