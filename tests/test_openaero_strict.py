@@ -11,7 +11,8 @@ the point tip (D11).
 * ``test_sequence[<corpus>:<sequence id>]``: direction state, figures OpenAero
   builds that PyOlan does not (missing) and the reverse (extra);
 * ``test_template[<sequence id>]``: parse_olan templates against OpenAero's figure
-  exits, for the fixed subset in tests/data/openaero/template_subset.json;
+  exits, and no heading override warning, for the fixed subset in
+  tests/data/openaero/template_subset.json;
 * ``test_template_library_all``: the same for every library sequence (about four
   minutes). It is a diagnostic selection, not part of the component lane:
 
@@ -36,7 +37,6 @@ from openaero import templates as T  # noqa: E402
 
 pytestmark = pytest.mark.component
 
-TEMPLATE_CHECKS = ("template", "template_count")
 SUBSET = json.loads((D.DATA / "template_subset.json").read_text())["sequences"]
 
 

@@ -9,6 +9,7 @@ import schemas.positioning as p
 from flightanalysis import ManDef, Manoeuvre
 from flightanalysis.builders.manbuilder import ManBuilder
 from flightdata import State
+from loguru import logger
 from schemas import aresti as a
 from schemas import sequence_position
 
@@ -16,6 +17,9 @@ from .direction import DirectionState
 from .drawing import olan_items
 from .errors import NoFigureLeft, OlanParseError
 from .figure_parser import OlanFig
+
+# in the warning for a template that leaves the box the other way from OpenAero
+HEADING_OVERRIDE = "the next figure starts on OpenAero's heading"
 
 
 @dataclass
@@ -271,6 +275,11 @@ def _parse_figure(
         and _along_box(actual)
         and actual != required
     ):
+        # not expected: report it so that the figure can be added to the corpora
+        logger.warning(
+            f'Figure {len(figs) + 1} "{olanfig.token}": the template leaves {actual.name} '
+            f"where OpenAero leaves {required.name}; {HEADING_OVERRIDE}"
+        )
         itrans = g.Transformation(g.Euler(olanfig.exit, 0, required), g.P0())
 
     # update maninfo with the correct centre now that we know the exit direction.

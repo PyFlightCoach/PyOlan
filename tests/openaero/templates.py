@@ -8,7 +8,9 @@ physical exit, as the server builds templates: parse_olan with the IAC builder
 * ``template``, key ``<sequence id>#<figure index>``: the exit differs, or the
   template does not exit level where OpenAero does;
 * ``template_count``, key ``<sequence id>``: parse_olan builds a different number
-  of figures, or raises (detail).
+  of figures, or raises (detail);
+* ``heading_override``, key ``<sequence id>``: parse_olan warned that a template left
+  the box the other way and that it restarted on OpenAero's heading.
 
 A sequence whose figures do not link (a figure written to start in the other
 attitude from the one the figure before ends in, which OpenAero autocorrects) is
@@ -18,6 +20,7 @@ and its exits are not compared. The join is found from OpenAero's own trace.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from functools import lru_cache
 
 import geometry as g
@@ -27,7 +30,7 @@ from loguru import logger
 
 from pyolan.direction import FigureDirection, physical_to_heading
 from pyolan.errors import OlanParseError
-from pyolan.parser import parse_olan
+from pyolan.parser import HEADING_OVERRIDE, parse_olan
 
 from . import differential as D
 
@@ -73,12 +76,27 @@ def unlinked_join(seq: dict) -> dict | None:
     return None
 
 
+@contextmanager
+def heading_overrides():
+    """The heading override warnings parse_olan logs inside the block."""
+    messages: list[str] = []
+    sink = logger.add(
+        lambda m: messages.append(m.record["message"]),
+        level="WARNING",
+        filter=lambda record: HEADING_OVERRIDE in record["message"],
+    )
+    try:
+        yield messages
+    finally:
+        logger.remove(sink)
+
+
 def compare_sequence(res: D.Result, corpus: str, seq: dict) -> None:
     oa = seq["figures"]
     join = unlinked_join(seq)
-    logger.disable("pyolan")
     try:
-        figs = parse_olan(seq["text"], builder(), WIND)
+        with heading_overrides() as overrides:
+            figs = parse_olan(seq["text"], builder(), WIND)
     except OlanParseError as e:
         if join is None or not D._token_matches(e.token or "", join["s"]) or "ends" not in e.detail:
             where = "" if join is None else f" (expected the D2 error at {join['s']!r})"
@@ -87,8 +105,8 @@ def compare_sequence(res: D.Result, corpus: str, seq: dict) -> None:
     except Exception as e:  # noqa: BLE001
         res.add(corpus, seq["id"], "template_count", f"parse_olan raised {type(e).__name__}: {str(e)[:120]}")
         return
-    finally:
-        logger.enable("pyolan")
+    if overrides:
+        res.add(corpus, seq["id"], "heading_override", "; ".join(overrides))
     if join is not None:
         res.add(
             corpus, seq["id"], "template_count",

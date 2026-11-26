@@ -200,6 +200,8 @@ def propose_templates(res, entries: dict, seqs: dict) -> dict:
         if k[2] == "template":
             sid, idx = k[1].rsplit("#", 1)
             by_seq.setdefault(sid, []).append((int(idx), k))
+        elif k[2] == "heading_override":
+            out[k] = "?"
         else:
             seq = seqs[k[1]]
             detail = res.details[k]

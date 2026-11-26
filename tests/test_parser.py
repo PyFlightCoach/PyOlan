@@ -523,3 +523,27 @@ def test_figures_that_link_or_restart_parse(mb: ManBuilder, olan: str):
     """Linked figures, a first figure written inverted, and a join after a
     subsequence or an entry command (which restart the attitude, as in OpenAero)."""
     assert len(parse_olan(olan, mb)) == len([t for t in olan.split() if t not in ("eu", "ed", "ej", "eja", "//")])
+
+
+def test_a_template_that_leaves_the_other_way_is_logged(monkeypatch):
+    """Where a template does not leave on OpenAero's heading, the next figure starts on
+    OpenAero's heading and a warning names the figure."""
+    from loguru import logger
+    from pyolan.direction import FigureDirection
+    from pyolan.parser import HEADING_OVERRIDE
+    from tuning.builders import load_builder
+
+    # OpenAero is made to say the loop leaves the way it did not come
+    monkeypatch.setattr(
+        FigureDirection,
+        "exit_heading",
+        lambda self, wind: self.entry_heading(wind).reverse(),
+    )
+    messages = []
+    sink = logger.add(lambda m: messages.append(m.record["message"]), level="WARNING")
+    try:
+        parse_olan("o", load_builder("IAC", category="unlimited"))
+    finally:
+        logger.remove(sink)
+
+    assert [m for m in messages if HEADING_OVERRIDE in m and m.startswith('Figure 1 "o":')]
