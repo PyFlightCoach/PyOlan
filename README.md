@@ -1,92 +1,125 @@
 # PyOlan
 
-This WIP package contains a OLAN (One Letter Aerobatic Notation, https://openaero.net/) parser written in Python. The OLAN string is interpreted as a set of elements (loop, line, stallturn, spin etc). This is currently used by FCScore (https://www.flightcoach.org/fcscore/) to generate sequence definitions for automatic scoring.
+PyOlan reads OLAN (One Letter Aerobatic Notation, https://openaero.net/) sequences,
+as typed into OpenAero or held in an AcroWRX file, and builds the figures FCScore
+scores: a `schemas.aresti` figure, its definition, manoeuvre and template, and the
+K factor. It also turns F3A unknown catalogue descriptions into figures
+(`pyolan.f3a`, below).
 
+PyOlan is part of the FCScoreFuture workspace and is installed with it; it is not
+published to PyPI.
 
-Installation
-```
-    pip install pyolan
-```
+## Reading a sequence
 
-Install from source
-```
-    pip install -e .
-```
+`parse_olan` needs a rule set's builder (from Tuning) and the wind direction:
 
-Read the next figure from an olan string:
-```
-    from pyolan.figure_parser import OlanFig
+```python
+from schemas.positioning import Heading
+from tuning.builders import load_builder
 
-    ostr = "/d'1 5% 2a,f (-3,6) 4h4^> p(2)...' dq"
-    olan_array = ostr.split(" ")
-    ofig, olan_array = OlanFig.take(olan_array)
-```
+from pyolan.errors import OlanParseError
+from pyolan.parser import parse_olan
 
-
-parse an entire olan sequence, join the templates into one and plot:
-```
-    from flightdata import State
-    from pyolan.parser import parse_olan
-
-    olans: list[ParsedOlanFig] = parse_olan(
-        "/d'1 5% 2a,f (-3,6) 4h4^> p(2)...' dq 4% 2b.''1.''+``` (-13,0) 3% ~2g~ (2,0) 3% iv```6s.....'' 22y````1.. (-3,0) 8% `24'zt`8''",
-    )
-
-    template = State.stack({fig.definition.info.short_name: fig.template for fig in olans}, "manoeuvre")
-
-    template.plotlabels("manoeuvre").show()
+builder = load_builder("IAC", category="advanced")
+try:
+    figures = parse_olan("o 4h4 dq", builder, Heading.RTOL)
+except OlanParseError as error:
+    print(error.message, error.token, error.index)
+else:
+    for figure in figures:  # ParsedOlanFig
+        print(figure.short_name, figure.aresti.info.k, figure.warnings)
 ```
 
-OpenAero compatibility
-----------------------
+Each `ParsedOlanFig` holds the figure as read (`olan`), the aresti figure, the
+definition, the manoeuvre, its template and the warnings. The templates are chained:
+each figure starts where the one before it ends.
 
-PyOlan keeps a pinned OpenAero catalogue at
-`tests/data/openaero/figures.json`. It contains normalized attitudes, drawing
-shapes, roll markers, render plans, and K factors without making OpenAero a
-runtime dependency. Refresh it from a clean OpenAero checkout with:
+`OlanFig.take` reads one figure from the items of a sequence
+(`pyolan.drawing.olan_items`), skipping drawing commands, and needs no builder.
+`pyolan.sequence_key.sequence_key` gives a form of a sequence without its drawing,
+for finding the same sequence again.
 
+## What it reads, and how
+
+The reference is OpenAero: a figure PyOlan builds is the figure OpenAero draws from
+the same OLAN (elements, rolls, entry and exit attitude and direction, and K).
+
+- **Geometry** comes from OpenAero's drawing string for the catalogue variant
+  OpenAero chooses (`drawn.py`, `direction.py`). Rolling turns and roll-only figures
+  use hand-written elements (`primitives.py`).
+- **K** is OpenAero's: the base figure's K plus the K of each roll, powered or glider
+  (`OlanFig.k_powered`, `k_glider`). OpenAero's rule-specific K (`kRules`, used by
+  the French rule sets for some rolling turns) is not applied.
+- **Turns** can be flown either way. A turn or rolling turn carries both in
+  `ndmps["roll_option"]`; option 0 is the way OpenAero draws it. Rolls on a vertical
+  line that decide the exit direction are linked the same way.
+- **Sizes** are not read from the rules: PyOlan creates no loop radius or line length
+  ManParms, so the sides and radii of a figure are not compared with each other.
+
+## Errors and warnings
+
+Nothing is skipped silently. `parse_olan` raises `OlanParseError` (a `ValueError`)
+for anything that is neither a figure nor a drawing command, and for a figure it
+cannot build. The error carries the item (`token`), its position among the items of
+the sequence (`index`), the figure number and a `message` written for a pilot.
+
+Two cases differ from OpenAero on purpose:
+
+- **A sequence that does not link raises.** Each figure must start in the attitude
+  the figure before it ends in. OpenAero corrects the entry and draws on; PyOlan
+  inserts no half roll or turnaround between figures. An OpenAero free known file
+  lists only the compulsory figures, so it cannot be read as a sequence.
+- **The point tip, `th`, raises.** No element flies it.
+
+Codes that are not OpenAero figures (once PyOlan's own, such as `jj`, `bh` or `ph`)
+raise too, as do figures OpenAero rejects, usually for a missing `-` attitude marker.
+
+`ParsedOlanFig.warnings` reports what was read differently from what was written, as
+OpenAero does it:
+
+- a roll the figure needs and the OLAN leaves out is added (a correction roll, as in
+  `c` or `ao`);
+- a roll written where the figure has no roll (`o(2)`) is ignored.
+
+A template that leaves the box the other way from OpenAero is logged as a warning,
+and the next figure starts on OpenAero's heading. That is not expected: add the
+sequence to the regressions.
+
+## OpenAero reference data
+
+PyOlan does not need OpenAero or Node to run. Data taken from OpenAero is committed:
+
+| File | Contents | Written by |
+| --- | --- | --- |
+| `src/pyolan/data/openaero_figures.json` | figure variants and their drawing strings | `scripts/generate_openaero_figures.py` |
+| `src/pyolan/data/openaero_k.json` | base figure and roll K | `tools/openaero/export.py tables` |
+| `tests/data/openaero/` | the figure catalogue, and OpenAero's own trace of the library, catalogue, syntax and regression corpora | `tools/openaero/export.py` |
+
+The pinned OpenAero commit and the tools are described in
+[tools/openaero/README.md](tools/openaero/README.md).
+
+## Tests
+
+Run from the FCScoreFuture root:
+
+```sh
+.venv/bin/python scripts/test.py unit --package PyOlan
+.venv/bin/python scripts/test.py component --package PyOlan --timeout 900
 ```
-node ../../../OpenAero/tools/export-figure-catalog.js \
-    tests/data/openaero/figures.json
+
+The component lane compares PyOlan with OpenAero figure by figure, sequence by
+sequence and, for a subset of the library, template by template under each rule set.
+There is no list of accepted differences. The same comparison of every library
+sequence's templates is a diagnostic selection of about four minutes:
+
+```sh
+.venv/bin/python scripts/test.py diagnostic --package PyOlan --timeout 900 \
+    --select packages/PyOlan/tests/test_openaero_strict.py::test_template_library_all
 ```
 
-Render plans distinguish independent rolls (`_`) from embedded looping rolls
-(`!`). The compatibility tests use this distinction when checking primitive
-element counts and roll placement. The 36 renderer-only inverted variants are
-explicitly excluded from PyOlan parsing and covered by
-`test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope`.
-Marker-only roll slots are accepted as empty slots, so definitions such as
-`+o_+` retain their loop geometry without creating an invalid roll element.
-
-Parsed catalogue definitions expose their OpenAero K factors through
-`OlanFig.k_powered`, `OlanFig.k_glider`, or
-`OlanFig.k_factor(glider=True)`. Lookup is exact-definition based because K
-factors vary with orientation and roll pattern; unknown/custom OLAN patterns
-raise `ValueError`.
-
-When a parsed figure contains numeric roll slots, `parse_olan` also emits the
-roll angles in the Aresti definition's `ndmps["roll_option"]` metadata. Empty
-marker-only slots are omitted.
-
-Rolling-circle figures with a single roll expose paired turn and roll choices
-in the same combination parameter. For example, `3jo3` emits
-`[[3*pi/2, -6*pi], [-3*pi/2, 6*pi]]`; the loop angle references column zero
-and its roll references column one.
-
-Testing status
---------------
-
-- OpenAero differential coverage includes signed, inverted, special-figure,
-  multi-roll, and rolling-circle cases.
-- Ambiguous turnable figures prefer an exit direction opposite to entry when
-  no explicit exit marker overrides it.
-
-Deferred work
--------------
-
-- Consider whether direct `.seq` integration is preferable to the pinned
-  catalogue for some workflows.
-- Improve template positioning where this belongs in FlightAnalysis.
+When a pilot reports OLAN that is read wrongly, add it first:
+`tools/openaero/add_regression.py` (see the tools README). The analysis server logs
+the OLAN it refuses (`/parse_olan refused`).
 
 ## F3A catalogue descriptions (`pyolan.f3a`)
 
