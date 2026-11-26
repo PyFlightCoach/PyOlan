@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from pyolan.figure_parser import OlanFig
+from pyolan.errors import OlanParseError
+from pyolan.figure_parser import POINT_TIP, OlanFig
 
 
 FIXTURE = json.loads(
@@ -60,8 +61,9 @@ def test_fixture_has_open_aero_provenance():
 
 def test_every_open_aero_pattern_is_an_olan_parser_input():
     """Every catalogue pattern parses, the inverted variants of PyOlan's non-Aresti
-    codes (itri, ivv, ihat, ixm, idz, idvz, idvd, irqq) included since Phase D."""
-    unsupported = set()
+    codes (itri, ivv, ihat, ixm, idz, idvz, idvd, irqq) included since Phase D. The
+    exception is the point tip, which raises (D11)."""
+    unsupported = {}
     seen = set()
     for figure in FIGURES:
         pattern = figure["pattern"]
@@ -70,14 +72,16 @@ def test_every_open_aero_pattern_is_an_olan_parser_input():
         seen.add(pattern)
         try:
             OlanFig.take([pattern])
-        except Exception:
-            unsupported.add(pattern)
+        except OlanParseError as ex:
+            unsupported[figure["base_code"], pattern] = ex.detail
 
-    assert unsupported == set()
+    assert len(unsupported) == 4
+    assert {code for code, _ in unsupported} == {"th"}
+    assert set(unsupported.values()) == {POINT_TIP}
 
 
 def test_fixture_parseability_boundary_is_stable():
-    assert sum(1 for _ in parseable_figures()) == 1163
+    assert sum(1 for _ in parseable_figures()) == 1159  # 1163 less the 4 point tips
 
 
 def test_fixture_contains_k_factors_for_all_definitions():

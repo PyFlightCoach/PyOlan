@@ -12,9 +12,11 @@ from pyolan.rolls import OlanRoll, sn, spi
 WRITTEN = {"jo": "1jo1", "jio": "2jio2", "joi": "2joi2", "dz": "dz-", "dvz": "dvz-", "rqq": "rqq-"}
 # PyOlan's own codes that are not OpenAero figures: they raise (D10, plan step 5)
 NOT_OPENAERO = {"bh", "ph", "pbh", "jj", "jojo", "jijo", "joji", "joj", "jjoi", "jojio"}
+# OpenAero's point tip, which raises (D11, test_drawn.py)
+POINT_TIP = {"th"}
 
 
-@pytest.mark.parametrize("figure_code", sorted(set(olan_figs) - NOT_OPENAERO))
+@pytest.mark.parametrize("figure_code", sorted(set(olan_figs) - NOT_OPENAERO - POINT_TIP))
 def test_open_aero_figure_codes_parse_and_build(figure_code):
     """Every figure code PyOlan reads is an OpenAero figure and builds."""
     figure = OlanFig.take([WRITTEN.get(figure_code, figure_code)])[0]

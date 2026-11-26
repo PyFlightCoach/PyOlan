@@ -34,9 +34,9 @@ that already agreed with OpenAero keeps the same elements and element names:
 * a roll slot drawn between two curves with no line (``d=_d=``) is a bare roll point:
   a roll there is flown on a short line, an empty one is no element at all.
 
-Point tips (``u``), rolling turns inside a figure and two roll slots on one line are
-not drawn here:
-elements_from_draw returns None and the figure keeps its hand-written primitive.
+Rolling turns inside a figure and two roll slots on one line are not drawn here:
+elements_from_draw returns None and the figure keeps its hand-written primitive. A
+point tip (``u``) has no element: OlanFig raises for it (D11).
 """
 
 from __future__ import annotations

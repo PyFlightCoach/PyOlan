@@ -434,8 +434,8 @@ olan_figs = create_ofig_dict(
 # OpenAero has is built from OpenAero's drawing string (drawn.py), whatever these
 # hand-written elements say, and a code OpenAero has no figure for (the compound turns
 # jj, jojo, jijo, joji, joj, jjoi, jojio, and bh, ph, pbh) raises in OlanFig.take. The
-# entries stay so that the error can name the code; th keeps its stall-turn elements
-# because OpenAero's point tip has no PyOlan element.
+# entries stay so that the error can name the code. th is OpenAero's point tip, which
+# no element flies: it raises too (D11), and its elements here are never built.
 olan_figs.update(
     create_ofig_dict(
         [

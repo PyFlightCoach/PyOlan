@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from pyolan.drawn import elements_from_draw
+from pyolan.errors import OlanParseError
 from pyolan.figure_parser import OlanFig
 from pyolan.primitives import OlanEl, li, lo, st, ts, tu
 
@@ -85,9 +86,18 @@ def test_figures_follow_openaero_drawing(olan, arcs):
     assert [s[1] for s in C.py_canonical(fig.create_elements()) if s[0] == "arc"] == arcs
 
 
-def test_turns_and_point_tips_keep_their_primitive():
-    for olan in ["2j", "1jo1", "th"]:
+def test_turns_keep_their_primitive():
+    for olan in ["2j", "1jo1"]:
         assert OlanFig.take([olan])[0].drawn_slots is None
+
+
+@pytest.mark.parametrize("olan", ["th", "th-", "-th", "34th34", "-2fth2-"])
+def test_a_point_tip_raises(olan):
+    """D11: OpenAero's point tip has no element, so it is not built."""
+    with pytest.raises(OlanParseError) as info:
+        OlanFig.take([olan])
+    assert info.value.token == olan
+    assert info.value.message == f'"{olan}": "th" is a point tip, which FCScore cannot score yet.'
 
 
 @pytest.mark.parametrize(

@@ -36,6 +36,12 @@ from .errors import NoFigureLeft, OlanParseError
 _OLAN_CHARACTERS = re.compile(r"[0-9a-zA-Z_&$;,()\-+~`'.>^/%\[\]\"|]")
 
 
+# D11: OpenAero's point tip ("th", drawn with "u"), a 180 degree pitch over the top
+# of the vertical line. No element flies it, so it raises: the one exception to
+# matching OpenAero besides sequences that do not link (D2).
+POINT_TIP = '"th" is a point tip, which FCScore cannot score yet.'
+
+
 def _unreadable(token: str) -> str:
     """Why a token is neither a figure nor a drawing command, for a pilot."""
     bad = [c for c in strip_comments(token) if not _OLAN_CHARACTERS.fullmatch(c)]
@@ -287,12 +293,15 @@ class OlanFig:
     def _drawn(self) -> OlanFig:
         """Take the elements from the drawing string of the variant OpenAero
         chooses (drawn.py), where it can be drawn. Raises OlanParseError for a
-        figure OpenAero has no figure for (D10, plan step 5)."""
+        figure OpenAero has no figure for (D10, plan step 5) and for a point tip
+        (D11)."""
         if self.fig.chars in self.TURN_CHARS:
             return self
         oa = self.openaero()
         if not oa.resolved:
             raise OlanParseError(self._not_openaero())
+        if oa.draw and set(oa.draw) & set("uU"):
+            raise OlanParseError(POINT_TIP)
         if self.fig.chars == "r" or not oa.draw:
             return self
         drawn = elements_from_draw(oa.draw)

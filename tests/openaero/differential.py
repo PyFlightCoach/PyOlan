@@ -8,7 +8,9 @@ tools/openaero/export.py. Each difference is a (corpus, key, check) triple:
   - ``negative``: the negative flags of snaps and spins differ;
   - ``attitude``: the entry or exit attitude (upright or inverted) differs;
   - ``k_powered`` / ``k_glider``: K differs, or PyOlan cannot compute it;
-  - ``error``: PyOlan raises while building the figure's elements;
+  - ``error``: PyOlan raises while building the figure's elements; or, for a
+    figure OpenAero draws with a point tip, does not raise the point tip error (D11).
+    That error is the only thing expected of such a figure: it is not built;
 * sequence checks, keyed by ``<sequence id>#<figure index>``:
   - ``direction``: PyOlan's direction state (direction.py) differs from OpenAero's
     entry or exit direction and attitude;
@@ -32,7 +34,7 @@ from pathlib import Path
 from pyolan.direction import DirectionState
 from pyolan.drawing import olan_items
 from pyolan.errors import NoFigureLeft, OlanParseError
-from pyolan.figure_parser import OlanFig
+from pyolan.figure_parser import POINT_TIP, OlanFig
 import schemas.positioning as p
 
 from . import canonical as C
@@ -57,7 +59,7 @@ class PyFigure:
     direction_error: str | None = None
 
 
-def take_all(text: str) -> tuple[list[PyFigure], str | None]:
+def take_all(text: str) -> tuple[list[PyFigure], list[OlanParseError]]:
     """Read every figure the way parse_olan does: OlanFig.take, then the
     direction state. An item that raises OlanParseError is skipped. Returns the
     figures and the errors."""
@@ -75,7 +77,7 @@ def take_all(text: str) -> tuple[list[PyFigure], str | None]:
             # but keep the direction state as OpenAero has it: the drawing
             # commands before the item, then the item (OpenAero autocorrects its
             # entry and builds it, or draws it as illegal)
-            errors.append(f"OlanParseError: {e}")
+            errors.append(e)
             for command in data[: e.index]:
                 if command in ("eu", "ed", "ej", "eja"):
                     state.entry_command(command)
@@ -89,7 +91,12 @@ def take_all(text: str) -> tuple[list[PyFigure], str | None]:
             out.append(PyFigure(ofig, state.apply(ofig)))
         except Exception as e:  # noqa: BLE001
             out.append(PyFigure(ofig, None, f"{type(e).__name__}: {e}"))
-    return out, "; ".join(errors) or None
+    return out, errors
+
+
+def _point_tip(figure: dict) -> bool:
+    """OpenAero draws a point tip, for which PyOlan raises (D11)."""
+    return ["other", "PointTip"] in figure["c"]
 
 
 def _token_matches(py_token: str, oa_string: str) -> bool:
@@ -146,7 +153,8 @@ def compare_figure(res: Result, corpus: str, f: dict, ofig: OlanFig, checks: set
 
 
 def compare_sequence(res: Result, corpus: str, seq: dict, checks: set[str]) -> None:
-    py_figs, stop = take_all(seq["text"])
+    py_figs, errors = take_all(seq["text"])
+    stop = "; ".join(f"OlanParseError: {e}" for e in errors)
     used = 0
     for f in seq["figures"]:
         res.figures += 1
@@ -155,6 +163,17 @@ def compare_sequence(res: Result, corpus: str, seq: dict, checks: set[str]) -> N
             if _token_matches(py_figs[k].olan.token, f["s"]):
                 match = k
                 break
+        if _point_tip(f) and "error" in checks:
+            raised = match is None and any(
+                e.detail == POINT_TIP and _token_matches(e.token or "", f["s"]) for e in errors
+            )
+            if not raised:
+                what = "built it" if match is not None else f"stopped: {stop or 'no error'}"
+                res.add(corpus, f["s"], "error", f"OpenAero draws a point tip; PyOlan must raise (D11), {what}")
+        if _point_tip(f):
+            if match is not None:
+                used = match + 1
+            continue
         skey = f"{seq['id']}#{f['i']}"
         if match is None:
             if "missing" in checks:
