@@ -4,7 +4,7 @@ Each corpus in tests/data/openaero/expected holds OpenAero's own trace of every
 figure, reduced to the canonical form (tests/openaero/canonical.py). There is no
 list of accepted differences: every difference from OpenAero is a failing test. The
 two deliberate exceptions are expected errors: a sequence that does not link (D2) and
-the point tip (D11).
+OpenAero's non-Aresti figures, its Family 0 with the point tip (D11, Phase S SQ5).
 
 * ``test_figure[<corpus>:<figure string>]``: elements, negative flags, entry and
   exit attitude, errors, powered and glider K;

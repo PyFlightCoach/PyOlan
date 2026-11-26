@@ -13,7 +13,7 @@ The ofig_re regex combines all the olan letters and matches an olan expression t
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 
@@ -28,10 +28,14 @@ class OlanEl:
     # a roll slot between two curves with no line drawn (OpenAero's "d=_d="): a
     # roll there is flown on a short line, no roll means no line at all
     bare: bool = False
+    # a loop OpenAero draws as a curve, not as a corner (drawn.py): at least one of its
+    # drawing characters is 180 degrees or more, or is followed by "=" (makeCorner).
+    # How the loop is drawn, not what is flown, so it is left out of comparisons.
+    round: bool = field(default=False, compare=False)
 
 
-def lo(amount: float, canRoll: bool = False) -> OlanEl:
-    return OlanEl("Loop", amount, canRoll)
+def lo(amount: float, canRoll: bool = False, round: bool = False) -> OlanEl:
+    return OlanEl("Loop", amount, canRoll, round=round)
 
 
 def li() -> OlanEl:

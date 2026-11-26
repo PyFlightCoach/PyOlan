@@ -2,7 +2,7 @@ import pytest
 
 from pyolan.drawing import re_drawing
 from pyolan.errors import OlanParseError
-from pyolan.figure_parser import OlanFig
+from pyolan.figure_parser import NON_ARESTI, OlanFig
 from pyolan.primitives import olan_figs
 from pyolan.rolls import OlanRoll, sn, spi
 
@@ -12,17 +12,53 @@ from pyolan.rolls import OlanRoll, sn, spi
 WRITTEN = {"jo": "1jo1", "jio": "2jio2", "joi": "2joi2", "dz": "dz-", "dvz": "dvz-", "rqq": "rqq-"}
 # PyOlan's own codes that are not OpenAero figures: they raise (D10, plan step 5)
 NOT_OPENAERO = {"bh", "ph", "pbh", "jj", "jojo", "jijo", "joji", "joj", "jjoi", "jojio"}
-# OpenAero's point tip, which raises (D11, test_drawn.py)
-POINT_TIP = {"th"}
+# OpenAero's non-Aresti figures (its Family 0, catalogue numbers 0.x) raise under every
+# rule set (Phase S, SQ5), the point tip (D11) among them; they are not parsed and built
+NON_ARESTI_CODES = {
+    "jw", "oj", "mj", "aj", "th", "vv", "hat", "hp", "tri", "xm", "xa",
+    "oaj", "oajj", "oajjj", "oajjjj",
+}
 
 
-@pytest.mark.parametrize("figure_code", sorted(set(olan_figs) - NOT_OPENAERO - POINT_TIP))
+@pytest.mark.parametrize("figure_code", sorted(set(olan_figs) - NOT_OPENAERO - NON_ARESTI_CODES))
 def test_open_aero_figure_codes_parse_and_build(figure_code):
     """Every figure code PyOlan reads is an OpenAero figure and builds."""
     figure = OlanFig.take([WRITTEN.get(figure_code, figure_code)])[0]
 
     assert figure_code in figure.fig.chars.split("|")
     assert figure.create_elements()
+
+
+def test_the_non_aresti_codes_are_the_pyolan_codes_of_openaero_family_0():
+    """NON_ARESTI_CODES is every code PyOlan reads whose OpenAero catalogue number is
+    0.x: nothing else is refused as non-Aresti, and none of them is missed."""
+    refused = set()
+    for code in set(olan_figs) - NOT_OPENAERO:
+        try:
+            OlanFig.take([WRITTEN.get(code, code)])
+        except OlanParseError as ex:
+            assert ex.detail == NON_ARESTI
+            refused.add(code)
+
+    assert refused == NON_ARESTI_CODES
+
+
+@pytest.mark.parametrize(
+    "olan",
+    sorted(
+        NON_ARESTI_CODES
+        # the inverted and rolling forms OpenAero has (the other inverted codes are
+        # not OpenAero figures and raise for that, below)
+        | {"4j5-", "4jo5-", "ihat", "ivv", "itri", "ixm", "ixa", "iph", "ibh", "ipbh", "ioj", "34th34"}
+    ),
+)
+def test_an_openaero_non_aresti_figure_raises(olan):
+    """Phase S, SQ5: every Family 0 figure is refused under every rule set."""
+    with pytest.raises(OlanParseError) as info:
+        OlanFig.take([olan])
+
+    assert info.value.detail == NON_ARESTI
+    assert info.value.token == olan
 
 
 @pytest.mark.parametrize(

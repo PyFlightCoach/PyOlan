@@ -27,6 +27,8 @@ that already agreed with OpenAero keeps the same elements and element names:
 
 * consecutive curves pulled the same way are one loop (``v=m!`` is the 3/4 loop of
   ``ao``), a change of sign starts a new one (``mm``, ``oo``);
+* a loop is ``round`` when OpenAero draws any part of it as a curve rather than a
+  corner; the sizing rules (sizing.py) match the radii of round loops;
 * a loop with a roll in its top can roll (the roll is centred on its apex);
 * a line with a roll slot can roll; a line between two elements without one is an
   unjudged line; the entry and exit lines are kept only when they have a roll slot.
@@ -95,6 +97,9 @@ def elements_from_draw(draw: str) -> tuple[list[OlanEl], list[int | str | None]]
             end_line()
             amount = DRAW_ANGLES[c] / 360
             top = i + 1 < n and draw[i + 1] == "!"
+            # OpenAero's makeCorner test (direction.py): a corner is under 180 degrees
+            # and not followed by "="
+            curve = abs(DRAW_ANGLES[c]) >= 180 or (i + 1 < n and draw[i + 1] == "=")
             if top and not (i + 2 < n and draw[i + 2] == "_"):
                 return None
             previous = oels[-1] if oels else None
@@ -104,9 +109,11 @@ def elements_from_draw(draw: str) -> tuple[list[OlanEl], list[int | str | None]]
                 and (previous.loopamount > 0) == (amount > 0)
                 and not (top and slots[-1] is not None)
             ):
-                oels[-1] = lo(previous.loopamount + amount, previous.canRoll or top)
+                oels[-1] = lo(
+                    previous.loopamount + amount, previous.canRoll or top, previous.round or curve
+                )
             else:
-                oels.append(lo(amount, top))
+                oels.append(lo(amount, top, curve))
                 slots.append(None)
             if top:
                 slots[-1] = k
