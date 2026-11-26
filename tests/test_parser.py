@@ -479,3 +479,33 @@ def test_definition_info_matches_final_aresti_info(mb: ManBuilder):
             assert getattr(fig.definition.info, key) == getattr(fig.aresti.info, key)
     assert figs[1].definition.info.start.direction == Direction.CROSS
     assert figs[1].definition.info.end.direction != Direction.CROSS
+
+
+# D2: a sequence we receive links up; one that does not raises
+
+
+def test_a_figure_that_does_not_link_raises(mb: ManBuilder):
+    with pytest.raises(OlanParseError) as info:
+        parse_olan("m1- 4h4", mb)
+    e = info.value
+    assert (e.token, e.index, e.figure) == ("4h4", 1, 2)
+    assert e.message == (
+        'Figure 2 "4h4": starts upright, but figure 1 "m1-" ends inverted. Each figure '
+        "must start in the attitude the figure before it ends in. An OpenAero free known "
+        "file lists only the compulsory figures, so it cannot be read as a sequence."
+    )
+
+
+def test_an_inverted_start_after_an_upright_exit_raises(mb: ManBuilder):
+    with pytest.raises(OlanParseError, match='Figure 3 "-o": starts inverted, but figure 2 "o" ends upright'):
+        parse_olan("eu o o -o", mb)
+
+
+@pytest.mark.parametrize(
+    "olan",
+    ["m1- -4h4", "-4h4 m", "-ic", "m1- eu 4h4", "m1- ed 4h4", "m1- ej 4h4", "m1- eja 4h4", "m1- // 4h4"],
+)
+def test_figures_that_link_or_restart_parse(mb: ManBuilder, olan: str):
+    """Linked figures, a first figure written inverted, and a join after a
+    subsequence or an entry command (which restart the attitude, as in OpenAero)."""
+    assert len(parse_olan(olan, mb)) == len([t for t in olan.split() if t not in ("eu", "ed", "ej", "eja", "//")])

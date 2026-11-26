@@ -1,4 +1,7 @@
-"""parse_olan places each figure at its position in the sequence (A2)."""
+"""parse_olan places each figure at its position in the sequence (A2).
+
+The sequences link (D2): each figure starts in the attitude the one before ends in.
+"""
 
 from dataclasses import replace
 
@@ -28,7 +31,7 @@ def applied(fig):
 
 
 def test_first_and_last_figures_are_placed_in_both_figure_and_definition(probe_builder):
-    figs = parse_olan("1xm(1)1 4 1xm(1)1", probe_builder)
+    figs = parse_olan("1a2 1 1a2", probe_builder)
 
     assert len(figs) == 3
     assert [f.aresti.info.sequence_position for f in figs] == ["first", None, "last"]
@@ -40,7 +43,7 @@ def test_first_and_last_figures_are_placed_in_both_figure_and_definition(probe_b
 
 
 def test_a_single_figure_is_both_first_and_last(probe_builder):
-    (fig,) = parse_olan("1xm(1)1", probe_builder)
+    (fig,) = parse_olan("1a2", probe_builder)
 
     assert fig.aresti.info.sequence_position == "only"
     assert fig.definition.info.sequence_position == "only"
@@ -51,7 +54,7 @@ def test_a_single_figure_is_both_first_and_last(probe_builder):
 def test_f3a_figures_keep_no_position():
     f3a = load_builder("f3a")
 
-    figs = parse_olan("1xm(1)1 4", f3a)
+    figs = parse_olan("1a2 1", f3a)
 
     assert [f.aresti.info.sequence_position for f in figs] == [None, None]
     assert [f.definition.info.sequence_position for f in figs] == [None, None]

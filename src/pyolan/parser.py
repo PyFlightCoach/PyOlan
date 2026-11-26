@@ -192,6 +192,21 @@ def parse_olan(
     return figs
 
 
+def _attitude_word(attitude: int) -> str:
+    return "inverted" if attitude == 180 else "upright"
+
+
+def _unlinked(olanfig: OlanFig, previous_exit: int, figs: list[ParsedOlanFig]) -> str:
+    """The detail of the error for a figure that does not start in the attitude the
+    figure before it ends in (D2)."""
+    return (
+        f"starts {_attitude_word(180 - previous_exit)}, but figure {len(figs)} "
+        f'"{figs[-1].olan.token}" ends {_attitude_word(previous_exit)}. Each figure must '
+        "start in the attitude the figure before it ends in. An OpenAero free known file "
+        "lists only the compulsory figures, so it cannot be read as a sequence."
+    )
+
+
 def _parse_figure(
     olanfig: OlanFig,
     state: DirectionState,
@@ -202,6 +217,10 @@ def _parse_figure(
 ) -> ParsedOlanFig:
     # OpenAero's direction state gives the entry and the required exit heading
     oa = state.apply(olanfig)
+    if oa.entry_conflict is not None and figs:
+        # D2: a sequence we receive links up; PyOlan inserts no half roll or
+        # turnaround between figures, where OpenAero autocorrects
+        raise OlanParseError(_unlinked(olanfig, oa.entry_conflict, figs))
 
     # make sure short_name is unique
     _suffix = ""

@@ -102,6 +102,10 @@ class FigureDirection:
     # (slot, signed degrees) (D1)
     roll_slots: list[int] = field(default_factory=list)
     corrections: list[tuple[int, int]] = field(default_factory=list)
+    # the attitude (0 upright, 180 inverted) the figure before ended in, when this
+    # figure is written to start in the other one; OpenAero autocorrects such a
+    # join, parse_olan raises (D2)
+    entry_conflict: int | None = None
 
     @staticmethod
     def _physical(direction: int, attitude: int) -> int:
@@ -375,11 +379,16 @@ class DirectionState:
             self.first_figure = False
             return res
 
-        # autocorrect the entry attitude after the first (sub)figure (~line 2170)
+        # autocorrect the entry attitude after the first (sub)figure (~line 2170).
+        # first_figure is set at the start, after "//" and after an entry command
+        # (eu, ed, ej, eja), as OpenAero's firstFigure || subSequence, so only a join
+        # between two figures counts as a conflict.
+        conflict = None
         if not self.first_figure:
             if (self.attitude == 0 and base[0] == "-") or (
                 self.attitude == 180 and base[0] == "+"
             ):
+                conflict = int(self.attitude)
                 self.attitude = 180 - self.attitude
                 self.change_dir(180)
         # the first figure starts inverted with the same drawing direction (~2186)
@@ -390,6 +399,7 @@ class DirectionState:
         if self.direction % 180 == 0:
             self.go_right = (self.direction == 180) == (self.attitude == 0)
         res = self._build(candidates, base, figure, token)
+        res.entry_conflict = conflict
         self.results.append(res)
         self.first_figure = False
         return res

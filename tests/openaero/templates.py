@@ -8,6 +8,11 @@ physical exit, as the server builds templates: parse_olan with the IAC builder
 * ``template``, key ``<sequence id>#<figure index>``: the exit differs;
 * ``template_count``, key ``<sequence id>``: parse_olan builds a different number
   of figures, or raises (detail).
+
+A sequence whose figures do not link (a figure written to start in the other
+attitude from the one the figure before ends in, which OpenAero autocorrects) is
+an expected error instead (D2): parse_olan must raise OlanParseError at that figure,
+and its exits are not compared. The join is found from OpenAero's own trace.
 """
 
 from __future__ import annotations
@@ -19,6 +24,7 @@ import schemas.positioning as p
 from loguru import logger
 
 from pyolan.direction import FigureDirection, physical_to_heading
+from pyolan.errors import OlanParseError
 from pyolan.parser import parse_olan
 
 from . import differential as D
@@ -40,16 +46,47 @@ def template_exit(tp) -> tuple[p.Heading, bool]:
     return heading, float(zb.z[0]) > 0
 
 
+_RESTARTS = ("//", "eu", "ed", "ej", "eja")
+
+
+def unlinked_join(seq: dict) -> dict | None:
+    """The first OpenAero figure whose entry attitude OpenAero autocorrected: it
+    enters upright or inverted, the figure before it exits in the other one, and
+    no subsequence ("//") or entry command (eu, ed, ej, eja) lies between them."""
+    items = seq["text"].split()
+    figures = seq["figures"]
+    for prev, f in zip(figures, figures[1:]):
+        between = items[prev["i"] + 1 : f["i"]]
+        if any(item in _RESTARTS for item in between):
+            continue
+        before, after = prev["exit"][1], f["entry"][1]
+        if before in (0, 180) and after in (0, 180) and before != after:
+            return f
+    return None
+
+
 def compare_sequence(res: D.Result, corpus: str, seq: dict) -> None:
     oa = seq["figures"]
+    join = unlinked_join(seq)
     logger.disable("pyolan")
     try:
         figs = parse_olan(seq["text"], builder(), WIND)
+    except OlanParseError as e:
+        if join is None or not D._token_matches(e.token or "", join["s"]) or "ends" not in e.detail:
+            where = "" if join is None else f" (expected the D2 error at {join['s']!r})"
+            res.add(corpus, seq["id"], "template_count", f"parse_olan raised OlanParseError: {str(e)[:160]}{where}")
+        return
     except Exception as e:  # noqa: BLE001
         res.add(corpus, seq["id"], "template_count", f"parse_olan raised {type(e).__name__}: {str(e)[:120]}")
         return
     finally:
         logger.enable("pyolan")
+    if join is not None:
+        res.add(
+            corpus, seq["id"], "template_count",
+            f"figure {join['s']!r} does not link to the figure before it; parse_olan must raise (D2)",
+        )
+        return
     if len(figs) != len(oa):
         res.add(corpus, seq["id"], "template_count", f"{len(figs)} templates, OpenAero {len(oa)} figures")
     k = 0
