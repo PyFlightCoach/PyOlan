@@ -45,8 +45,8 @@ EMBEDDED_ROLL_FIGURES = {
     "pp": "pp(2)",
     "rq": "rq(1)",
     "q": "q(1)",
-    "oj": "1oj",
-    "ioj": "1ioj",
+    "oj": "oj1",
+    "ioj": "ioj1",
 }
 # "ph" and "pbh" (PyOlan aliases of "hp", the same figure) were here too: OpenAero
 # has no such figure, so since C3 parse_olan refuses them (no K). "hp1" was here
@@ -105,15 +105,13 @@ def test_snap_only_section_is_a_point_at_the_apex(olan, mb):
     assert end == pytest.approx(0, abs=1.5)
 
 
-def test_xm_rolls_span_their_eighth_loops_without_pads(mb):
-    # A 90 degree roll does not fit in a 45 degree arc: it spans the arc instead
-    # of leaving a pad with a negative angle.
+def test_xm_rolls_are_between_its_eighth_loops(mb):
+    # OpenAero's xm (0.101) draws its rolls between the 45 degree curves, not in
+    # them (Phase D; PyOlan's own xm had them in the curves)
     figure = parse_olan("1xm(1)1", mb)[0]
-    names = list(figure.template.labels.element.keys())
 
-    assert not [n for n in names if "pad" in n]
-    for element in figure.aresti.elements[:3]:
-        assert element.kwargs["rollangle"] == pytest.approx(np.pi / 4)
+    assert [pe.kind for pe in figure.aresti.elements] == ["loop", "roll", "loop", "roll", "loop", "roll", "loop"]
+    assert not [pe for pe in figure.aresti.elements if pe.kind == "loop" and "rolls" in pe.kwargs]
 
 
 @pytest.mark.parametrize(
@@ -194,7 +192,11 @@ def _merged_open_aero_loops(plan):
             after_arc = True
         elif item["kind"] == "embedded_roll":
             loops[-1][1] = True
-        elif not (item["kind"] == "roll" and loops and loops[-1][1] and after_arc):
+        elif not (
+            # the slot of the roll in the top belongs to the loop; a fixed quarter
+            # roll ("4", oj and ioj) is flown between two curves
+            item["kind"] == "roll" and item["marker"] == "_" and loops and loops[-1][1] and after_arc
+        ):
             after_arc = False
     return loops
 

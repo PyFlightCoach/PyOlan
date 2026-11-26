@@ -27,7 +27,7 @@ from schemas import aresti as a, ManInfo
 
 from .primitives import OFig, li, lo, tu, ofig_re, olan_figs
 from .rolls import OlanRoll, ro
-from .drawn import elements_from_draw
+from .drawn import FIXED_QUARTER, elements_from_draw
 
 from .drawing import re_drawing, re_draw, strip_comments
 from .errors import NoFigureLeft, OlanParseError
@@ -284,16 +284,10 @@ class OlanFig:
             d,
         )._with_corrections()._drawn()
 
-    # PyOlan's own codes, whose letters OpenAero uses for another figure (F12): they
-    # keep the hand-written primitive until plan step 5
-    HANDWRITTEN = frozenset({"xm", "xa"})
-
     def _drawn(self) -> OlanFig:
         """Take the elements from the drawing string of the variant OpenAero
         chooses (drawn.py), where it can be drawn."""
         if self.fig.chars in self.TURN_CHARS or self.fig.chars == "r":
-            return self
-        if set(self.fig.chars.split("|")) & self.HANDWRITTEN:
             return self
         oa = self.openaero()
         if not oa.resolved or not oa.draw:
@@ -303,11 +297,15 @@ class OlanFig:
             return self
         oels, slots = drawn
         self.fig = replace(self.fig, oels=oels, turnable=None)
-        self.drawn_slots = [None if s is None else oa.first_slot + s for s in slots]
+        self.drawn_slots = [s if s is None or isinstance(s, str) else oa.first_slot + s for s in slots]
         self.drawn_nslots = len(oa.roll_slots)
+        # the attitude OpenAero exits in, which the drawn elements fly; it can differ
+        # from the written exit marker when the rolls written leave the other way
+        if oa.exit_attitude in (0, 180):
+            self.exit = p.Orientation.INVERTED if oa.exit_attitude == 180 else p.Orientation.UPRIGHT
         # OpenAero ignores a roll written where the figure has no roll ("o(2)": a
         # loop has no roll in brackets); so does PyOlan, but it says so (D7)
-        used = set(self.drawn_slots) - {None}
+        used = {s for s in self.drawn_slots if isinstance(s, int)}
         n = self.drawn_nslots
         written = [(0, self.prefix, "before the figure")]
         # the bracketed slots are 1 to n - 2; a bracket beyond them has no slot
@@ -408,7 +406,12 @@ class OlanFig:
 
     def element_rolls(self) -> list[OlanRoll | None]:
         if self.drawn_slots is not None:
-            return [None if s is None else self._slot_roll(s) for s in self.drawn_slots]
+            return [
+                None if s is None
+                else OlanRoll(FIXED_QUARTER, [ro(0.25)]) if s == FIXED_QUARTER
+                else self._slot_roll(s)
+                for s in self.drawn_slots
+            ]
         # n==4: p fig (s0) (s1) f
         # n==3: p fig (s0) f
         # n==2: p fig f
@@ -732,6 +735,8 @@ class OlanFig:
                                     padded=i > 0 and i < len(self.fig.oels) - 1,
                                 )
                             )
+                    elif el.bare:
+                        pass  # a roll point between two curves with no roll: no line
                     elif (i > 0 and i < len(self.fig.oels) - 1) or len(self.fig.oels) == 1:
                         # a figure that is only a line ("--") keeps it
                         pes.append(a.line())

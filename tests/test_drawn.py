@@ -41,9 +41,20 @@ def test_elements_from_draw(draw, oels, slots):
     assert elements_from_draw(draw) == (oels, slots)
 
 
-@pytest.mark.parametrize("draw", ["~j1~", "~v~_~u~_''v~", "~''v=4p!_~", "~_~_~"])
+def test_a_fixed_quarter_roll_and_bare_roll_points():
+    # oj: a quarter roll between the curves, the roll of the slot in the 3/4 loop
+    assert elements_from_draw("~''v=4p!_~") == (
+        [lo(1 / 4), OlanEl("Line", 0, True, bare=True), lo(3 / 4, True)], [None, "4", 0]
+    )
+    # xm: roll slots between curves with no line drawn
+    oels, slots = elements_from_draw("~d=_d=_d=_d=~")
+    assert [e.bare for e in oels if e.kind == "Line"] == [True] * 3
+    assert slots == [None, 0, None, 1, None, 2, None]
+
+
+@pytest.mark.parametrize("draw", ["~j1~", "~v~_~u~_''v~", "~_~_~"])
 def test_what_is_not_drawn_keeps_the_primitive(draw):
-    """Turns, point tips, the clover's quarter rolls and two slots on one line."""
+    """Turns, point tips and two slots on one line."""
     assert elements_from_draw(draw) is None
 
 
@@ -66,8 +77,8 @@ def test_figures_follow_openaero_drawing(olan, arcs):
     assert [s[1] for s in C.py_canonical(fig.create_elements()) if s[0] == "arc"] == arcs
 
 
-def test_turns_and_legacy_codes_keep_their_primitive():
-    for olan in ["2j", "1jo1", "1xm(1)1", "xa", "oj"]:
+def test_turns_and_point_tips_keep_their_primitive():
+    for olan in ["2j", "1jo1", "jw", "th", "oaj"]:
         assert OlanFig.take([olan])[0].drawn_slots is None
 
 

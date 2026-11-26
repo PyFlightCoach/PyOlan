@@ -25,6 +25,9 @@ class OlanEl:
     direction: int = None
     rolltype: Literal["oi", "io", "o", "i"] = "i"
     turnamount: float = 0
+    # a roll slot between two curves with no line drawn (OpenAero's "d=_d="): a
+    # roll there is flown on a short line, no roll means no line at all
+    bare: bool = False
 
 
 def lo(amount: float, canRoll: bool = False) -> OlanEl:
@@ -442,9 +445,9 @@ olan_figs.update(
             OFig("Outside Rolling Turn", "rturn", "joj", [tu("o"), tu("i"), tu("o")]),
             OFig("Inside Reversing Rolling Turn", "rturn", "jjoi", [tu("i"), tu("oi", 1 / 2)]),
             OFig("Outside Reversing Rolling Turn", "rturn", "jojio", [tu("o"), tu("io", 1 / 2)]),
-            OFig("Double Z", "doubleZ", "dz", [lo(1 / 8), li(), lo(-1 / 8), lo(3 / 8), li(), lo(-3 / 8)]),
-            OFig("Double Vertical Z", "doubleVZ", "dvz", [lo(1 / 4), li(), lo(-1 / 4), lo(1 / 4), li(), lo(-1 / 4), lo(1 / 4), li(), lo(-1 / 4)]),
-            OFig("Double Vertical Diamond", "doubleVD", "dvd", [lo(1 / 4), li(), lo(-1 / 4), lo(-1 / 4), li(), lo(1 / 4), lo(-1 / 4), li(), lo(1 / 4)]),
+            OFig("Double Z", "doubleZ", "dz", [lo(1 / 8), li(), lo(-1 / 8), lo(3 / 8), li(), lo(-3 / 8)], True),
+            OFig("Double Vertical Z", "doubleVZ", "dvz", [lo(1 / 4), li(), lo(-1 / 4), lo(1 / 4), li(), lo(-1 / 4), lo(1 / 4), li(), lo(-1 / 4)], True),
+            OFig("Double Vertical Diamond", "doubleVD", "dvd", [lo(1 / 4), li(), lo(-1 / 4), lo(-1 / 4), li(), lo(1 / 4), lo(-1 / 4), li(), lo(1 / 4)], True),
             OFig(
                 "Reverse Eight Loop",
                 "reverse8",
@@ -459,10 +462,11 @@ olan_figs.update(
                     lo(-1 / 8), OlanEl("Line", 0, False),
                     lo(-1 / 8),
                 ],
+                True,
             ),
-            OFig("Extended Vertical Lines", "verticalLines", "vv", [lo(1 / 4), li(), lo(-1 / 4), li(), lo(1 / 4), li(), lo(-1 / 4)]),
-            OFig("Hat", "hat", "hat", [lo(1 / 4), li(), lo(-1 / 4), li(), lo(1 / 4), li(), lo(-1 / 4)]),
-            OFig("Triangle", "triangle", "tri", [lo(1 / 8), li(), lo(3 / 8), li(), lo(-3 / 8), li(), lo(-1 / 8)]),
+            OFig("Extended Vertical Lines", "verticalLines", "vv", [lo(1 / 4), li(), lo(-1 / 4), li(), lo(1 / 4), li(), lo(-1 / 4)], True),
+            OFig("Hat", "hat", "hat", [lo(1 / 4), li(), lo(-1 / 4), li(), lo(1 / 4), li(), lo(-1 / 4)], True),
+            OFig("Triangle", "triangle", "tri", [lo(1 / 8), li(), lo(3 / 8), li(), lo(-3 / 8), li(), lo(-1 / 8)], True),
             OFig(
                 "Extended Immelman",
                 "extendedImmelman",
@@ -473,6 +477,7 @@ olan_figs.update(
                     lo(1 / 8, True),
                     lo(1 / 8),
                 ],
+                True,
             ),
             OFig(
                 "Extended Split S",

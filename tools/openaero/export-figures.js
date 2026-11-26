@@ -59,6 +59,10 @@ while ((match = entryPattern.exec(source)) !== null) {
         } else if (character === "_") {
             flushLine();
             renderPlan.push({ kind: "roll", marker: character });
+        } else if (character === "4") {
+            // the clover's fixed quarter roll (oj, mj, aj), drawn where it stands
+            flushLine();
+            renderPlan.push({ kind: "roll", marker: character });
         } else if (character === "!") {
             flushLine();
             renderPlan.push({ kind: "embedded_roll", marker: character });

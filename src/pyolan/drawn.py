@@ -17,6 +17,8 @@ The drawing characters (OpenAero's figpat and drawAngles, js/config.js):
 * ``~`` and ``'``: lines. ``_``: a roll slot on the line it is drawn on.
 * ``h`` / ``H``: a hammer (stall turn). ``t`` / ``T``: a tailslide, wheels down (``ta``)
   or canopy down (``ita``).
+* ``4``: a fixed quarter roll where it is drawn (between the curves of ``oj``, ``mj``,
+  ``aj``); its direction is chosen like any quarter roll on a vertical line.
 * ``-`` at the start: an inverted entry, nothing to draw.
 
 PyOlan's elements follow the hand-written primitives (primitives.py) so that a figure
@@ -28,52 +30,63 @@ that already agreed with OpenAero keeps the same elements and element names:
 * a line with a roll slot can roll; a line between two elements without one is an
   unjudged line; the entry and exit lines are kept only when they have a roll slot.
 
-Turns (``j``), point tips (``u``), the clover's fixed quarter rolls (``4``) and two roll
-slots on one line are not drawn here: elements_from_draw returns None and the figure
-keeps its hand-written primitive.
+* a roll slot drawn between two curves with no line (``d=_d=``) is a bare roll point:
+  a roll there is flown on a short line, an empty one is no element at all.
+
+Turns (``j``), point tips (``u``) and two roll slots on one line are not drawn here:
+elements_from_draw returns None and the figure keeps its hand-written primitive.
 """
 
 from __future__ import annotations
 
 from .direction import DRAW_ANGLES
-from .primitives import OlanEl, li, lo, st, ts
+from .primitives import OlanEl, lo, st, ts
 
 _LINES = frozenset("~'")
 _HINTS = frozenset("=/«»-")
 
 
-def elements_from_draw(draw: str) -> tuple[list[OlanEl], list[int | None]] | None:
+FIXED_QUARTER = "4"  # the slot of a fixed quarter roll
+
+
+def elements_from_draw(draw: str) -> tuple[list[OlanEl], list[int | str | None]] | None:
     """The elements of a drawing string, and for each element the roll slot it
-    holds: the number of the ``_`` in the string (0 for the first), or None.
+    holds: the number of the ``_`` in the string (0 for the first), FIXED_QUARTER for
+    a fixed quarter roll, or None.
 
     Returns None for a drawing string with something this module does not draw.
     """
     oels: list[OlanEl] = []
-    slots: list[int | None] = []
+    slots: list[int | str | None] = []
     run = False  # a line is being drawn
-    run_slot: int | None = None
+    drawn_line = False  # the line has line characters, not only a slot
+    run_slot: int | str | None = None
     k = 0
 
     def end_line(last: bool = False) -> None:
-        nonlocal run, run_slot
+        nonlocal run, run_slot, drawn_line
         if run_slot is not None:
-            oels.append(li())
+            oels.append(OlanEl("Line", 0, True, bare=not drawn_line))
             slots.append(run_slot)
         elif run and oels and not last:
             oels.append(OlanEl("Line", 0, False))
             slots.append(None)
-        run, run_slot = False, None
+        run, run_slot, drawn_line = False, None, False
 
     i, n = 0, len(draw)
     while i < n:
         c = draw[i]
         if c in _LINES:
-            run = True
-        elif c == "_":
+            run = drawn_line = True
+        elif c == "_" or c == FIXED_QUARTER:
             if run_slot is not None:
                 return None
-            run, run_slot = True, k
-            k += 1
+            run = True
+            if c == "_":
+                run_slot = k
+                k += 1
+            else:
+                run_slot = FIXED_QUARTER
         elif c in DRAW_ANGLES:
             end_line()
             amount = DRAW_ANGLES[c] / 360

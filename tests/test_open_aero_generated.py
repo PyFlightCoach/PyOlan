@@ -16,17 +16,6 @@ for figure in FIGURES:
     if figure["base_code"]:
         BY_CODE.setdefault(figure["base_code"], figure)
 
-RENDERER_ONLY_PATTERNS = {
-    "+$ihat(_)&+", "+$ivv(_)&+", "+^itri(^)^-", "+^itri(^)_+",
-    "+^itri(_)^+", "+^itri(_)_-", "+^ixm(_)_+", "+_itri(^)^+",
-    "+_itri(^)_-", "+_itri(_)^-", "+_itri(_)_+", "+_ixm(^)_+",
-    "+_ixm(_)^+", "+_ixm(_)_+", "+idvd+", "+idvz-", "+idz-",
-    "+irqq-", "-$ihat(_)&-", "-$ivv(_)&-", "-^itri(^)^+",
-    "-^itri(^)_-", "-^itri(_)^-", "-^itri(_)_+", "-^ixm(_)_-",
-    "-_itri(^)^-", "-_itri(^)_+", "-_itri(_)^+", "-_itri(_)_-",
-    "-_ixm(^)_-", "-_ixm(_)^-", "-_ixm(_)_-", "-idvd-", "-idvz+",
-    "-idz+", "-irqq+",
-}
 
 
 def parseable_figures():
@@ -69,8 +58,9 @@ def test_fixture_has_open_aero_provenance():
     assert FIGURES
 
 
-def test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope():
-    """These inverted renderer variants are not OLAN parser inputs."""
+def test_every_open_aero_pattern_is_an_olan_parser_input():
+    """Every catalogue pattern parses, the inverted variants of PyOlan's non-Aresti
+    codes (itri, ivv, ihat, ixm, idz, idvz, idvd, irqq) included since Phase D."""
     unsupported = set()
     seen = set()
     for figure in FIGURES:
@@ -83,12 +73,11 @@ def test_renderer_only_open_aero_patterns_are_explicitly_out_of_scope():
         except Exception:
             unsupported.add(pattern)
 
-    assert unsupported == RENDERER_ONLY_PATTERNS
-    assert len(unsupported) == 36
+    assert unsupported == set()
 
 
 def test_fixture_parseability_boundary_is_stable():
-    assert sum(1 for _ in parseable_figures()) == 1127
+    assert sum(1 for _ in parseable_figures()) == 1163
 
 
 def test_fixture_contains_k_factors_for_all_definitions():
