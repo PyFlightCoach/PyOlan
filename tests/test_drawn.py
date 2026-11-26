@@ -7,7 +7,7 @@ import pytest
 
 from pyolan.drawn import elements_from_draw
 from pyolan.figure_parser import OlanFig
-from pyolan.primitives import OlanEl, li, lo, st, ts
+from pyolan.primitives import OlanEl, li, lo, st, ts, tu
 
 sys.path.insert(0, str(Path(__file__).parent))
 from openaero import canonical as C  # noqa: E402
@@ -52,9 +52,17 @@ def test_a_fixed_quarter_roll_and_bare_roll_points():
     assert slots == [None, 0, None, 1, None, 2, None]
 
 
-@pytest.mark.parametrize("draw", ["~j1~", "~v~_~u~_''v~", "~_~_~"])
+def test_turns_in_a_figure():
+    # oaj: a loop, then a quarter turn; jw: a half turn between its 45 degree lines
+    assert elements_from_draw("~oj1~") == ([lo(1), tu("i", 1 / 4)], [None, None])
+    assert elements_from_draw("~d=''_''j2~_~d=~") == (
+        [lo(1 / 8), li(), tu("i", 1 / 2), li(), lo(1 / 8)], [None, 0, None, 1, None]
+    )
+
+
+@pytest.mark.parametrize("draw", ["~''jio215''~", "~v~_~u~_''v~", "~_~_~"])
 def test_what_is_not_drawn_keeps_the_primitive(draw):
-    """Turns, point tips and two slots on one line."""
+    """Rolling turns, point tips and two slots on one line."""
     assert elements_from_draw(draw) is None
 
 
@@ -78,7 +86,7 @@ def test_figures_follow_openaero_drawing(olan, arcs):
 
 
 def test_turns_and_point_tips_keep_their_primitive():
-    for olan in ["2j", "1jo1", "jw", "th", "oaj"]:
+    for olan in ["2j", "1jo1", "th"]:
         assert OlanFig.take([olan])[0].drawn_slots is None
 
 

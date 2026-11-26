@@ -746,7 +746,7 @@ class OlanFig:
                     pes.append(a.spin(rolls[i].roll_arr[0].turns * 2 * np.pi))
                 case "Turn":
                     linked = use_roll_options and self.turn_options() is not None
-                    if self.final:
+                    if self.drawn_slots is None and self.final:
                         angle = el.turnamount * np.pi * 2
                         turn_rolls = self.final.angles()
                         if linked:

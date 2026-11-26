@@ -17,6 +17,7 @@ The drawing characters (OpenAero's figpat and drawAngles, js/config.js):
 * ``~`` and ``'``: lines. ``_``: a roll slot on the line it is drawn on.
 * ``h`` / ``H``: a hammer (stall turn). ``t`` / ``T``: a tailslide, wheels down (``ta``)
   or canopy down (``ita``).
+* ``j`` and digits: a turn of that many quarters (``oj1`` in ``oaj``, ``j2`` in ``jw``).
 * ``4``: a fixed quarter roll where it is drawn (between the curves of ``oj``, ``mj``,
   ``aj``); its direction is chosen like any quarter roll on a vertical line.
 * ``-`` at the start: an inverted entry, nothing to draw.
@@ -33,14 +34,17 @@ that already agreed with OpenAero keeps the same elements and element names:
 * a roll slot drawn between two curves with no line (``d=_d=``) is a bare roll point:
   a roll there is flown on a short line, an empty one is no element at all.
 
-Turns (``j``), point tips (``u``) and two roll slots on one line are not drawn here:
+Point tips (``u``), rolling turns inside a figure and two roll slots on one line are
+not drawn here:
 elements_from_draw returns None and the figure keeps its hand-written primitive.
 """
 
 from __future__ import annotations
 
 from .direction import DRAW_ANGLES
-from .primitives import OlanEl, lo, st, ts
+import re
+
+from .primitives import OlanEl, lo, st, ts, tu
 
 _LINES = frozenset("~'")
 _HINTS = frozenset("=/«»-")
@@ -108,6 +112,17 @@ def elements_from_draw(draw: str) -> tuple[list[OlanEl], list[int | str | None]]
                 slots[-1] = k
                 k += 1
                 i += 2  # past "!" and the slot it fills
+        elif c in "jJ":
+            # makeTurn: the first digit is the turn in quarters; more digits would
+            # be rolls in the turn, which no catalogue figure but the rolling turns
+            # (not drawn here) has
+            m = re.match(r"[jJ][ioIO]*(\d+)", draw[i:])
+            if m is None or len(m.group(1)) != 1:
+                return None
+            end_line()
+            oels.append(tu("i", int(m.group(1)) / 4))
+            slots.append(None)
+            i += len(m.group(0)) - 1
         elif c in "hH":
             end_line()
             oels.append(st())
