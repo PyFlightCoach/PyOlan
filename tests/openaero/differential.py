@@ -16,8 +16,9 @@ tools/openaero/export.py. Each difference is a (corpus, key, check) triple:
   - ``extra``: PyOlan builds a figure that OpenAero does not
     (key ``<sequence id>@<token>``).
 
-known_differences.json lists the differences that are expected today, each with
-a finding ID. The tests require the actual differences to equal that list.
+There is no list of expected differences: every difference is a failing test in
+the ``openaero`` lane (tests/test_openaero_strict.py). tools/openaero/propose_findings.py
+groups the current differences by finding (tools/openaero/findings.json).
 """
 
 from __future__ import annotations
@@ -38,7 +39,6 @@ from . import canonical as C
 
 DATA = Path(__file__).resolve().parents[1] / "data" / "openaero"
 EXPECTED = DATA / "expected"
-KNOWN = DATA / "known_differences.json"
 CORPORA = ("library", "catalogue", "syntax", "regressions")
 FIGURE_CHECKS = ("elements", "negative", "attitude", "k_powered", "k_glider", "error")
 SEQUENCE_CHECKS = ("direction", "missing", "extra")
@@ -48,39 +48,6 @@ SEQUENCE_CHECKS = ("direction", "missing", "extra")
 def load_corpus(name: str) -> dict:
     with gzip.open(EXPECTED / f"{name}.json.gz", "rt") as fh:
         return json.load(fh)
-
-
-def load_known() -> dict:
-    return json.loads(KNOWN.read_text())
-
-
-def known_entries(known: dict | None = None) -> dict[tuple[str, str, str], str]:
-    """(corpus, key, check) -> finding ID, from known_differences.json.
-
-    The file groups the keys as known[corpus][check][finding] = [keys]."""
-    known = load_known() if known is None else known
-    out = {}
-    for corpus, checks in known["known"].items():
-        for check, findings in checks.items():
-            for finding, keys in findings.items():
-                for key in keys:
-                    out[(corpus, key, check)] = finding
-    return out
-
-
-def known_set(checks: tuple[str, ...] | None = None, corpus: str | None = None) -> set[tuple[str, str, str]]:
-    return {
-        k for k in known_entries()
-        if (checks is None or k[2] in checks) and (corpus is None or k[0] == corpus)
-    }
-
-
-def write_known(known: dict, entries: dict[tuple[str, str, str], str]) -> None:
-    grouped: dict = {}
-    for (corpus, key, check), finding in sorted(entries.items()):
-        grouped.setdefault(corpus, {}).setdefault(check, {}).setdefault(finding, []).append(key)
-    known = {**known, "known": grouped}
-    KNOWN.write_text(json.dumps(known, indent=1, ensure_ascii=False) + "\n")
 
 
 @dataclass
@@ -211,16 +178,3 @@ def differences(corpus: str, checks: tuple[str, ...] = FIGURE_CHECKS + SEQUENCE_
     for seq in load_corpus(corpus)["sequences"]:
         compare_sequence(res, corpus, seq, check_set)
     return res
-
-
-def report(actual: Result, expected: set[tuple[str, str, str]], limit: int = 40) -> str:
-    new = sorted(actual.diffs - expected)
-    fixed = sorted(expected - actual.diffs)
-    lines = []
-    if new:
-        lines.append(f"{len(new)} new differences (fix them, or add them to known_differences.json with a finding):")
-        lines += [f"  {k} {actual.details.get(k, '')}" for k in new[:limit]]
-    if fixed:
-        lines.append(f"{len(fixed)} listed differences no longer occur (remove them from known_differences.json):")
-        lines += [f"  {k}" for k in fixed[:limit]]
-    return "\n".join(lines)

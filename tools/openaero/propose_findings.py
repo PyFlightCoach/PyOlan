@@ -1,16 +1,18 @@
-"""Propose finding IDs for differences that are not in known_differences.json.
+"""Triage report for the strict OpenAero tests (the ``openaero`` lane).
 
-    python tools/openaero/propose_findings.py [--write] [corpus ...]
+    python tools/openaero/propose_findings.py [corpus ...] [--templates subset|all]
+        [--show N] [--verbose] [--json PATH]
 
-Prints each new difference with a proposed finding (or "?" when no rule fits),
-and the listed differences that no longer occur. With --write, adds the proposed
-entries to known_differences.json and removes the ones that no longer occur.
-Every proposal is a guess from simple rules: review them before committing, and
-never list a "?" without working out its cause.
+Runs the same comparisons as tests/test_openaero_strict.py, classifies every
+current difference with simple rules and prints the counts by finding and by
+(corpus, check, finding), the total and samples of the differences no rule fits
+("?"). It groups the current failures by finding so that each fix can record
+before and after counts (--json writes the counts). The proposals are guesses:
+work out the cause of every "?".
 
-The finding IDs and their reasons are in known_differences.json ("findings"); they
-follow docs/investigations/olan-openaero-differential-2026-11-25 in the
-FCScoreFuture workspace.
+The finding IDs and their reasons are in tools/openaero/findings.json; they follow
+docs/investigations/olan-openaero-differential-2026-11-25 in the FCScoreFuture
+workspace.
 """
 
 from __future__ import annotations
@@ -189,7 +191,7 @@ def propose_templates(res, entries: dict, seqs: dict) -> dict:
     figure before it in the sequence.
     """
     own = {}
-    for (corpus, key, check), finding in entries.items():
+    for (corpus, key, check), finding in sorted(entries.items()):
         if corpus == "library" and check in ("elements", "attitude", "direction", "negative"):
             own.setdefault(key, finding)
     out = {}
@@ -235,16 +237,13 @@ def propose_templates(res, entries: dict, seqs: dict) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("corpora", nargs="*", default=list(D.CORPORA))
-    ap.add_argument("--write", action="store_true")
-    ap.add_argument("--show", type=int, default=200)
-    ap.add_argument("--verbose", action="store_true", help="print every new difference")
-    ap.add_argument("--relabel", action="store_true",
-                    help="re-attribute listed template differences to their current cause")
+    ap.add_argument("--show", type=int, default=200, help="print at most N differences")
+    ap.add_argument("--verbose", action="store_true", help="print every difference, not only '?'")
     ap.add_argument("--templates", choices=["subset", "all"],
                     help="also compare library templates: the test subset, or all (about four minutes)")
+    ap.add_argument("--json", type=Path, help="write the counts to this file")
     args = ap.parse_args()
-    known = D.load_known()
-    entries = D.known_entries(known)
+    entries: dict[tuple[str, str, str], str] = {}
     counts: Counter = Counter()
     shown = 0
     for corpus in args.corpora:
@@ -255,15 +254,7 @@ def main() -> None:
             for f in s["figures"]:
                 figs.setdefault(f["s"], f)
         seqs = {s["id"]: s for s in data["sequences"]}
-        listed = {k for k in entries if k[0] == corpus and k[2] not in TEMPLATE_CHECKS}
-        gone = listed - res.diffs
-        if gone:
-            print(f"{corpus}: {len(gone)} listed differences no longer occur")
-            for k in sorted(gone)[: args.show]:
-                print("  gone", k, entries[k])
-            for k in gone:
-                del entries[k]
-        for k in sorted(res.diffs - listed):
+        for k in sorted(res.diffs):
             finding = propose(*k, res.details[k], figs, seqs)
             counts[(corpus, k[2], finding)] += 1
             if (finding == "?" or args.verbose) and shown < args.show:
@@ -278,37 +269,30 @@ def main() -> None:
             ids = json.loads((D.DATA / "template_subset.json").read_text())["sequences"]
         res = T.differences("library", ids)
         seqs = {s["id"]: s for s in D.load_corpus("library")["sequences"]}
-        listed = {
-            k for k in entries
-            if k[0] == "library" and k[2] in TEMPLATE_CHECKS
-            and (ids is None or k[1].split("#")[0] in ids)
-        }
-        gone = listed - res.diffs
-        if gone:
-            print(f"templates: {len(gone)} listed differences no longer occur")
-            for k in gone:
-                del entries[k]
+        # a template's own cause is the finding of the library figure or direction
+        # difference just proposed above (empty when library was not compared)
         proposals = propose_templates(res, entries, seqs)
-        if args.relabel:
-            # a fix can leave a cascade whose first cause is gone: re-attribute
-            for k in sorted(listed & res.diffs):
-                if entries[k] != proposals[k]:
-                    print(f"relabel {k} {entries[k]} -> {proposals[k]}")
-                    entries[k] = proposals[k]
-        for k in sorted(res.diffs - listed):
+        for k in sorted(res.diffs):
             finding = proposals[k]
             counts[("library", k[2], finding)] += 1
             if (finding == "?" or args.verbose) and shown < args.show:
                 print(finding, k, res.details[k][:300])
                 shown += 1
-            entries[k] = finding
+    by_finding: Counter = Counter()
     for (corpus, check, finding), n in sorted(counts.items()):
-        print(f"{corpus:12s} {check:10s} {finding:4s} {n}")
-    if args.write:
-        if any(f == "?" for f in entries.values()):
-            raise SystemExit("not written: some differences have no finding (?)")
-        D.write_known(known, entries)
-        print(f"wrote {len(entries)} entries to {D.KNOWN}")
+        print(f"{corpus:12s} {check:14s} {finding:4s} {n}")
+        by_finding[finding] += n
+    print()
+    for finding, n in sorted(by_finding.items(), key=lambda kv: (kv[0] == "?", kv[0].zfill(4))):
+        print(f"{finding:4s} {n}")
+    total = sum(by_finding.values())
+    print(f"total {total}")
+    if args.json:
+        args.json.write_text(json.dumps({
+            "total": total,
+            "by_finding": dict(sorted(by_finding.items())),
+            "by_corpus_check_finding": {f"{c}:{k}:{f}": n for (c, k, f), n in sorted(counts.items())},
+        }, indent=1) + "\n")
 
 
 if __name__ == "__main__":

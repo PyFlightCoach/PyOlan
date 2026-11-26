@@ -1,5 +1,5 @@
 {
- "description": "Library sequences checked by test_template_subset: a greedy cover of every finding that reaches these sequences (template, direction, element, K), every rule set and both classes, padded to 50 with sequences that have template differences (seed 1). Chosen 2026-11-25 from the baseline in known_differences.json.",
+ "description": "Library sequences checked by test_template (tests/test_openaero_strict.py): a greedy cover of every finding that reaches these sequences (template, direction, element, K), every rule set and both classes, padded to 50 with sequences that have template differences (seed 1). Chosen 2026-11-25 from the allowlist baseline (known_differences.json, removed by D10).",
  "sequences": [
   "2014 CIVA Adv Known",
   "2015 BAeA Beginners Known",

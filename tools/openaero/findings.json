@@ -1,0 +1,26 @@
+{
+ "description": "Finding IDs and their descriptions: the vocabulary for grouping failures of the openaero lane (tests/test_openaero_strict.py) in tools/openaero/propose_findings.py. No test reads this file. The findings follow docs/investigations/olan-openaero-differential-2026-11-25 in the FCScoreFuture workspace.",
+ "findings": {
+  "F1": "oa_base misses OpenAero's long-forward step ('+' becomes '~~~' before the base is found, parseSequence). A turn written with '+' line extensions has no base, the direction state does not turn, and every later figure's direction follows it.",
+  "F2": "A roll-only figure with an attitude marker ('24-', '-1-', '-,2', '2f-') is taken for a drawing command and dropped.",
+  "F3": "A figure's written entry attitude disagrees with the previous figure's exit (mostly free knowns). OpenAero takes the written attitude (an implied half roll, same physical heading); parse_olan chains the template from the previous exit, so it and the figures after it are built inverted. D2: see C4.",
+  "F4": "For a 90 or 270 degree turn, option 0 of turn_options was not the direction OpenAero draws, and the next figure is chained from option 0. Fixed in C5 for turns with options; a rolling turn with alternating rolls (jio, joi) has no roll_option, so its one direction can still be the other way.",
+  "F5": "Silent failure paths: parse_olan stops at the first error and keeps the figures so far, OlanRoll.parse stops at the first unreadable piece, unknown tokens become drawing commands.",
+  "F6": "A ';' or ',' with no roll after it (before the figure letters, '>' or the end) adds a phantom full roll (OlanRoll.parse, new_rolls = [1]).",
+  "F7": "A spin with turns and no figure ('6s', '5s', '+5s', '6s-') is OpenAero's iv downline with a spin; PyOlan builds a horizontal roll.",
+  "F8": "Loop signs in inverted variants and after stall turns are not OpenAero's (loop_amounts): pp/ipp, qo, hd/dhd, kz, vv, bh, hp, k, dq, qq.",
+  "F9": "The figure does not change when OpenAero picks another catalogue variant for the attitude marker or the rolls: 'd-' (1.1.4), 'd' or 'z' with a half roll (1.1.5, 1.1.11: the reversing variant), 'z-'.",
+  "F10": "The OLAN omits a roll the figure needs; OpenAero inserts a correction roll and PyOlan builds geometry that contradicts its exit attitude (D1). Fixed in C8: PyOlan inserts the same roll and warns; what remains is listed under the figure's other finding (F8, F11, F22, F23).",
+  "F11": "Joined figures lose the rolls between their parts or get the wrong loop total: mm, oo, ooo and the reversing loops ao, iao, rao, ro, or.",
+  "F12": "Non-Aresti 0.x figures and PyOlan's legacy compound codes are not the figure OpenAero has under those letters (oj, jw, tri, itri, co, dz, dvz, dvd, rqq ...). D3: match oj and jw, raise for the rest (deferred). parse_olan raises for the inverted variants PyOlan has no figure for (itri, ixm, ivv, ihat, idz, idvz, idvd, irqq).",
+  "F13": "K differs from OpenAero's sum of base and roll K, or PyOlan cannot compute it (ValueError, and 10 in create_maninfo). Glider K reads the catalogue's 0 ('same as powered') literally.",
+  "F17": "Rolling-turn roll digits are read as a decimal number: OpenAero reads each digit as rolls ('15' a roll then a half roll, '5' a half roll, '51' a half roll then a roll), with 'io' alternating every roll. PyOlan builds '15' as 1.5 rolls plus another half, '5' as five rolls and '51' as 5.1 rolls, and does not alternate the half roll.",
+  "F19": "PyOlan builds a figure that OpenAero rejects: there is no catalogue figure with the written entry and exit attitudes (e.g. '3jio15' written with an upright exit).",
+  "F20": "Quoted comments: PyOlan splits the text on spaces, so a comment with a space becomes tokens whose letters are read as figures; a comment inside a figure drops the roll before it.",
+  "F21": "A line with no roll (OpenAero's '--', and '-', which OpenAero builds with a correction half roll) is not a figure PyOlan can build: a figure must have an element. parse_olan raises for it.",
+  "F22": "A half roll at the top of a loop (o- and o(2), OpenAero's 7.4.2): OpenAero draws two half loops with the roll on a line between them, PyOlan one loop with the roll embedded at the apex. The same flight in two forms the canonical form tells apart.",
+  "F23": "A leading ',' reverses the first roll in OpenAero; PyOlan ignores it. Relative directions are unchanged, so it shows only where a correction roll is added after it (',24'). Changing it changes the roll sign of many figures: left for the user.",
+  "F24": "A spin with a quarter turn over and no figure ('+5s': the iv downline with 1 1/4 turns) exits across the box; its spin direction is fixed (it has no roll_option), and can be the other way from OpenAero's, as for F4.",
+  "OA": "OpenAero itself looks wrong here; recorded, not patched."
+ }
+}

@@ -1,36 +1,20 @@
 """No silent drops (plan B5, D7).
 
-Every figure that OpenAero builds must become a PyOlan figure, unless it is listed
-as "missing" in known_differences.json (PyOlan raises for it), and anything PyOlan
-cannot read must raise OlanParseError naming the item, never be skipped.
+Anything PyOlan cannot read must raise OlanParseError naming the item, never be
+skipped. (Every figure that OpenAero builds must become a PyOlan figure: the
+"missing" check of test_sequence in test_openaero_strict.py.)
 """
 
 import random
-import sys
-from pathlib import Path
 
 import pytest
-from loguru import logger
 
 from pyolan.direction import parse_rolls
 from pyolan.errors import OlanParseError
 from pyolan.parser import parse_olan
 from pyolan.rolls import OlanRoll
 
-sys.path.insert(0, str(Path(__file__).parent))
-from openaero import differential as D  # noqa: E402
-
 pytestmark = pytest.mark.component
-
-@pytest.mark.parametrize("corpus", D.CORPORA)
-def test_every_openaero_figure_is_built(corpus):
-    logger.disable("pyolan")
-    try:
-        res = D.differences(corpus, ("missing",))
-    finally:
-        logger.enable("pyolan")
-    expected = D.known_set(("missing",), corpus)
-    assert res.diffs == expected, D.report(res, expected)
 
 
 @pytest.mark.parametrize(
