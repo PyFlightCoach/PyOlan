@@ -13,6 +13,8 @@ the point tip (D11).
 * ``test_template[<sequence id>]``: parse_olan templates against OpenAero's figure
   exits, and no heading override warning, for the fixed subset in
   tests/data/openaero/template_subset.json;
+* ``test_template_other_rules[<rules>:<sequence id>]``: the same under CIVA, IMAC,
+  IACGlider and CIVAGlider, for a smaller part of the subset;
 * ``test_template_library_all``: the same for every library sequence (about four
   minutes). It is a diagnostic selection, not part of the component lane:
 
@@ -37,7 +39,11 @@ from openaero import templates as T  # noqa: E402
 
 pytestmark = pytest.mark.component
 
-SUBSET = json.loads((D.DATA / "template_subset.json").read_text())["sequences"]
+_SUBSETS = json.loads((D.DATA / "template_subset.json").read_text())
+SUBSET = _SUBSETS["sequences"]
+# test_template uses IAC; these rule sets change the builder, not the figures flown
+OTHER_RULES = ("CIVA", "IMAC", "IACGlider", "CIVAGlider")
+OTHER_RULES_SUBSET = _SUBSETS["other_rules_sequences"]
 
 
 def _sequence_id(key: str) -> str:
@@ -71,8 +77,9 @@ def _corpus_differences(corpus: str) -> tuple[dict, dict]:
 
 
 @lru_cache
-def _template_differences(subset: bool) -> dict:
-    res = T.differences("library", SUBSET if subset else None)
+def _template_differences(subset: bool, rules: str = "IAC") -> dict:
+    ids = (SUBSET if rules == "IAC" else OTHER_RULES_SUBSET) if subset else None
+    res = T.differences("library", ids, rules)
     return _group(res, lambda key, check: _sequence_id(key))
 
 
@@ -113,6 +120,16 @@ def test_sequence(corpus, sequence):
 def test_template(sequence):
     items = _template_differences(True).get(sequence, [])
     assert not items, _fail_message(f"library template {sequence}", items)
+
+
+@pytest.mark.parametrize(
+    "rules, sequence",
+    [pytest.param(r, s, id=f"{r}:{s}") for r in OTHER_RULES for s in OTHER_RULES_SUBSET],
+)
+def test_template_other_rules(rules, sequence):
+    """The same exits, and the same expected error, under the other rule sets."""
+    items = _template_differences(True, rules).get(sequence, [])
+    assert not items, _fail_message(f"library template {sequence} under {rules}", items)
 
 
 @pytest.mark.parametrize("sequence", [s["id"] for s in D.load_corpus("library")["sequences"]])

@@ -51,5 +51,24 @@
   "2026 NZAC Primary Known III",
   "2026 NZAC Sports Known",
   "2027 NZAC Int Free Known"
+ ],
+ "other_rules_description": "The part of the subset test_template_other_rules builds under CIVA, IMAC, IACGlider and CIVAGlider as well: powered and glider sequences, some that do not link. Smaller to keep the four extra rule sets under a minute; all 50 agreed under each on 2026-11-26.",
+ "other_rules_sequences": [
+  "2014 CIVA Adv Known",
+  "2015 BAeA Beginners Known",
+  "2015 CIVA-Glider Unl Known",
+  "2016 CIVA Adv Free Known",
+  "2016 CIVA-Glider Unl Free Known",
+  "2018 CIVA Yak 52 Free Known",
+  "2018 IAC Sportsman Known",
+  "2020 IAC-Glider Sportsman Known",
+  "2022 NZAC Sports Known",
+  "2022 VINK Club Known",
+  "2023 IAC-Glider Primary Known",
+  "2023 IAC-Glider Unlimited Known",
+  "2023 IMAC Unlimited Known",
+  "2024 CIVA Adv Free Known",
+  "2025 CIVA-Glider Unl Free Known",
+  "2026 IAC-Glider Advanced Known"
  ]
 }
