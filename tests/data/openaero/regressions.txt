@@ -77,3 +77,9 @@ iv.s. // 1 // +++2j+++~
 
 # PyOlan codes that are not OpenAero figures: they raise (D10, continuation step 5)
 o jj jojo jijo joji joj jjoi jojio bh ph pbh ihp iaj imj ith ioaj o
+
+# AcroWRX export (examples/snaps/flightlog.acrowrx), 2026-11-26
+3% /++,2if'pbb(``````,34...'')'22'-~~ (-2,0) 4% ~-````5is,2.''ib``,24-` 7% ``-if....'in(.,3,34...'').....''-~~ 2% 2> -'2ac(.....'',"|"32......)-- 3% -```5..,"|"34``p(,22)..'',24....++++ (3,0) "@C" 5% '9m6f,48---~~ [9,0] 6% /-''ita''3if. ~++22b..''3f.''+~~ 3% ....'22m2if~~ "@E" 3% /``+3joi3+
+
+# AcroWRX export (client test-fixtures/acrowrx_olan_test.dat), 2026-11-26
+44 (0,0) 9c,24,24- (-2,13) -m,2if- (9,0) -2joi2- -ivis h4 (-9,3) 4rp~
