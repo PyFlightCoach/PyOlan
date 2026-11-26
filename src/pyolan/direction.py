@@ -370,14 +370,6 @@ class DirectionState:
         """Process one figure token and return its direction summary."""
         base, figure = oa_base(token)
         candidates = _figure_table().get(base)
-        if candidates is None:
-            # OpenAero draws an illegal figure and leaves the state alone
-            res = FigureDirection(
-                self.direction, self.attitude, self.direction, self.attitude, False, token
-            )
-            self.results.append(res)
-            self.first_figure = False
-            return res
 
         # autocorrect the entry attitude after the first (sub)figure (~line 2170).
         # first_figure is set at the start, after "//" and after an entry command
@@ -391,6 +383,15 @@ class DirectionState:
                 conflict = int(self.attitude)
                 self.attitude = 180 - self.attitude
                 self.change_dir(180)
+        if candidates is None:
+            # OpenAero draws an illegal figure (buildIllegal), after the autocorrect
+            # and without building it, so firstFigure stays as it was
+            res = FigureDirection(
+                self.direction, self.attitude, self.direction, self.attitude, False, token
+            )
+            res.entry_conflict = conflict
+            self.results.append(res)
+            return res
         # the first figure starts inverted with the same drawing direction (~2186)
         if self.first_figure and base[0] == "-":
             self.attitude = 180

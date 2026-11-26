@@ -5,7 +5,8 @@ attitude (upright or inverted, from the body z axis) are compared with OpenAero'
 physical exit, as the server builds templates: parse_olan with the IAC builder
 (category unlimited) and the wind from the right (RTOL). Differences:
 
-* ``template``, key ``<sequence id>#<figure index>``: the exit differs;
+* ``template``, key ``<sequence id>#<figure index>``: the exit differs, or the
+  template does not exit level where OpenAero does;
 * ``template_count``, key ``<sequence id>``: parse_olan builds a different number
   of figures, or raises (detail).
 
@@ -20,6 +21,7 @@ from __future__ import annotations
 from functools import lru_cache
 
 import geometry as g
+import numpy as np
 import schemas.positioning as p
 from loguru import logger
 
@@ -44,6 +46,12 @@ def template_exit(tp) -> tuple[p.Heading, bool]:
     # body z points down when upright (world z up)
     zb = tp.att[-1].transform_point(g.PZ(1))
     return heading, float(zb.z[0]) > 0
+
+
+def exit_pitch(tp) -> float:
+    """The template's pitch at the exit, degrees (body x against the horizontal)."""
+    xb = tp.att[-1].transform_point(g.PX(1))
+    return float(np.degrees(np.arcsin(np.clip(xb.z[0], -1, 1))))
 
 
 _RESTARTS = ("//", "eu", "ed", "ej", "eja")
@@ -103,7 +111,15 @@ def compare_sequence(res: D.Result, corpus: str, seq: dict) -> None:
             continue
         want = (physical_to_heading(FigureDirection._physical(exit_dir, exit_att), WIND), exit_att == 180)
         got = template_exit(f.template)
-        if got != want:
+        pitch = exit_pitch(f.template)
+        if abs(pitch) > 10:
+            # a heading means nothing for a vertical exit, and the next figure
+            # would start from it
+            res.add(
+                corpus, f"{seq['id']}#{o['i']}", "template",
+                f"{o['s']!r}: OpenAero exits level, template pitch {pitch:.0f} degrees",
+            )
+        elif got != want:
             res.add(
                 corpus, f"{seq['id']}#{o['i']}", "template",
                 f"{o['s']!r}: OpenAero exits {want[0].name} {'inverted' if want[1] else 'upright'}, "

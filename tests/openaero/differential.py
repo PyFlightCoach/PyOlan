@@ -71,8 +71,18 @@ def take_all(text: str) -> tuple[list[PyFigure], str | None]:
         except NoFigureLeft:
             break
         except OlanParseError as e:
-            # parse_olan raises here; skip the item so the rest is still compared
+            # parse_olan raises here; skip the item so the rest is still compared,
+            # but keep the direction state as OpenAero has it: the drawing
+            # commands before the item, then the item (OpenAero autocorrects its
+            # entry and builds it, or draws it as illegal)
             errors.append(f"OlanParseError: {e}")
+            for command in data[: e.index]:
+                if command in ("eu", "ed", "ej", "eja"):
+                    state.entry_command(command)
+                elif command == "//":
+                    state.subsequence()
+            if e.index < len(data):
+                state.figure(data[e.index])
             data = data[e.index + 1:]
             continue
         try:
