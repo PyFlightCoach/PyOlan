@@ -74,3 +74,6 @@ oj // jw // itri // co // tri
 iv.s. // 1 // +++2j+++~
 24 // 4;4
 -iv2s
+
+# PyOlan codes that are not OpenAero figures: they raise (D10, continuation step 5)
+o jj jojo jijo joji joj jjoi jojio bh ph pbh ihp iaj imj ith ioaj o

@@ -430,8 +430,12 @@ olan_figs = create_ofig_dict(
     ]
 )
 
-# OpenAero legacy names and compound field codes. These are kept as distinct
-# entries because they occur in exported OLAN strings.
+# OpenAero legacy names and compound field codes. Since Phase D (D10) a figure that
+# OpenAero has is built from OpenAero's drawing string (drawn.py), whatever these
+# hand-written elements say, and a code OpenAero has no figure for (the compound turns
+# jj, jojo, jijo, joji, joj, jjoi, jojio, and bh, ph, pbh) raises in OlanFig.take. The
+# entries stay so that the error can name the code; th keeps its stall-turn elements
+# because OpenAero's point tip has no PyOlan element.
 olan_figs.update(
     create_ofig_dict(
         [

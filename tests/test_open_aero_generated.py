@@ -266,36 +266,11 @@ def test_hammer_and_tailslide_plans_have_explicit_special_shapes(code):
 @pytest.mark.parametrize(
     ("code", "expected"),
     [
-        (
-            "jj",
-            [
-                ("Turn", 0, True, "i", 1 / 4),
-                ("Turn", 0, True, "i", 1 / 4),
-            ],
-        ),
-        # an outside rolling turn needs a roll ("jo" alone is not an OpenAero figure)
+        # an outside rolling turn needs a roll ("jo" alone is not an OpenAero figure);
+        # PyOlan's compound turns (jj, jijo, jjoi, jojio, ...) are not OpenAero figures
+        # and raise (test_open_aero_compat.py)
         ("1jo1", [("Turn", 0, True, "o", 1 / 4)]),
-        (
-            "jijo",
-            [
-                ("Turn", 0, True, "i", 1 / 4),
-                ("Turn", 0, True, "o", 1 / 4),
-            ],
-        ),
-        (
-            "jjoi",
-            [
-                ("Turn", 0, True, "i", 1 / 4),
-                ("Turn", 0, True, "oi", 1 / 2),
-            ],
-        ),
-        (
-            "jojio",
-            [
-                ("Turn", 0, True, "o", 1 / 4),
-                ("Turn", 0, True, "io", 1 / 2),
-            ],
-        ),
+        ("2jio2", [("Turn", 0, True, "io", 1 / 2)]),
     ],
 )
 def test_open_aero_turn_family_semantics(code, expected):

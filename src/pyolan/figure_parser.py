@@ -286,11 +286,14 @@ class OlanFig:
 
     def _drawn(self) -> OlanFig:
         """Take the elements from the drawing string of the variant OpenAero
-        chooses (drawn.py), where it can be drawn."""
-        if self.fig.chars in self.TURN_CHARS or self.fig.chars == "r":
+        chooses (drawn.py), where it can be drawn. Raises OlanParseError for a
+        figure OpenAero has no figure for (D10, plan step 5)."""
+        if self.fig.chars in self.TURN_CHARS:
             return self
         oa = self.openaero()
-        if not oa.resolved or not oa.draw:
+        if not oa.resolved:
+            raise OlanParseError(self._not_openaero())
+        if self.fig.chars == "r" or not oa.draw:
             return self
         drawn = elements_from_draw(oa.draw)
         if drawn is None:
@@ -320,6 +323,24 @@ class OlanFig:
                     "figure has no roll there, so it is built without it"
                 )
         return self
+
+    def _not_openaero(self) -> str:
+        """Why OpenAero has no figure for this one, for a pilot."""
+        from .direction import _figure_table
+
+        code = re.sub(r"[^a-z]", "", strip_comments(self.rawfig))
+        code = re.sub(r"^(if|f|is|s)(?=[a-z])|(?<=[a-z])(if|f|is|s)$", "", code)
+        letters = self.fig.chars.split("|")
+        written = next((c for c in letters + [f"i{c}" for c in letters] if c == code), code)
+        if not any(f"{a}{written}{b}" in _figure_table() for a in "+-" for b in "+-"):
+            return (
+                f'"{written}" is not an OpenAero figure (it was a PyOlan code for '
+                f"{self.fig.name.lower()}), so it cannot be read"
+            )
+        return (
+            "OpenAero has no figure like this. Check the attitude markers: a figure "
+            'that starts or ends inverted needs a "-" before or after it'
+        )
 
     def _slot_roll(self, slot: int) -> OlanRoll | None:
         """The roll written for an OpenAero roll slot: the roll before the base, the

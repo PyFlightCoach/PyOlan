@@ -1,22 +1,39 @@
 import pytest
 
 from pyolan.drawing import re_drawing
+from pyolan.errors import OlanParseError
 from pyolan.figure_parser import OlanFig
 from pyolan.primitives import olan_figs
 from pyolan.rolls import OlanRoll, sn, spi
 
 
-# a rolling turn needs its rolls: "jo" alone is not an OpenAero figure (F19)
-WRITTEN = {"jo": "1jo1", "jio": "2jio2", "joi": "2joi2"}
+# a rolling turn needs its rolls: "jo" alone is not an OpenAero figure (F19); some
+# figures exist in OpenAero only with an attitude marker
+WRITTEN = {"jo": "1jo1", "jio": "2jio2", "joi": "2joi2", "dz": "dz-", "dvz": "dvz-", "rqq": "rqq-"}
+# PyOlan's own codes that are not OpenAero figures: they raise (D10, plan step 5)
+NOT_OPENAERO = {"bh", "ph", "pbh", "jj", "jojo", "jijo", "joji", "joj", "jjoi", "jojio"}
 
 
-@pytest.mark.parametrize("figure_code", sorted(olan_figs))
+@pytest.mark.parametrize("figure_code", sorted(set(olan_figs) - NOT_OPENAERO))
 def test_open_aero_figure_codes_parse_and_build(figure_code):
-    """Every figure code registered by OpenAero's primitive catalogue is usable."""
+    """Every figure code PyOlan reads is an OpenAero figure and builds."""
     figure = OlanFig.take([WRITTEN.get(figure_code, figure_code)])[0]
 
     assert figure_code in figure.fig.chars.split("|")
     assert figure.create_elements()
+
+
+@pytest.mark.parametrize(
+    "olan", sorted(NOT_OPENAERO) + ["ihp", "iaj", "imj", "ith", "ioaj", "ioajjjj"]
+)
+def test_a_pyolan_code_openaero_does_not_have_raises(olan):
+    with pytest.raises(OlanParseError, match=rf'"{olan}" is not an OpenAero figure'):
+        OlanFig.take([olan])
+
+
+def test_a_figure_with_attitude_markers_openaero_does_not_have_raises():
+    with pytest.raises(OlanParseError, match="OpenAero has no figure like this"):
+        OlanFig.take(["dz"])  # OpenAero has dz- and -dz only
 
 
 @pytest.mark.parametrize(
