@@ -115,7 +115,7 @@ def test_open_aero_drawing_commands_are_removed_without_changing_rolls():
     assert [
         roll.turns() if roll is not None else None
         for roll in drawn.element_rolls()
-    ] == [None, [1], None, [1.25, -0.75], None, [0.125, 0.125], None]
+    ] == [None, [1], None, [1.25, -0.75], None, [-0.125, -0.125], None]  # ",8": F23
 
 
 def test_open_aero_roll_only_fields_are_supported():

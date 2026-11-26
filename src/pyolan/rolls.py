@@ -123,8 +123,11 @@ class OlanRoll:
 
     def pfc_roll(self) -> list[float] | str | float:
         roll_arr = np.array(self.turns())
+        # "NxM" (N points of 1/M) only for points rolled the positive way: the
+        # builder's roll string has no sign; ",24" (F23) goes as angles
         if (
             len(roll_arr) > 1
+            and roll_arr[0] > 0
             and np.all(roll_arr == roll_arr[0])
             and np.all(np.array([r.kind for r in self.roll_arr]) == "roll")
         ):
@@ -152,7 +155,10 @@ class OlanRoll:
             return OlanRoll(data, [])  # a marker-only slot is an empty slot
         data = re.sub(r"[_&$]", "", data)
         rolls = []
-        rollarr = [";"] + re.split(r"(;|,)", re.sub(r"^(;|,)", "", data))
+        # The first roll is positive; "," reverses the direction and ";" keeps it,
+        # also before the first roll (",24" rolls the other way), as OpenAero reads
+        # it (buildFigure; F23).
+        rollarr = [";"] + re.split(r"(;|,)", data)
         last_direction = 1
         piece = 0
         for direction, roll in zip(rollarr[::2], rollarr[1::2]):

@@ -1,3 +1,4 @@
+import numpy as np
 import schemas.positioning as pos
 
 from pyolan.rolls import OlanRoll, oroll_re, ro, sn
@@ -20,7 +21,10 @@ def test_parse_roll():
     check_roll_parse("1f;1f", [sn(1, False), sn(1, False)])
     check_roll_parse("22;1", [ro(0.5), ro(0.5), ro(1)])
     check_roll_parse("22;1", [ro(0.5), ro(0.5), ro(1)])
-    check_roll_parse(",8", [ro(1 / 8), ro(1 / 8)])
+    # a leading "," reverses the first roll, a leading ";" keeps it (OpenAero; F23)
+    check_roll_parse(",8", [ro(-1 / 8), ro(-1 / 8)])
+    check_roll_parse(";8", [ro(1 / 8), ro(1 / 8)])
+    check_roll_parse(",2,2", [ro(-1 / 2), ro(1 / 2)])
 
 
 def check_olanroll(rollstr, angles, rtypes):
@@ -61,3 +65,9 @@ def test_separator_with_no_roll_adds_none():
     """F6: OpenAero reads a trailing ";" or "," as nothing."""
     assert OlanRoll.parse("4,").roll_arr == [ro(0.25)]
     assert OlanRoll.parse("5s;").turns() == [1.25]
+
+
+def test_a_reversed_point_roll_is_passed_as_angles():
+    """The builder's "NxM" point roll string has no sign (F23)."""
+    assert OlanRoll.parse("24").pfc_roll() == "2x4"
+    np.testing.assert_allclose(OlanRoll.parse(",24").pfc_roll(), np.radians([-90, -90]))

@@ -47,7 +47,7 @@ def test_element_rolls():
     assert not rolls[2]
     assert rolls[3] == [sn(5 / 4, True), ro(-3 / 4)]
     assert not rolls[4]
-    assert rolls[5] == [ro(1 / 8), ro(1 / 8)]
+    assert rolls[5] == [ro(-1 / 8), ro(-1 / 8)]  # a leading "," reverses the roll (F23)
 
     ofig2 = OlanFig.take(["(13,8)", "-```5is';3..''iBb(``````````4',2`)....1~~"])[0]
     rolls = ofig2.element_rolls()
@@ -308,10 +308,11 @@ def test_inverted_figure_without_a_vertical_is_mirrored(code):
 
 def test_half_cuban_from_the_top_after_an_entry_snap():
     # 1.5 snap leaves the aircraft inverted, so the "ic" 5/8 loop is pulled down,
-    # then a half roll on the 45 upline and a pull to level inverted.
+    # then a half roll on the 45 upline and a pull to level inverted. The leading
+    # "," reverses the snap (F23).
     ofig = OlanFig.take([",6fic2-"])[0]
     assert [(e.kind, e.args) for e in ofig.create_elements()] == [
-        ("roll", [pytest.approx(3 * np.pi)]),
+        ("roll", [pytest.approx(-3 * np.pi)]),
         ("loop", [pytest.approx(5 * np.pi / 4)]),
         ("roll", [pytest.approx(np.pi)]),
         ("loop", [pytest.approx(np.pi / 4)]),
