@@ -61,6 +61,18 @@ def test_an_inverting_roll_in_a_loop_flips_openaero_pull_sign():
     assert C.oa_canonical(trace) == [["arc", 270, [["roll", 180, 1]]]]
 
 
+def test_a_correction_roll_in_the_top_is_embedded_in_the_loop():
+    """OpenAero builds the correction roll with params[2] false even in the top of a
+    loop (o-); the RollTopLine split tells where the top is."""
+    top = [t("Curve", 135), t("RollTopLine", ""), t("Curve", 45)]
+    after = [t("Curve", -45), t("Curve", -135)]
+    assert C.oa_canonical(top + [roll(-180, corr=True)] + after) == [["arc", 360, [["roll", 180, 1]]]]
+    # outside the top a correction roll stays on its line
+    assert C.oa_canonical([t("Curve", 180), line(), roll(-180, corr=True), line(), t("Curve", -180)]) == [
+        ["arc", 180, []], ["line", [["roll", 180, 1]]], ["arc", -180, []],
+    ]
+
+
 def test_split_loops_merge_into_one_arc():
     trace = [t("Curve", 90), t("Curve", 90), line(), t("Corner", 90)]
     assert C.oa_canonical(trace) == [["arc", 180, []], ["line", []], ["arc", 90, []]]

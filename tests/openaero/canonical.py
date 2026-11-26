@@ -175,9 +175,24 @@ def turn_rolls(rolls: Iterable[tuple[str, float]]) -> list[list]:
 
 
 def oa_tokens(trace: list[dict]) -> list[list]:
+    """OpenAero's buildShape trace -> raw tokens.
+
+    A roll in the top of a loop is marked embedded by its own params[2]. OpenAero
+    builds its correction roll (params[4]) with params[2] false even there, although
+    the slot is in the top (buildFigure sets rollInfo[rollnr].rollTop). The top is
+    where buildFigure splits the loop: a Curve, the RollTopLine marker, a Curve, the
+    rolls, then the rest of the loop; a correction roll between the curve after the
+    marker and the next curve is in the top too.
+    """
     tokens: list[list] = []
+    top = None  # None, "split" after RollTopLine, "rolls" after the curve that follows
     for t in trace:
         s, prm = t["shape"], t["params"]
+        if s == "RollTopLine":
+            top = "split"
+            continue
+        if s in ("Curve", "Corner"):
+            top = "rolls" if top == "split" else None
         if s == "Line":
             if isinstance(prm, list) and len(prm) > 2 and prm[2] == "hiddenCurve":
                 continue
@@ -188,8 +203,9 @@ def oa_tokens(trace: list[dict]) -> list[list]:
             ang = prm["angle"] if isinstance(prm, dict) else prm
             tokens.append(["arc", float(ang)])
         elif s in ROLL_KINDS:
-            top = bool(prm[2]) if len(prm) > 2 else False
-            tokens.append(["roll", ROLL_KINDS[s], float(prm[0]), top])
+            embedded = bool(prm[2]) if len(prm) > 2 else False
+            correction = len(prm) > 4 and bool(prm[4])
+            tokens.append(["roll", ROLL_KINDS[s], float(prm[0]), embedded or (correction and top == "rolls")])
         elif s == "Hammer":
             tokens.append(["stall"])
         elif s == "Tailslide":
