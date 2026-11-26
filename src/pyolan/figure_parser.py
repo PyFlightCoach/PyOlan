@@ -28,6 +28,7 @@ from schemas import aresti as a, ManInfo
 from .primitives import OFig, li, lo, tu, ofig_re, olan_figs
 from .rolls import OlanRoll, ro
 from .drawn import FIXED_QUARTER, elements_from_draw
+from .sizing import SizeGroups, Sizing, size_groups
 
 from .drawing import re_drawing, re_draw, strip_comments
 from .errors import NoFigureLeft, OlanParseError
@@ -36,10 +37,35 @@ from .errors import NoFigureLeft, OlanParseError
 _OLAN_CHARACTERS = re.compile(r"[0-9a-zA-Z_&$;,()\-+~`'.>^/%\[\]\"|]")
 
 
-# D11: OpenAero's point tip ("th", drawn with "u"), a 180 degree pitch over the top
-# of the vertical line. No element flies it, so it raises: the one exception to
-# matching OpenAero besides sequences that do not link (D2).
-POINT_TIP = '"th" is a point tip, which FCScore cannot score yet.'
+# Phase S, SQ5 (user, 2026-11-26): OpenAero's non-Aresti figures (its Family 0, the
+# catalogue numbers 0.x) raise under every rule set, the point tip ("th", D11) among
+# them. The message lists them all, so a pilot sees that it is a short list.
+NON_ARESTI_FIGURES = (
+    "the wingover (jw)",
+    "the clover leaves (oj, ioj)",
+    "the half loops with a quarter roll (mj, aj)",
+    "the 360 degree rolling turns with a half roll (4j5, 4jo5)",
+    "the tip-head hammer (th)",
+    "the extended vertical line figures (vv, hat)",
+    "the hammer P-loops (hp, iph, ibh, ipbh)",
+    "the triangle (tri)",
+    "the extended Immelmann and split S (xm, xa)",
+    "the loop with turns (oaj)",
+)
+NON_ARESTI = (
+    "FCScore cannot analyse OpenAero's non-Aresti figures yet; we are working on it. "
+    "They are the only figures it cannot analyse: "
+    + ", ".join(NON_ARESTI_FIGURES[:-1])
+    + f" and {NON_ARESTI_FIGURES[-1]}, upright or inverted. Every Aresti catalogue "
+    "figure can be analysed."
+)
+# the point tip is one of them (D11); the name is kept for the OpenAero harness
+POINT_TIP = NON_ARESTI
+
+
+def non_aresti(aresti: list[str]) -> bool:
+    """Whether OpenAero's catalogue number for the figure is a non-Aresti one (0.x)."""
+    return bool(aresti) and aresti[0].split(".")[0] == "0"
 
 
 def _unreadable(token: str) -> str:
@@ -300,8 +326,6 @@ class OlanFig:
         oa = self.openaero()
         if not oa.resolved:
             raise OlanParseError(self._not_openaero())
-        if oa.draw and set(oa.draw) & set("uU"):
-            raise OlanParseError(POINT_TIP)
         if self.fig.chars == "r" or not oa.draw:
             return self
         drawn = elements_from_draw(oa.draw)
@@ -371,6 +395,8 @@ class OlanFig:
         brackets and the roll after (a roll-only figure has one): PyOlan's prefix,
         suffix and final. The roll goes after the rolls written in that slot.
         """
+        if non_aresti(self.openaero().aresti):
+            raise OlanParseError(NON_ARESTI)
         if self.fig.chars in self.TURN_CHARS:
             if not self.openaero().resolved:
                 # OpenAero rejects it, e.g. 3jio15 written with an upright exit (F19)
@@ -653,6 +679,17 @@ class OlanFig:
         up = (round(angles[-1] * 4) % 4 == 0) == (canopies[-1] > 0)
         return p.Orientation.UPRIGHT if up else p.Orientation.INVERTED
 
+    def size_groups(self, sizing: Sizing | None) -> SizeGroups:
+        """The loops and lines the rule set's sizing policy compares (sizing.py).
+
+        Only a figure drawn from OpenAero's drawing string has groups: the rolling
+        turns and the hand-written primitives have none."""
+        if sizing is None or self.drawn_slots is None:
+            return SizeGroups()
+        return size_groups(
+            self.fig.oels, self.openaero().aresti[0], sizing, self.element_rolls()
+        )
+
     ROLL_ANGLE = np.radians(90)
 
     def _loop_roll_kwargs(
@@ -689,14 +726,17 @@ class OlanFig:
         use_roll_options: bool = False,
         link_lines: bool = True,
         flip_lines: frozenset[int] = frozenset(),
+        sizes: SizeGroups | None = None,
     ) -> list[a.PE]:
         """Create the elements.
 
         With use_roll_options the turn rolls refer to roll_option, and, if link_lines
         is set, so do the direction-changing lines (spin and roll points). The rolls
-        of the lines in flip_lines are reversed when they are not linked.
+        of the lines in flip_lines are reversed when they are not linked. sizes
+        (size_groups) names the comparison parameter of each matched loop and line.
         """
         pes: list[a.PE] = []
+        sizes = sizes or SizeGroups()
 
         rolls = self.element_rolls()
         loops = self.loop_amounts(rolls)
@@ -716,6 +756,7 @@ class OlanFig:
                                 if rolls[i] and rolls[i].roll_arr
                                 else {}
                             ),
+                            **({"radius": sizes.radius[i]} if i in sizes.radius else {}),
                         )
                     )
                 case "Line":
@@ -763,13 +804,20 @@ class OlanFig:
                                     ),
                                     rolltypes=rolls[i].rolltypes(),
                                     padded=i > 0 and i < len(self.fig.oels) - 1,
+                                    **(
+                                        {"line_length": sizes.length[i]}
+                                        if i in sizes.length
+                                        else {}
+                                    ),
                                 )
                             )
                     elif el.bare:
                         pass  # a roll point between two curves with no roll: no line
                     elif (i > 0 and i < len(self.fig.oels) - 1) or len(self.fig.oels) == 1:
                         # a figure that is only a line ("--") keeps it
-                        pes.append(a.line())
+                        pes.append(
+                            a.line(**({"length": sizes.length[i]} if i in sizes.length else {}))
+                        )
                 case "Stallturn":
                     pes.append(a.stallturn())
                 case "Spin":

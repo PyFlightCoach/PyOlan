@@ -15,7 +15,8 @@ import pytest
 from pytest import fixture
 from tuning.builders import load_builder
 
-from pyolan.figure_parser import OlanFig, horizontal_fractions
+from pyolan.errors import OlanParseError
+from pyolan.figure_parser import NON_ARESTI, OlanFig, horizontal_fractions
 from pyolan.parser import parse_olan
 
 CATALOGUE = json.loads(
@@ -45,9 +46,9 @@ EMBEDDED_ROLL_FIGURES = {
     "pp": "pp(2)",
     "rq": "rq(1)",
     "q": "q(1)",
-    "oj": "oj1",
-    "ioj": "ioj1",
 }
+# "oj" and "ioj" were here: OpenAero's clover leaf (0.x) is Family 0 and raises under
+# every rule set (Phase S, SQ5), like the rest of its Family 0
 # "ph" and "pbh" (PyOlan aliases of "hp", the same figure) were here too: OpenAero
 # has no such figure, so since C3 parse_olan refuses them (no K). "hp1" was here
 # too: OpenAero draws the roll of its hammer P loop on the exit line, after the loop.
@@ -105,13 +106,13 @@ def test_snap_only_section_is_a_point_at_the_apex(olan, mb):
     assert end == pytest.approx(0, abs=1.5)
 
 
-def test_xm_rolls_are_between_its_eighth_loops(mb):
-    # OpenAero's xm (0.101) draws its rolls between the 45 degree curves, not in
-    # them (Phase D; PyOlan's own xm had them in the curves)
-    figure = parse_olan("1xm(1)1", mb)[0]
+def test_xm_raises(mb):
+    # OpenAero's xm (0.101) is Family 0: refused under every rule set (Phase S, SQ5).
+    # Its rolls between the 45 degree curves (Phase D) are no longer built.
+    with pytest.raises(OlanParseError) as info:
+        parse_olan("1xm(1)1", mb)
 
-    assert [pe.kind for pe in figure.aresti.elements] == ["loop", "roll", "loop", "roll", "loop", "roll", "loop"]
-    assert not [pe for pe in figure.aresti.elements if pe.kind == "loop" and "rolls" in pe.kwargs]
+    assert info.value.detail == NON_ARESTI
 
 
 @pytest.mark.parametrize(
@@ -158,6 +159,8 @@ def _catalogue_roll_arcs():
         code = figure["base_code"]
         if code in seen or not figure["pattern"].startswith("+"):
             continue
+        if figure["aresti"].split(".")[0] == "0":
+            continue  # Family 0 raises (Phase S, SQ5)
         plan = figure["semantics"]["render_plan"]
         if not any(item["kind"] == "embedded_roll" for item in plan):
             continue

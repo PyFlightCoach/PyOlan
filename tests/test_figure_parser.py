@@ -298,8 +298,9 @@ def test_path_angles_inverted_entry_descends_on_a_pull():
 
 
 @pytest.mark.parametrize(
-    # "aj" was here: OpenAero's aj (0.2) has a quarter roll between its curves
-    "code", ["c", "-c", "rc", "g", "q", "mm", "dq", "db", "cc", "ac", "xa", "d", "o"]
+    # "aj" was here: OpenAero's aj (0.2) has a quarter roll between its curves; "xa"
+    # too: OpenAero's xa (0.102) is Family 0 and raises (Phase S, SQ5)
+    "code", ["c", "-c", "rc", "g", "q", "mm", "dq", "db", "cc", "ac", "d", "o"]
 )
 def test_inverted_figure_without_a_vertical_is_mirrored(code):
     # "i" mirrors the whole figure top to bottom when no vertical line resets it

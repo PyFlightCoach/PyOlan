@@ -7,7 +7,7 @@ import pytest
 
 from pyolan.drawn import elements_from_draw
 from pyolan.errors import OlanParseError
-from pyolan.figure_parser import OlanFig
+from pyolan.figure_parser import NON_ARESTI, OlanFig
 from pyolan.primitives import OlanEl, li, lo, st, ts, tu
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -93,11 +93,13 @@ def test_turns_keep_their_primitive():
 
 @pytest.mark.parametrize("olan", ["th", "th-", "-th", "34th34", "-2fth2-"])
 def test_a_point_tip_raises(olan):
-    """D11: OpenAero's point tip has no element, so it is not built."""
+    """D11, now Phase S (SQ5): the point tip is one of OpenAero's non-Aresti figures,
+    which are refused under every rule set."""
     with pytest.raises(OlanParseError) as info:
         OlanFig.take([olan])
     assert info.value.token == olan
-    assert info.value.message == f'"{olan}": "th" is a point tip, which FCScore cannot score yet.'
+    assert info.value.detail == NON_ARESTI
+    assert info.value.message == f'"{olan}": {NON_ARESTI}'
 
 
 @pytest.mark.parametrize(
@@ -110,5 +112,7 @@ def test_a_roll_openaero_ignores_is_reported(olan, where):
 
 
 def test_rolls_in_their_slots_are_not_reported():
-    for olan in ["o1", "hp(1)", "2b2", "24h4"]:
+    # "hp(1)" was here: the hammer P loop is Family 0 and raises (Phase S, SQ5); "p(2)" and
+    # "ao(1)" have the same kind of slot, a roll in brackets inside the figure
+    for olan in ["o1", "p(2)", "ao(1)", "2b2", "24h4"]:
         assert not [w for w in OlanFig.take([olan])[0].warnings if "ignores" in w]

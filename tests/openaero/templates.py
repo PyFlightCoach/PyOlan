@@ -17,6 +17,11 @@ A sequence whose figures do not link (a figure written to start in the other
 attitude from the one the figure before ends in, which OpenAero autocorrects) is
 an expected error instead (D2): parse_olan must raise OlanParseError at that figure,
 and its exits are not compared. The join is found from OpenAero's own trace.
+
+A sequence with one of OpenAero's non-Aresti figures (Family 0, catalogue number 0.x,
+the point tip among them) is an expected error too (Phase S, SQ5): parse_olan must
+raise OlanParseError with the non-Aresti detail at the first such figure, unless a
+figure before it fails to link, and its exits are not compared.
 """
 
 from __future__ import annotations
@@ -31,6 +36,7 @@ from loguru import logger
 
 from pyolan.direction import FigureDirection, physical_to_heading
 from pyolan.errors import OlanParseError
+from pyolan.figure_parser import NON_ARESTI, non_aresti
 from pyolan.parser import HEADING_OVERRIDE, parse_olan
 
 from . import differential as D
@@ -77,6 +83,11 @@ def unlinked_join(seq: dict) -> dict | None:
     return None
 
 
+def first_non_aresti(seq: dict) -> dict | None:
+    """The first figure OpenAero builds that is one of its non-Aresti figures."""
+    return next((f for f in seq["figures"] if non_aresti(f["aresti"])), None)
+
+
 @contextmanager
 def heading_overrides():
     """The heading override warnings parse_olan logs inside the block."""
@@ -95,6 +106,23 @@ def heading_overrides():
 def compare_sequence(res: D.Result, corpus: str, seq: dict, rules: str = "IAC") -> None:
     oa = seq["figures"]
     join = unlinked_join(seq)
+    family_0 = first_non_aresti(seq)
+    if family_0 is not None and (join is None or family_0["i"] <= join["i"]):
+        # parse_olan reads the figures in order: it stops at the first non-Aresti
+        # figure, which comes before any figure that does not link
+        try:
+            with heading_overrides():
+                parse_olan(seq["text"], builder(rules), WIND)
+        except OlanParseError as e:
+            if e.detail != NON_ARESTI or not D._token_matches(e.token or "", family_0["s"]):
+                res.add(corpus, seq["id"], "template_count",
+                        f"expected the non-Aresti error at {family_0['s']!r}, parse_olan raised: {str(e)[:160]}")
+        except Exception as e:  # noqa: BLE001
+            res.add(corpus, seq["id"], "template_count", f"parse_olan raised {type(e).__name__}: {str(e)[:120]}")
+        else:
+            res.add(corpus, seq["id"], "template_count",
+                    f"figure {family_0['s']!r} is non-Aresti; parse_olan must raise (SQ5)")
+        return
     try:
         with heading_overrides() as overrides:
             figs = parse_olan(seq["text"], builder(rules), WIND)

@@ -5,13 +5,24 @@ from pathlib import Path
 import pytest
 
 from pyolan.errors import OlanParseError
-from pyolan.figure_parser import POINT_TIP, OlanFig
+from pyolan.figure_parser import NON_ARESTI, OlanFig
 
 
 FIXTURE = json.loads(
     (Path(__file__).parent / "data" / "openaero" / "figures.json").read_text()
 )
 FIGURES = FIXTURE["figures"]
+
+
+FAMILY_0_PATTERNS = 127  # patterns whose catalogue number is 0.x
+
+
+def family_0(figure):
+    """OpenAero's non-Aresti figures (catalogue numbers 0.x), which PyOlan refuses
+    under every rule set (Phase S, SQ5)."""
+    return figure["aresti"].split(".")[0] == "0"
+
+
 BY_CODE = {}
 for figure in FIGURES:
     if figure["base_code"]:
@@ -30,6 +41,15 @@ def parseable_figures():
         except Exception:
             continue
         yield figure, parsed
+
+
+def catalogue_patterns():
+    """One figure per catalogue pattern that has a base code."""
+    seen = set()
+    for figure in FIGURES:
+        if figure["base_code"] and figure["pattern"] not in seen:
+            seen.add(figure["pattern"])
+            yield figure
 
 
 def pyolan_semantic(code):
@@ -60,28 +80,34 @@ def test_fixture_has_open_aero_provenance():
 
 
 def test_every_open_aero_pattern_is_an_olan_parser_input():
-    """Every catalogue pattern parses, the inverted variants of PyOlan's non-Aresti
-    codes (itri, ivv, ihat, ixm, idz, idvz, idvd, irqq) included since Phase D. The
-    exception is the point tip, which raises (D11)."""
+    """Every catalogue pattern parses, the inverted variants (idz, idvz, idvd, irqq)
+    included since Phase D, except OpenAero's non-Aresti figures (its Family 0,
+    catalogue numbers 0.x), which raise under every rule set (Phase S, SQ5)."""
     unsupported = {}
-    seen = set()
-    for figure in FIGURES:
+    for figure in catalogue_patterns():
         pattern = figure["pattern"]
-        if not figure["base_code"] or pattern in seen:
-            continue
-        seen.add(pattern)
         try:
             OlanFig.take([pattern])
         except OlanParseError as ex:
             unsupported[figure["base_code"], pattern] = ex.detail
 
-    assert len(unsupported) == 4
-    assert {code for code, _ in unsupported} == {"th"}
-    assert set(unsupported.values()) == {POINT_TIP}
+    assert set(unsupported) == {
+        (figure["base_code"], figure["pattern"])
+        for figure in catalogue_patterns()
+        if family_0(figure)
+    }
+    assert set(unsupported.values()) == {NON_ARESTI}
 
 
 def test_fixture_parseability_boundary_is_stable():
-    assert sum(1 for _ in parseable_figures()) == 1159  # 1163 less the 4 point tips
+    # 1163 patterns less the 4 point tips was 1159 until Phase S (SQ5): Family 0 is
+    # refused too, which leaves the Aresti figures
+    patterns = list(catalogue_patterns())
+    family_0_patterns = [figure for figure in patterns if family_0(figure)]
+
+    assert len(patterns) == 1163
+    assert len(family_0_patterns) == FAMILY_0_PATTERNS
+    assert sum(1 for _ in parseable_figures()) == 1163 - FAMILY_0_PATTERNS
 
 
 def test_fixture_contains_k_factors_for_all_definitions():
@@ -248,12 +274,20 @@ def test_representative_open_aero_metadata(code, aresti, k_powered, k_glider):
     assert figure["k_glider"] == k_glider
 
 
-@pytest.mark.parametrize("code", ["d", "v", "o", "ry", "n", "cm", "tri", "xm"])
+@pytest.mark.parametrize("code", ["d", "v", "o", "ry", "n", "cm"])
 def test_representative_generated_codes_parse_in_pyolan(code):
     figure = OlanFig.take([code])[0]
 
     assert figure.fig.chars == code
     assert figure.create_elements()
+
+
+@pytest.mark.parametrize("code", ["tri", "xm"])
+def test_representative_family_0_codes_raise_in_pyolan(code):
+    with pytest.raises(OlanParseError) as info:
+        OlanFig.take([code])
+
+    assert info.value.detail == NON_ARESTI
 
 
 def test_generated_fixture_has_one_normalized_record_per_definition_code():
@@ -295,12 +329,12 @@ def test_open_aero_turn_family_semantics(code, expected):
 @pytest.mark.parametrize(
     ("code", "olan", "turnamount", "rolltype"),
     [
-        # rolls that end inverted are written with "-" after them (F19)
+        # rolls that end inverted are written with "-" after them (F19); 4j5 and 4jo5
+        # are OpenAero's Family 0 and raise (Phase S, SQ5)
         ("j", "j", 1 / 4, "i"),
         ("1j5", "1j5-", 1 / 4, "i"),
         ("2jio15", "2jio15-", 1 / 2, "io"),
         ("3j3", "3j3", 3 / 4, "i"),
-        ("4j5", "4j5-", 1, "i"),
         ("4jio3", "4jio3", 1, "io"),
         ("4joi4", "4joi4", 1, "oi"),
     ],
@@ -327,7 +361,7 @@ def test_all_numeric_rolling_turn_definitions_match_open_aero():
 
     for source in FIGURES:
         code = source["base_code"]
-        if not code or code in seen:
+        if not code or code in seen or family_0(source):
             continue
         match = re.fullmatch(r"([1-4])j(io|oi|i|o)?(\d*)", code)
         if not match:
@@ -358,7 +392,7 @@ def test_turn_render_tokens_match_parseable_turn_elements():
 
     for source in FIGURES:
         pattern = source["pattern"]
-        if not source["base_code"] or pattern in seen:
+        if not source["base_code"] or pattern in seen or family_0(source):
             continue
         seen.add(pattern)
 
@@ -389,6 +423,7 @@ def test_turn_render_tokens_match_parseable_turn_elements():
             assert turn.turnamount == int(digits[0]) / 4
         checked += 1
 
-    assert checked >= 90
+    # was 90: the 9 Family 0 patterns with turns are refused since Phase S (SQ5)
+    assert checked >= 89
 
 

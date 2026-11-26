@@ -17,6 +17,7 @@ from .direction import DirectionState
 from .drawing import olan_items
 from .errors import NoFigureLeft, OlanParseError
 from .figure_parser import OlanFig
+from .sizing import LOOP_RADIUS, SizeGroups, Sizing
 
 # in the warning for a template that leaves the box the other way from OpenAero
 HEADING_OVERRIDE = "the next figure starts on OpenAero's heading"
@@ -52,6 +53,16 @@ def _template(mdef: ManDef, itrans: g.Transformation, option: int = 0) -> State:
     return State.stack(mdef.create().create_template(itrans), "element")
 
 
+def _size_ndmps(sizes: SizeGroups, mb: ManBuilder) -> dict[str, a.NewComparison]:
+    """A NewComparison like loop_radius for each radius group after the first."""
+    default = mb.mps.data[LOOP_RADIUS].defaul
+    return {
+        name: a.NewComparison(value=default, like=LOOP_RADIUS)
+        for name in sizes.radius_names()
+        if name != LOOP_RADIUS
+    }
+
+
 def _linked_figure(
     olanfig: OlanFig,
     mb: ManBuilder,
@@ -59,6 +70,7 @@ def _linked_figure(
     itrans: g.Transformation,
     entry_heading: p.Heading,
     required: p.Heading | None,
+    sizes: SizeGroups | None = None,
 ) -> tuple[a.Figure, ManDef]:
     """Create the figure, linking the rolls of the direction-changing lines.
 
@@ -67,15 +79,18 @@ def _linked_figure(
     along the box, only the combinations that exit as required (OpenAero's exit
     direction, see direction.py) are kept; for a cross box entry both are kept so
     the analysis can choose, with the one that exits as required first. A cross
-    box exit only emits roll_option when it links more than one element.
+    box exit only emits roll_option when it links more than one element. sizes
+    links the loops and lines the rules compare (sizing.py).
     """
+    sizes = sizes or SizeGroups()
+    size_ndmps = _size_ndmps(sizes, mb)
     lines = olanfig.direction_lines()
     if not lines:
         ndmps = _turn_ndmps(olanfig)
         figure = a.Figure(
             info=info,
-            elements=olanfig.create_elements(use_roll_options=True),
-            ndmps=ndmps,
+            elements=olanfig.create_elements(use_roll_options=True, sizes=sizes),
+            ndmps={**ndmps, **size_ndmps},
         )
         mdef = mb.create_mdef(figure)
         if ndmps and required is not None:
@@ -90,7 +105,9 @@ def _linked_figure(
                 first = exits.index(required)
                 order = [first] + [i for i in range(len(options)) if i != first]
                 figure = figure.model_copy(
-                    update=dict(ndmps={"roll_option": [options[i] for i in order]})
+                    update=dict(
+                        ndmps={"roll_option": [options[i] for i in order], **size_ndmps}
+                    )
                 )
                 mdef = mb.create_mdef(figure)
             mdef.mps.data["roll_option"].defaul = 0
@@ -99,8 +116,8 @@ def _linked_figure(
     vectors = olanfig.roll_option_vectors()
     figure = a.Figure(
         info=info,
-        elements=olanfig.create_elements(use_roll_options=True),
-        ndmps={"roll_option": vectors},
+        elements=olanfig.create_elements(use_roll_options=True, sizes=sizes),
+        ndmps={"roll_option": vectors, **size_ndmps},
     )
     mdef = mb.create_mdef(figure)
     exits = [
@@ -130,16 +147,16 @@ def _linked_figure(
         figure = figure.model_copy(
             update=dict(
                 elements=olanfig.create_elements(
-                    use_roll_options=True, link_lines=False, flip_lines=flip
+                    use_roll_options=True, link_lines=False, flip_lines=flip, sizes=sizes
                 ),
-                ndmps={},
+                ndmps=size_ndmps,
             )
         )
         return figure, mb.create_mdef(figure)
 
     if keep != list(range(len(vectors))):
         figure = figure.model_copy(
-            update=dict(ndmps={"roll_option": [vectors[i] for i in keep]})
+            update=dict(ndmps={"roll_option": [vectors[i] for i in keep], **size_ndmps})
         )
         mdef = mb.create_mdef(figure)
     mdef.mps.data["roll_option"].defaul = 0
@@ -147,13 +164,21 @@ def _linked_figure(
 
 
 def parse_olan(
-    data: str, mb: ManBuilder, wind: p.Heading = p.Heading.LTOR
+    data: str,
+    mb: ManBuilder,
+    wind: p.Heading = p.Heading.LTOR,
+    sizing: Sizing | dict | None = None,
 ) -> list[ParsedOlanFig]:
     """Parse an OLAN sequence into figures.
+
+    sizing is the rule set's sizing policy (``tuning.sizing_info``): the loops and
+    lines the rules compare refer to loop_radius and line_length (sizing.py).
+    Without it no size is linked.
 
     Raises OlanParseError, naming the item and its position, for anything that is
     not a figure or a drawing command, and for a figure that cannot be built.
     """
+    sizing = Sizing.parse(sizing)
     data = olan_items(data)
     total = len(data)
     figs: list[ParsedOlanFig] = []
@@ -170,7 +195,7 @@ def parse_olan(
             raise ex.at(index=offset + ex.index, figure=len(figs) + 1) from None
         index = total - len(data) - 1
         try:
-            figs.append(_parse_figure(olanfig, state, figs, itrans, mb, wind))
+            figs.append(_parse_figure(olanfig, state, figs, itrans, mb, wind, sizing))
             figs[-1].warnings = [
                 f'Figure {len(figs)} "{olanfig.token}": {w}' for w in olanfig.warnings
             ]
@@ -218,6 +243,7 @@ def _parse_figure(
     itrans: g.Transformation | None,
     mb: ManBuilder,
     wind: p.Heading,
+    sizing: Sizing | None = None,
 ) -> ParsedOlanFig:
     # OpenAero's direction state gives the entry and the required exit heading
     oa = state.apply(olanfig)
@@ -259,6 +285,7 @@ def _parse_figure(
         itrans,
         entry_heading,
         required,
+        olanfig.size_groups(sizing),
     )
     man = mdef.create()
     tp = State.stack(man.create_template(itrans), "element")

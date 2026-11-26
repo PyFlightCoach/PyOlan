@@ -69,10 +69,18 @@ Two cases differ from OpenAero on purpose:
   the figure before it ends in. OpenAero corrects the entry and draws on; PyOlan
   inserts no half roll or turnaround between figures. An OpenAero free known file
   lists only the compulsory figures, so it cannot be read as a sequence.
-- **The point tip, `th`, raises.** No element flies it.
+- **OpenAero's non-Aresti figures raise** (its Family 0: the wingover `jw`, the clover
+  leaves `oj` and `ioj`, `mj`, `aj`, `4j5`, `4jo5`, the point tip `th`, `vv`, `hat`,
+  `hp`, `iph`, `ibh`, `ipbh`, `tri`, `xm`, `xa` and `oaj`, upright or inverted), under
+  every rule set, with a message that lists them all (`figure_parser.NON_ARESTI`).
 
 Codes that are not OpenAero figures (once PyOlan's own, such as `jj`, `bh` or `ph`)
 raise too, as do figures OpenAero rejects, usually for a missing `-` attitude marker.
+
+`parse_olan(olan, builder, wind, sizing=tuning.builders.sizing_info(rules))` links the
+sizes the rules compare (`sizing.py`): the part-loops OpenAero draws as round elements
+share `loop_radius`, and the rule set's `[sizing]` table names the figures whose corners
+and interior lines match too. Without `sizing` no size is linked.
 
 `ParsedOlanFig.warnings` reports what was read differently from what was written, as
 OpenAero does it:
