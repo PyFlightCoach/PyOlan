@@ -2,8 +2,9 @@
 
 For each figure that OpenAero exits level, the template's exit heading and its
 attitude (upright or inverted, from the body z axis) are compared with OpenAero's
-physical exit, as the server builds templates: parse_olan with the IAC builder
-(category unlimited) and the wind from the right (RTOL). Differences:
+physical exit, as the server builds templates: parse_olan with a rule set's builder
+(IAC unless another is given; category unlimited) and the wind from the right (RTOL).
+Differences:
 
 * ``template``, key ``<sequence id>#<figure index>``: the exit differs, or the
   template does not exit level where OpenAero does;
@@ -38,10 +39,10 @@ WIND = p.Heading.RTOL
 
 
 @lru_cache
-def builder():
+def builder(rules: str = "IAC"):
     from tuning.builders import load_builder
 
-    return load_builder("IAC", category="unlimited")
+    return load_builder(rules, category="unlimited")
 
 
 def template_exit(tp) -> tuple[p.Heading, bool]:
@@ -91,12 +92,12 @@ def heading_overrides():
         logger.remove(sink)
 
 
-def compare_sequence(res: D.Result, corpus: str, seq: dict) -> None:
+def compare_sequence(res: D.Result, corpus: str, seq: dict, rules: str = "IAC") -> None:
     oa = seq["figures"]
     join = unlinked_join(seq)
     try:
         with heading_overrides() as overrides:
-            figs = parse_olan(seq["text"], builder(), WIND)
+            figs = parse_olan(seq["text"], builder(rules), WIND)
     except OlanParseError as e:
         if join is None or not D._token_matches(e.token or "", join["s"]) or "ends" not in e.detail:
             where = "" if join is None else f" (expected the D2 error at {join['s']!r})"
@@ -145,9 +146,9 @@ def compare_sequence(res: D.Result, corpus: str, seq: dict) -> None:
             )
 
 
-def differences(corpus: str, ids: list[str] | None = None) -> D.Result:
+def differences(corpus: str, ids: list[str] | None = None, rules: str = "IAC") -> D.Result:
     res = D.Result()
     for seq in D.load_corpus(corpus)["sequences"]:
         if ids is None or seq["id"] in ids:
-            compare_sequence(res, corpus, seq)
+            compare_sequence(res, corpus, seq, rules)
     return res
